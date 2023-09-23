@@ -1,23 +1,10 @@
 import * as React from "react";
-import { Button, View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import HomeScreen from "./pages/home";
 
-type RootStackParamList = {
-  Home: undefined;
-};
-
-type Props = NativeStackScreenProps<RootStackParamList, "Home">;
-
-function HomeScreen({ navigation }: Props) {
-  return (
-    <View className="bg-white text-5xl flex-1 justify-center items-center">
-      <Text>Home Screen!</Text>
-    </View>
-  );
-}
+import type { RootStackParamList } from "./pages";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
