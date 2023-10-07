@@ -37,7 +37,15 @@ export default function HomeScreen({ navigation }: Props) {
               console.log({ ...err });
             });
 
-          console.log(userData);
+          if (userData) {
+            const avatarUrl = userData?.meta?.avatarUrl;
+            const name = userData?.meta?.name;
+            pb.collection("users").update(pb?.authStore?.model?.id, {
+              avatarUrl,
+              name,
+            });
+            //pb.authStore.navigation.navigate("Main");
+          }
         }}
         style={styles.login}
       >
