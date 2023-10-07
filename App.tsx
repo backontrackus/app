@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import HomeScreen from "./pages/home";
 
-import type { RootStackParamList } from "./pages";
+import type { RootStackParamList } from "./util/pages";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
