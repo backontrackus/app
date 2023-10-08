@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import HomeScreen from "./pages/home";
+import SetupScreen from "./pages/setup";
 
 import type { RootStackParamList } from "./util/pages";
 
@@ -15,6 +16,13 @@ function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Setup"
+          component={SetupScreen}
           options={{
             headerShown: false,
           }}

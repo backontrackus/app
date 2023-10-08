@@ -1,11 +1,4 @@
-import {
-  TouchableOpacity,
-  View,
-  Text,
-  Image,
-  Linking,
-  StyleSheet,
-} from "react-native";
+import { TouchableOpacity, View, Text, Image, Linking } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -15,94 +8,64 @@ import pb from "../util/pocketbase";
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
 export default function HomeScreen({ navigation }: Props) {
+  if (pb.authStore.model) {
+    if (pb.authStore.model?.location) {
+      // TODO: go to main screen
+    } else {
+      navigation.navigate("Setup");
+    }
+  }
+
   return (
-    <View style={styles.container}>
-      <Image style={styles.lucas} source={require("../assets/lucas.jpg")} />
+    <View className="items-center flex-1 h-screen relative justify-end gap-5 flex-col">
+      <Image
+        className="top-0 absolute z-0"
+        source={require("../assets/lucas.jpg")}
+      />
       <LinearGradient
         colors={["rgba(0, 0, 0, 0.30)", "rgba(0, 0, 0, 0.40)", "black"]}
-        style={styles.gradient}
+        className="top-0 absolute z-10 w-full h-full"
       />
-      <Image style={styles.logo} source={require("../assets/logo.png")} />
-      <TouchableOpacity
-        onPress={async () => {
-          const userData = await pb
-            .collection("users")
-            .authWithOAuth2({
-              provider: "google",
-              urlCallback: async (url) => {
-                Linking.openURL(url);
-              },
-            })
-            .catch((err) => {
-              console.log({ ...err });
-            });
+      <View className="absolute bottom-0 flex-1 flex-col justify-end items-center py-2">
+        <Image
+          className="w-32 aspect-square z-20"
+          source={require("../assets/logo.png")}
+        />
+        <TouchableOpacity
+          onPress={async () => {
+            const userData = await pb
+              .collection("users")
+              .authWithOAuth2({
+                provider: "google",
+                urlCallback: async (url) => {
+                  Linking.openURL(url);
+                },
+              })
+              .catch((err) => {
+                console.log({ ...err });
+              });
 
-          if (userData) {
-            const avatarUrl = userData?.meta?.avatarUrl;
-            const name = userData?.meta?.name;
-            pb.collection("users").update(pb?.authStore?.model?.id, {
-              avatarUrl,
-              name,
-            });
-            //pb.authStore.navigation.navigate("Main");
-          }
-        }}
-        style={styles.login}
-      >
-        <Image style={styles.google} source={require("../assets/google.png")} />
-        <Text style={styles.text}>Log in with Google</Text>
-      </TouchableOpacity>
+            if (userData) {
+              const avatarUrl = userData?.meta?.avatarUrl;
+              const name = userData?.meta?.name;
+              pb.collection("users").update(pb?.authStore?.model?.id, {
+                avatarUrl,
+                name,
+              });
+              navigation.navigate("Setup");
+            }
+          }}
+          className="bg-bot-orange rounded-md py-2 px-5 z-20 flex flex-1 flex-row items-center"
+        >
+          <Image
+            className="w-10 h-10 aspect-square mr-2"
+            source={require("../assets/google.png")}
+          />
+          <Text className="text-2xl font-bold text-center">
+            Log in with Google
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#000000",
-    padding: 8,
-    alignItems: "center",
-    position: "relative",
-    height: "100%",
-    flex: -1,
-    justifyContent: "flex-end",
-    gap: 10,
-  },
-  login: {
-    backgroundColor: "#F90",
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    zIndex: 20,
-    flex: -1,
-    flexDirection: "row",
-    gap: 10,
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  gradient: {
-    width: "110%",
-    height: "110%",
-    zIndex: 10,
-    position: "absolute",
-    top: 0,
-  },
-  lucas: {
-    zIndex: 0,
-    top: 0,
-    position: "absolute",
-  },
-  logo: {
-    height: 128,
-    width: 128,
-    zIndex: 20,
-  },
-  google: {
-    height: 40,
-    width: 40,
-    zIndex: 20,
-  },
-});
