@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import HomeScreen from "./pages/home";
 import SetupScreen from "./pages/setup";
+import MainScreen from "./pages/main";
 
 import type { RootStackParamList } from "./util/pages";
 
@@ -23,6 +24,13 @@ function App() {
         <Stack.Screen
           name="Setup"
           component={SetupScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Main"
+          component={MainScreen}
           options={{
             headerShown: false,
           }}

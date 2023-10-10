@@ -28,11 +28,6 @@ export default function SetupScreen({ navigation }: Props) {
       .catch((err) => {});
   }, []);
 
-  if (locations[0]) {
-    console.log(locations);
-    console.log(locations[0].latitude, locations[0].longitude);
-  }
-
   return (
     <View className="bg-bot-blue-1 h-screen flex-1 flex-col relative justify-center items-center">
       <Image

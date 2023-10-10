@@ -10,7 +10,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 export default function HomeScreen({ navigation }: Props) {
   if (pb.authStore.model) {
     if (pb.authStore.model?.location) {
-      // TODO: go to main screen
+      navigation.navigate("Main");
     } else {
       navigation.navigate("Setup");
     }
@@ -52,7 +52,12 @@ export default function HomeScreen({ navigation }: Props) {
                 avatarUrl,
                 name,
               });
-              navigation.navigate("Setup");
+
+              if (pb.authStore.model?.location) {
+                navigation.navigate("Main");
+              } else {
+                navigation.navigate("Setup");
+              }
             }
           }}
           className="bg-bot-orange rounded-md py-2 px-5 z-20 flex flex-1 flex-row items-center"
