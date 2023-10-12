@@ -1,6 +1,6 @@
 export type RootStackParamList = {
   Home: undefined;
-  Setup: undefined;
+  Setup: { logout: boolean };
   Main: undefined;
   Announcements: undefined;
 };

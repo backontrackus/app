@@ -9,7 +9,7 @@ import pb from "../util/pocketbase";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Setup">;
 
-export default function SetupScreen({ navigation }: Props) {
+export default function SetupScreen({ navigation, route }: Props) {
   const [locations, setLocations] = useState<RecordModel[]>([]);
   const [selectedLocationId, setSelectedLocationId] = useState<String | null>();
 
@@ -75,7 +75,13 @@ export default function SetupScreen({ navigation }: Props) {
             pb.collection("users").update(user.id, {
               location: selectedLocationId,
             });
-            // navigation.navigate("Main");
+
+            if (route.params.logout) {
+              pb.authStore.clear();
+              navigation.navigate("Home");
+            } else {
+              navigation.navigate("Main");
+            }
           }
         }}
       >

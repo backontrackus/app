@@ -52,7 +52,7 @@ export default function MainScreen({ navigation }: Props) {
                   source={{ uri: user.avatarUrl }}
                   width={size}
                   height={size}
-                  style={{ marginTop: 5 }}
+                  style={{ marginTop: 5, borderRadius: 9999 }}
                 />
               );
           }

@@ -12,7 +12,7 @@ export default function HomeScreen({ navigation }: Props) {
     if (pb.authStore.model?.location) {
       navigation.navigate("Main");
     } else {
-      navigation.navigate("Setup");
+      navigation.navigate("Setup", { logout: false });
     }
   }
 
@@ -56,7 +56,7 @@ export default function HomeScreen({ navigation }: Props) {
               if (pb.authStore.model?.location) {
                 navigation.navigate("Main");
               } else {
-                navigation.navigate("Setup");
+                navigation.navigate("Setup", { logout: false });
               }
             }
           }}
