@@ -29,19 +29,25 @@ export default function AnnouncementsPage({ navigation }: Props) {
   const location = user.location;
 
   useEffect(() => {
-    pb.collection("locations")
-      .getOne(location)
-      .then((locationData) => {
-        if (locationData.leaders.includes(user.id)) {
-          setIsLeader(true);
-        } else {
-          setIsLeader(false);
-        }
-      });
+    if (location) {
+      pb.collection("locations")
+        .getOne(location)
+        .then((locationData) => {
+          if (locationData.leaders.includes(user.id)) {
+            setIsLeader(true);
+          } else {
+            setIsLeader(false);
+          }
+        });
+    }
   }, [user]);
 
   useFocusEffect(
     useCallback(() => {
+      if (!location) {
+        return;
+      }
+
       pb.collection("announcements")
         .getList(1, 10, {
           filter: `location = "${location}"`,
@@ -58,7 +64,7 @@ export default function AnnouncementsPage({ navigation }: Props) {
             )
           );
         });
-    }, [user])
+    }, [location])
   );
   return (
     <View className="h-full w-full relative">
