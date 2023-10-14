@@ -80,6 +80,7 @@ export default function NewAnnouncement({ navigation }: Props) {
           multiline
           placeholder={`**Habitat for Humanity is a non-profit organization that builds homes for those in need.**
 Come volunteer with us on Saturday, August 10th and help paint and clean up a new house!`}
+          textAlignVertical="top"
         />
       </View>
       <ScrollView className="self-start w-full mb-4">
