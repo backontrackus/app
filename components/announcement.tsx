@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, Linking } from "react-native";
+import { Image } from "expo-image";
 import { useState, useEffect } from "react";
 import IcalParser from "ical-js-parser";
 import RNCal from "react-native-calendar-events";
@@ -7,7 +8,12 @@ import { MarkdownView } from "react-native-markdown-view";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import pb from "../util/pocketbase";
-import { icalToDate, getIntervalString } from "../util/dateUtils";
+import {
+  icalToDate,
+  getDateIntervalString,
+  getTimeIntervalString,
+} from "../util/dateUtils";
+import Attachment from "./attachment";
 
 import type { RecordModel } from "pocketbase";
 import type { ICalJSON } from "ical-js-parser";
@@ -18,6 +24,8 @@ type AnnouncementData = {
 
 export default function Announcement(props: AnnouncementData) {
   const [calendar, setCalendar] = useState<ICalJSON | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [attachments, setAttachments] = useState<string[]>([]);
 
   useEffect(() => {
     const url = pb.files.getUrl(props.model, props.model.calendar);
@@ -28,6 +36,32 @@ export default function Announcement(props: AnnouncementData) {
         const json = IcalParser.toJSON(text);
         setCalendar(json);
       });
+  }, []);
+
+  useEffect(() => {
+    const newAttachments: string[] = [];
+    const newImages: string[] = [];
+    for (const attachment of props.model.attachments) {
+      const url = pb.files.getUrl(props.model, attachment);
+      const filename = url.split("/").at(-1) ?? "file.txt";
+      const ext = filename.split(".").at(-1) ?? "txt";
+
+      if (
+        ext == "png" ||
+        ext == "jpg" ||
+        ext == "jpeg" ||
+        ext == "gif" ||
+        ext == "webp" ||
+        ext == "heic" ||
+        ext == "svg"
+      ) {
+        newImages.push(url);
+      } else {
+        newAttachments.push(url);
+      }
+    }
+    setAttachments(newAttachments);
+    setImages(newImages);
   }, []);
 
   return (
@@ -46,11 +80,18 @@ export default function Announcement(props: AnnouncementData) {
           <View className="flex flex-row justify-start items-center">
             <MaterialIcons name="calendar-today" size={24} color="white" />
             <Text className="text-white mx-1 text-sm">
-              {calendar?.events[0].dtstart.value
-                ? icalToDate(
-                    calendar?.events[0].dtstart.value,
-                    calendar?.events[0].dtstart.timezone
-                  ).toLocaleDateString()
+              {calendar?.events[0].dtstart.value ||
+              calendar?.events[0].dtend.value
+                ? getDateIntervalString(
+                    icalToDate(
+                      calendar?.events[0].dtstart.value,
+                      calendar?.events[0].dtstart.timezone
+                    ),
+                    icalToDate(
+                      calendar?.events[0].dtend.value,
+                      calendar?.events[0].dtend.timezone
+                    )
+                  )
                 : "No Date"}
             </Text>
           </View>
@@ -59,7 +100,7 @@ export default function Announcement(props: AnnouncementData) {
             <Text className="text-white mx-1 text-sm">
               {calendar?.events[0].dtstart.value ||
               calendar?.events[0].dtend.value
-                ? getIntervalString(
+                ? getTimeIntervalString(
                     icalToDate(
                       calendar?.events[0].dtstart.value,
                       calendar?.events[0].dtstart.timezone
@@ -89,6 +130,43 @@ export default function Announcement(props: AnnouncementData) {
         >
           {props.model.content}
         </MarkdownView>
+        <View className="flex flex-col justify-start items-center gap-y-5 my-2 w-full">
+          {images.map((image) => {
+            const filename = image.split("/").at(-1) ?? "file.txt";
+            const ext = filename.split(".").at(-1) ?? "txt";
+
+            if (
+              ext == "png" ||
+              ext == "jpg" ||
+              ext == "jpeg" ||
+              ext == "gif" ||
+              ext == "webp" ||
+              ext == "heic" ||
+              ext == "svg"
+            ) {
+              return (
+                <View key={image}>
+                  <Image
+                    source={image}
+                    contentFit="fill"
+                    className="w-56 h-56"
+                  />
+                  <View className="h-2" />
+                </View>
+              );
+            }
+          })}
+          {attachments.map((attachment) => {
+            const filename = attachment.split("/").at(-1) ?? "file.txt";
+
+            return (
+              <View key={attachment} className="w-full">
+                <Attachment key={attachment} name={filename} uri={attachment} />
+                <View className="h-2" />
+              </View>
+            );
+          })}
+        </View>
         <View className="flex flex-row justify-evenly items-center w-full">
           {props.model.rsvpUrl && (
             <TouchableOpacity

@@ -26,11 +26,20 @@ export function dateToIcal(date: Date) {
   return `${year}${month}${day}T${hour}${min}${sec}Z`;
 }
 
-export function getIntervalString(start: Date, end: Date) {
+export function getDateIntervalString(start: Date, end: Date) {
+  const startStr = start.toLocaleDateString();
+  const endStr = end.toLocaleDateString();
+
+  if (startStr == endStr) return startStr;
+  else return `${startStr} - ${endStr}`;
+}
+
+export function getTimeIntervalString(start: Date, end: Date) {
   const startStr = getTimeString(start);
   const endStr = getTimeString(end);
 
-  return `${startStr} - ${endStr}`;
+  if (startStr == endStr) return startStr;
+  else return `${startStr} - ${endStr}`;
 }
 
 export function getTimeString(date: Date) {

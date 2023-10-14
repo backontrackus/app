@@ -18,6 +18,7 @@ type Props = CompositeScreenProps<
 export default function AnnouncementsPage({ navigation }: Props) {
   const scrollViewRef = useRef<ScrollView>(null);
   const [announcements, setAnnouncements] = useState<RecordModel[]>([]);
+  const [isLeader, setIsLeader] = useState(false);
   const user = pb.authStore.model;
   if (!user) {
     navigation.navigate("Home");
@@ -25,6 +26,18 @@ export default function AnnouncementsPage({ navigation }: Props) {
   }
 
   const location = user.location;
+
+  useEffect(() => {
+    pb.collection("locations")
+      .getOne(location)
+      .then((locationData) => {
+        if (locationData.leaders.includes(user.id)) {
+          setIsLeader(true);
+        } else {
+          setIsLeader(false);
+        }
+      });
+  }, [user]);
 
   useEffect(() => {
     pb.collection("announcements")
@@ -62,17 +75,19 @@ export default function AnnouncementsPage({ navigation }: Props) {
           <Announcement key={announcement.id} model={announcement} />
         ))}
       </ScrollView>
-      <TouchableOpacity
-        style={{
-          elevation: 2,
-        }}
-        className="bg-gray-500 p-3 rounded-full aspect-square w-14 h-14 flex flex-col shadow-black justify-center items-center absolute right-5 bottom-5 "
-        onPress={() => {
-          navigation.navigate("NewAnnouncement");
-        }}
-      >
-        <Text className="text-2xl text-white text-center">+</Text>
-      </TouchableOpacity>
+      {isLeader && (
+        <TouchableOpacity
+          style={{
+            elevation: 2,
+          }}
+          className="bg-gray-500 p-3 rounded-full aspect-square w-14 h-14 flex flex-col shadow-black justify-center items-center absolute right-5 bottom-5 "
+          onPress={() => {
+            navigation.navigate("NewAnnouncement");
+          }}
+        >
+          <Text className="text-2xl text-white text-center">+</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

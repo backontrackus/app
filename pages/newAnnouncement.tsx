@@ -20,6 +20,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import pb from "../util/pocketbase";
 import type { RootStackParamList } from "../util/pages";
 import { getTimeString, dateToIcal } from "../util/dateUtils";
+import Attachment from "../components/attachment";
 
 type Props = NativeStackScreenProps<RootStackParamList, "NewAnnouncement">;
 
@@ -202,27 +203,14 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
       <Text className="text-lg self-start">Attachments</Text>
       <View className="w-full flex flex-col justify-start items-center gap-y-2 mb-2">
         {attachments.map((attachment) => (
-          <View
-            key={attachment.uri}
-            className="p-2 border-slate-400 rounded-md border-2 flex flex-row justify-between items-center w-full"
-          >
-            <Text className="text-lg">{attachment.name}</Text>
-            <TouchableOpacity
-              className="rounded-md p-1"
-              onPress={() => {
-                setAttachments((a) =>
-                  a.filter((att) => att.uri !== attachment.uri)
-                );
-              }}
-            >
-              <MaterialCommunityIcons
-                name="trash-can"
-                size={24}
-                color="red"
-                className="w-5 h-5"
-              />
-            </TouchableOpacity>
-          </View>
+          <Attachment
+            deleteable
+            name={attachment.name}
+            uri={attachment.uri}
+            delete={(uri) => {
+              setAttachments((a) => a.filter((att) => att.uri !== uri));
+            }}
+          />
         ))}
       </View>
       <TouchableOpacity
