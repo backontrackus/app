@@ -7,6 +7,7 @@ import { MarkdownView } from "react-native-markdown-view";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import pb from "../util/pocketbase";
+import { icalToDate, getIntervalString } from "../util/dateUtils";
 
 import type { RecordModel } from "pocketbase";
 import type { ICalJSON } from "ical-js-parser";
@@ -14,45 +15,6 @@ import type { ICalJSON } from "ical-js-parser";
 type AnnouncementData = {
   model: RecordModel;
 };
-
-function icalToDate(ical: string, tz: string = "America/New_York") {
-  const newStr =
-    ical.slice(0, 4) +
-    "-" +
-    ical.slice(4, 6) +
-    "-" +
-    ical.slice(6, 8) +
-    "T" +
-    ical.slice(9, 11) +
-    ":" +
-    ical.slice(11, 13) +
-    ":" +
-    ical.slice(13, 15) +
-    "Z";
-  const date = new Date(newStr);
-  return date;
-}
-
-function getIntervalString(start: Date, end: Date) {
-  // generate a string like 3pm - 6pm
-  const startHour = start.getHours();
-  const startMin = start.getMinutes();
-  const endHour = end.getHours();
-  const endMin = end.getMinutes();
-  const startStr =
-    startHour > 12
-      ? `${startHour - 12}:${pad(startMin)}pm`
-      : `${startHour}:${pad(startMin)}am`;
-  const endStr =
-    endHour > 12
-      ? `${endHour - 12}:${pad(endMin)}pm`
-      : `${endHour}:${pad(endMin)}am`;
-  return `${startStr} - ${endStr}`;
-}
-
-function pad(num: number) {
-  return num.toString().padStart(2, "0");
-}
 
 export default function Announcement(props: AnnouncementData) {
   const [calendar, setCalendar] = useState<ICalJSON | null>(null);

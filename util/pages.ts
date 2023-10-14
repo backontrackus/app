@@ -3,6 +3,7 @@ export type RootStackParamList = {
   Setup: { logout: boolean };
   Main: undefined;
   Announcements: undefined;
+  NewAnnouncement: undefined;
 };
 
 export type TabParamList = {

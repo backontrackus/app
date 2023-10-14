@@ -1,5 +1,5 @@
-import { View } from "react-native";
-import { useState, useEffect } from "react";
+import { TouchableOpacity, View, Text, ScrollView } from "react-native";
+import { useState, useEffect, useRef } from "react";
 
 import Announcement from "../components/announcement";
 import pb from "../util/pocketbase";
@@ -16,6 +16,7 @@ type Props = CompositeScreenProps<
 >;
 
 export default function AnnouncementsPage({ navigation }: Props) {
+  const scrollViewRef = useRef<ScrollView>(null);
   const [announcements, setAnnouncements] = useState<RecordModel[]>([]);
   const user = pb.authStore.model;
   if (!user) {
@@ -35,14 +36,43 @@ export default function AnnouncementsPage({ navigation }: Props) {
         expand: "user",
       })
       .then((newAnnouncements) => {
-        setAnnouncements(newAnnouncements.items);
+        setAnnouncements(
+          newAnnouncements.items.sort(
+            (a, b) =>
+              new Date(a.created).valueOf() - new Date(b.created).valueOf()
+          )
+        );
       });
   }, []);
   return (
-    <View className="flex flex-1 justify-start items-start flex-col w-full px-7 pt-5">
-      {announcements.map((announcement) => (
-        <Announcement key={announcement.id} model={announcement} />
-      ))}
+    <View className="h-full w-full relative">
+      <ScrollView
+        ref={scrollViewRef}
+        className="flex flex-1 flex-col w-full px-7"
+        contentContainerStyle={{
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+        }}
+        onContentSizeChange={() =>
+          scrollViewRef.current?.scrollToEnd({ animated: true })
+        }
+      >
+        <View className="h-5 w-full"></View>
+        {announcements.map((announcement) => (
+          <Announcement key={announcement.id} model={announcement} />
+        ))}
+      </ScrollView>
+      <TouchableOpacity
+        style={{
+          elevation: 2,
+        }}
+        className="bg-gray-500 p-3 rounded-full aspect-square w-14 h-14 flex flex-col shadow-black justify-center items-center absolute right-5 bottom-5 "
+        onPress={() => {
+          navigation.navigate("NewAnnouncement");
+        }}
+      >
+        <Text className="text-2xl text-white text-center">+</Text>
+      </TouchableOpacity>
     </View>
   );
 }
