@@ -1,5 +1,6 @@
 import { TouchableOpacity, View, Text, ScrollView } from "react-native";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
 import Announcement from "../components/announcement";
 import pb from "../util/pocketbase";
@@ -39,24 +40,26 @@ export default function AnnouncementsPage({ navigation }: Props) {
       });
   }, [user]);
 
-  useEffect(() => {
-    pb.collection("announcements")
-      .getList(1, 10, {
-        filter: `location = "${location}"`,
-        query: {
-          location,
-        },
-        expand: "user",
-      })
-      .then((newAnnouncements) => {
-        setAnnouncements(
-          newAnnouncements.items.sort(
-            (a, b) =>
-              new Date(a.created).valueOf() - new Date(b.created).valueOf()
-          )
-        );
-      });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      pb.collection("announcements")
+        .getList(1, 10, {
+          filter: `location = "${location}"`,
+          query: {
+            location,
+          },
+          expand: "user",
+        })
+        .then((newAnnouncements) => {
+          setAnnouncements(
+            newAnnouncements.items.sort(
+              (a, b) =>
+                new Date(a.created).valueOf() - new Date(b.created).valueOf()
+            )
+          );
+        });
+    }, [user])
+  );
   return (
     <View className="h-full w-full relative">
       <ScrollView
