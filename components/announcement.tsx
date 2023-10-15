@@ -14,29 +14,36 @@ import {
   getTimeIntervalString,
 } from "../util/dateUtils";
 import Attachment from "./attachment";
+import { getAnnouncementData } from "../util/ical";
 
 import type { RecordModel } from "pocketbase";
 import type { ICalJSON } from "ical-js-parser";
+import type { CompositeNavigationProp } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import type { RootStackParamList, TabParamList } from "../util/pages";
+import type { AnnouncementData as CalendarData } from "../util/ical";
+
+type NavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<TabParamList, "Announcements">,
+  NativeStackNavigationProp<RootStackParamList>
+>;
 
 type AnnouncementData = {
   model: RecordModel;
+  isLeader: boolean;
+  navigation: NavigationProp;
+  refresh: () => void;
 };
 
 export default function Announcement(props: AnnouncementData) {
-  const [calendar, setCalendar] = useState<ICalJSON | null>(null);
+  const [calendar, setCalendar] = useState<CalendarData | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<string[]>([]);
 
   useEffect(() => {
-    const url = pb.files.getUrl(props.model, props.model.calendar);
-
-    fetch(url)
-      .then((res) => res.text())
-      .then((text) => {
-        const json = IcalParser.toJSON(text);
-        setCalendar(json);
-      });
-  }, []);
+    getAnnouncementData(props.model).then(setCalendar);
+  }, [props.model]);
 
   useEffect(() => {
     const newAttachments: string[] = [];
@@ -62,7 +69,7 @@ export default function Announcement(props: AnnouncementData) {
     }
     setAttachments(newAttachments);
     setImages(newImages);
-  }, []);
+  }, [props.model.attachments]);
 
   return (
     <View className="flex flex-col justify-start items-start w-full mb-3">
@@ -73,50 +80,63 @@ export default function Announcement(props: AnnouncementData) {
         </Text>
       </View>
       <View className="rounded-lg bg-bot-blue-1 flex flex-col justify-start items-start w-full p-2">
-        <Text className="text-white text-2xl font-semibold">
-          {props.model.title}
-        </Text>
+        <View className="flex flex-row justify-between items-start w-full">
+          <Text className="text-white text-2xl font-semibold">
+            {props.model.title}
+          </Text>
+          {props.isLeader && (
+            <View className="flex flex-row justify-start items-center gap-x-2">
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate("NewAnnouncement", {
+                    announcementId: props.model.id,
+                  });
+                }}
+              >
+                <MaterialIcons
+                  name="mode-edit"
+                  size={24}
+                  color="white"
+                  className="w-5 h-5"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  pb.collection("announcements").delete(props.model.id);
+                  props.refresh();
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="trash-can"
+                  size={24}
+                  color="red"
+                  className="w-5 h-5"
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
         <View className="flex flex-row justify-evenly items-center flex-wrap mt-1">
           <View className="flex flex-row justify-start items-center">
             <MaterialIcons name="calendar-today" size={24} color="white" />
             <Text className="text-white mx-1 text-sm">
-              {calendar?.events[0].dtstart.value ||
-              calendar?.events[0].dtend.value
-                ? getDateIntervalString(
-                    icalToDate(
-                      calendar?.events[0].dtstart.value,
-                      calendar?.events[0].dtstart.timezone
-                    ),
-                    icalToDate(
-                      calendar?.events[0].dtend.value,
-                      calendar?.events[0].dtend.timezone
-                    )
-                  )
+              {calendar?.start || calendar?.end
+                ? getDateIntervalString(calendar.start, calendar.end)
                 : "No Date"}
             </Text>
           </View>
           <View className="flex flex-row justify-start items-center">
             <MaterialCommunityIcons name="clock" size={24} color="white" />
             <Text className="text-white mx-1 text-sm">
-              {calendar?.events[0].dtstart.value ||
-              calendar?.events[0].dtend.value
-                ? getTimeIntervalString(
-                    icalToDate(
-                      calendar?.events[0].dtstart.value,
-                      calendar?.events[0].dtstart.timezone
-                    ),
-                    icalToDate(
-                      calendar?.events[0].dtend.value,
-                      calendar?.events[0].dtend.timezone
-                    )
-                  )
+              {calendar?.start || calendar?.end
+                ? getTimeIntervalString(calendar.start, calendar.end)
                 : "No Time"}
             </Text>
           </View>
           <View className="flex flex-row justify-start items-center">
             <MaterialCommunityIcons name="map-marker" size={24} color="white" />
             <Text className="text-white mx-1 text-sm">
-              {calendar?.events[0].location ?? "No Location"}
+              {calendar?.location ?? "No Location"}
             </Text>
           </View>
         </View>
@@ -200,15 +220,9 @@ export default function Announcement(props: AnnouncementData) {
                   props.model.title,
                   {
                     calendarId: cal.id,
-                    startDate: icalToDate(
-                      calendar?.events[0].dtstart.value,
-                      calendar?.events[0].dtstart.timezone
-                    ).toISOString(),
-                    endDate: icalToDate(
-                      calendar?.events[0].dtend.value,
-                      calendar?.events[0].dtend.timezone
-                    ).toISOString(),
-                    location: calendar?.events[0].location,
+                    startDate: calendar?.start.toISOString(),
+                    endDate: calendar?.end.toISOString(),
+                    location: calendar?.location,
                     notes: `${props.model.content}\n(added by Back On Track)`,
                   },
                   // @ts-ignore

@@ -12,7 +12,7 @@ export default function Attachment(props: AttachmentData) {
   return (
     <View
       key={props.uri}
-      className="p-2 border-slate-400 bg-[#F2F2F2] rounded-md border-2 flex flex-row justify-between items-center w-full"
+      className="p-2 border-slate-400 bg-[#F2F2F2] rounded-md border-2 flex flex-row justify-between items-center w-full mb-2"
     >
       <Text className="text-lg">{props.name}</Text>
       {props.deleteable && (

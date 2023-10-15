@@ -7,24 +7,31 @@ import {
   TouchableOpacity,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as DocumentPicker from "expo-document-picker";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Toast from "react-native-root-toast";
 import FormData from "form-data";
 import ical from "ical-js-parser";
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
 
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import pb from "../util/pocketbase";
-import type { RootStackParamList } from "../util/pages";
-import { getTimeString, dateToIcal } from "../util/dateUtils";
 import Attachment from "../components/attachment";
+import { getAnnouncementData } from "../util/ical";
+import { getTimeString, dateToIcal } from "../util/dateUtils";
+import pb from "../util/pocketbase";
+
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import type { RootStackParamList } from "../util/pages";
 
 type Props = NativeStackScreenProps<RootStackParamList, "NewAnnouncement">;
 
-export default function NewAnnouncement({ navigation }: Props) {
+type Attachment = {
+  name: string;
+  uri: string;
+  mimeType?: string;
+};
+
+export default function NewAnnouncement({ navigation, route }: Props) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [rsvp, setRsvp] = useState("");
@@ -37,9 +44,45 @@ export default function NewAnnouncement({ navigation }: Props) {
   const [endTime, setEndTime] = useState(new Date());
   const [isEndTimeOpen, setIsEndTimeOpen] = useState(false);
   const [location, setLocation] = useState("");
-  const [attachments, setAttachments] = useState<
-    DocumentPicker.DocumentPickerAsset[]
-  >([]);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+
+  useEffect(() => {
+    if (route.params.announcementId) {
+      pb.collection("announcements")
+        .getOne(route.params.announcementId, {
+          query: {
+            location: pb.authStore.model?.location!,
+          },
+        })
+        .then((announcement) => {
+          getAnnouncementData(announcement).then(async (data) => {
+            const newAttachments = [];
+            for (const attachment of announcement.attachments) {
+              const url = pb.files.getUrl(announcement, attachment);
+              const res = await fetch(url);
+              const type = res.headers.get("content-type") ?? "text/plain";
+
+              newAttachments.push({
+                name: url.split("/").at(-1) ?? "file.txt",
+                uri: url,
+                mimeType: type,
+              });
+            }
+
+            setName(announcement.title);
+            setDescription(announcement.content);
+            setRsvp(announcement.rsvpUrl);
+            setAttachments(newAttachments);
+
+            setStartDate(data.start);
+            setStartTime(data.end);
+            setEndDate(data.start);
+            setEndTime(data.end);
+            setLocation(data.location);
+          });
+        });
+    }
+  }, [route.params.announcementId]);
 
   return (
     <ScrollView
@@ -201,10 +244,11 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
           placeholder="12345 Example St, Example, FL 12345"
         />
       </ScrollView>
-      <Text className="text-lg self-start">Attachments</Text>
+      <Text className="text-lg self-start mb-2">Attachments</Text>
       <View className="w-full flex flex-col justify-start items-center gap-y-2 mb-2">
         {attachments.map((attachment) => (
           <Attachment
+            key={attachment.uri}
             deleteable
             name={attachment.name}
             uri={attachment.uri}
@@ -257,13 +301,6 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
           data.append("location", pb.authStore.model?.location!);
           data.append("user", pb.authStore.model?.id!);
           data.append("rsvpUrl", rsvp);
-          for (const attachment of attachments) {
-            data.append("attachments", {
-              uri: attachment.uri,
-              name: attachment.name,
-              type: attachment.mimeType,
-            });
-          }
 
           const sDate = new Date(startDate);
           sDate.setHours(startTime.getHours());
@@ -320,7 +357,39 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
           });
 
           try {
-            await pb.collection("announcements").create(data);
+            if (route.params.announcementId) {
+              for (const attachment of attachments) {
+                if (attachment.uri.startsWith("file://")) {
+                  continue;
+                } else {
+                  const uri = `${FileSystem.cacheDirectory}${
+                    attachment.name.split(".")[0]
+                  }_${uuid.v4()}.${attachment.name.split(".").at(-1)}`;
+
+                  console.log(attachment.uri, uri);
+
+                  await FileSystem.downloadAsync(attachment.uri, uri);
+
+                  data.append("attachments", {
+                    uri,
+                    name: attachment.name,
+                    type: attachment.mimeType,
+                  });
+                }
+              }
+              await pb
+                .collection("announcements")
+                .update(route.params.announcementId, {
+                  attachments: null,
+                  location: pb.authStore.model?.location,
+                });
+              await pb
+                .collection("announcements")
+                .update(route.params.announcementId, data);
+            } else {
+              await pb.collection("announcements").create(data);
+            }
+
             navigation.goBack();
           } catch (e) {
             console.error(e);
@@ -334,7 +403,9 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
           }
         }}
       >
-        <Text className="text-xl text-center">Post</Text>
+        <Text className="text-xl text-center">
+          {route.params.announcementId ? "Update" : "Post"}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );

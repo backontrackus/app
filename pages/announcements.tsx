@@ -42,30 +42,31 @@ export default function AnnouncementsPage({ navigation }: Props) {
     }
   }, [user]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (!location) {
-        return;
-      }
+  const refresh = useCallback(() => {
+    if (!location) {
+      return;
+    }
 
-      pb.collection("announcements")
-        .getList(1, 10, {
-          filter: `location = "${location}"`,
-          query: {
-            location,
-          },
-          expand: "user",
-        })
-        .then((newAnnouncements) => {
-          setAnnouncements(
-            newAnnouncements.items.sort(
-              (a, b) =>
-                new Date(a.created).valueOf() - new Date(b.created).valueOf()
-            )
-          );
-        });
-    }, [location])
-  );
+    pb.collection("announcements")
+      .getList(1, 10, {
+        filter: `location = "${location}"`,
+        query: {
+          location,
+        },
+        expand: "user",
+      })
+      .then((newAnnouncements) => {
+        setAnnouncements(
+          newAnnouncements.items.sort(
+            (a, b) =>
+              new Date(a.created).valueOf() - new Date(b.created).valueOf()
+          )
+        );
+      });
+  }, [location]);
+
+  useFocusEffect(refresh);
+
   return (
     <View className="h-full w-full relative">
       <ScrollView
@@ -80,9 +81,17 @@ export default function AnnouncementsPage({ navigation }: Props) {
         }
       >
         <View className="h-5 w-full"></View>
-        {announcements.map((announcement) => (
-          <Announcement key={announcement.id} model={announcement} />
-        ))}
+        {announcements.map((announcement) => {
+          return (
+            <Announcement
+              key={announcement.id}
+              model={announcement}
+              isLeader={isLeader}
+              navigation={navigation}
+              refresh={refresh}
+            />
+          );
+        })}
       </ScrollView>
       {isLeader && (
         <TouchableOpacity
@@ -91,7 +100,7 @@ export default function AnnouncementsPage({ navigation }: Props) {
           }}
           className="bg-gray-500 p-3 rounded-full aspect-square w-14 h-14 flex flex-col shadow-black justify-center items-center absolute right-5 bottom-5 "
           onPress={() => {
-            navigation.navigate("NewAnnouncement");
+            navigation.navigate("NewAnnouncement", {});
           }}
         >
           <Text className="text-2xl text-white text-center">+</Text>
