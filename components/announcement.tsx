@@ -42,7 +42,9 @@ export default function Announcement(props: AnnouncementData) {
   const [attachments, setAttachments] = useState<string[]>([]);
 
   useEffect(() => {
-    getAnnouncementData(props.model).then(setCalendar);
+    if (props.model.calendar) {
+      getAnnouncementData(props.model).then(setCalendar);
+    }
   }, [props.model]);
 
   useEffect(() => {
@@ -79,27 +81,29 @@ export default function Announcement(props: AnnouncementData) {
           {new Date(props.model.created).toLocaleString()}
         </Text>
       </View>
-      <View className="rounded-lg bg-bot-blue-1 flex flex-col justify-start items-start w-full p-2">
+      <View className="rounded-lg bg-bot-blue-1 flex flex-1 flex-col justify-start items-start w-full p-2">
         <View className="flex flex-row justify-between items-start w-full">
-          <Text className="text-white text-2xl font-semibold">
+          <Text className="text-white text-2xl w-4/5 font-semibold">
             {props.model.title}
           </Text>
           {props.isLeader && (
-            <View className="flex flex-row justify-start items-center gap-x-2">
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate("NewAnnouncement", {
-                    announcementId: props.model.id,
-                  });
-                }}
-              >
-                <MaterialIcons
-                  name="mode-edit"
-                  size={24}
-                  color="white"
-                  className="w-5 h-5"
-                />
-              </TouchableOpacity>
+            <View className="flex w-1/5 flex-row justify-end items-center gap-x-2">
+              {props.model.calendar && (
+                <TouchableOpacity
+                  onPress={() => {
+                    props.navigation.navigate("NewAnnouncement", {
+                      announcementId: props.model.id,
+                    });
+                  }}
+                >
+                  <MaterialIcons
+                    name="mode-edit"
+                    size={24}
+                    color="white"
+                    className="w-5 h-5"
+                  />
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
                 onPress={() => {
                   pb.collection("announcements").delete(props.model.id);

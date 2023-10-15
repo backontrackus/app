@@ -49,11 +49,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
   useEffect(() => {
     if (route.params.announcementId) {
       pb.collection("announcements")
-        .getOne(route.params.announcementId, {
-          query: {
-            location: pb.authStore.model?.location!,
-          },
-        })
+        .getOne(route.params.announcementId)
         .then((announcement) => {
           getAnnouncementData(announcement).then(async (data) => {
             const newAttachments = [];

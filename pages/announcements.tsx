@@ -48,11 +48,7 @@ export default function AnnouncementsPage({ navigation }: Props) {
     }
 
     pb.collection("announcements")
-      .getList(1, 10, {
-        filter: `location = "${location}"`,
-        query: {
-          location,
-        },
+      .getList(1, 20, {
         expand: "user",
       })
       .then((newAnnouncements) => {
