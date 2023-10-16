@@ -46,7 +46,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
   const [location, setLocation] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [loading, setLoading] = useState(
-    route.params.announcementId ? true : false
+    route.params.announcementId ? true : false,
   );
 
   useEffect(() => {
@@ -86,17 +86,17 @@ export default function NewAnnouncement({ navigation, route }: Props) {
 
   return (
     <ScrollView
-      className="flex flex-col py-3 px-10"
+      className="flex flex-col px-10 py-3"
       contentContainerStyle={{
         alignItems: "center",
         justifyContent: "flex-start",
       }}
     >
       <Text className="text-3xl font-bold">New Announcement</Text>
-      <ScrollView className="self-start w-full mb-4">
+      <ScrollView className="mb-4 w-full self-start">
         <Text className="text-lg">Name*</Text>
         <TextInput
-          className={`w-full border-2 rounded-md border-black text-lg p-2 ${
+          className={`w-full rounded-md border-2 border-black p-2 text-lg ${
             loading ? "bg-slate-300" : "bg-white"
           }`}
           value={name}
@@ -109,12 +109,12 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           editable={!loading}
         />
       </ScrollView>
-      <View className="self-start w-full mb-4">
+      <View className="mb-4 w-full self-start">
         <Text className="text-lg">Description*</Text>
-        <View className="flex flex-row justify-start items-center">
+        <View className="flex flex-row items-center justify-start">
           <Text className="italic">You can use</Text>
           <Text
-            className="text-blue-500 italic ml-1"
+            className="ml-1 italic text-blue-500"
             onPress={() => {
               Linking.openURL("https://www.markdownguide.org/basic-syntax/");
             }}
@@ -124,7 +124,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           <Text className="italic">!</Text>
         </View>
         <TextInput
-          className={`w-full border-2 rounded-md border-black text-lg p-2 ${
+          className={`w-full rounded-md border-2 border-black p-2 text-lg ${
             loading ? "bg-slate-300" : "bg-white"
           }`}
           value={description}
@@ -139,10 +139,10 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           textAlignVertical="top"
         />
       </View>
-      <ScrollView className="self-start w-full mb-4">
+      <ScrollView className="mb-4 w-full self-start">
         <Text className="text-lg">RSVP Link</Text>
         <TextInput
-          className={`w-full border-2 rounded-md border-black text-lg p-2 ${
+          className={`w-full rounded-md border-2 border-black p-2 text-lg ${
             loading ? "bg-slate-300" : "bg-white"
           }`}
           value={rsvp}
@@ -154,16 +154,16 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           }
         />
       </ScrollView>
-      <View className="self-start w-full">
+      <View className="w-full self-start">
         <Text className="text-lg">Start Date</Text>
-        <View className="flex flex-row justify-between items-center">
+        <View className="flex flex-row items-center justify-between">
           <Text className="text-lg font-bold">
             {route.params.announcementId && loading
               ? "Loading..."
               : startDate.toLocaleDateString()}
           </Text>
           <TouchableOpacity
-            className="px-2 py-1 bg-bot-orange rounded-md"
+            className="rounded-md bg-bot-orange px-2 py-1"
             onPress={() => {
               setIsStartDateOpen((o) => !o);
             }}
@@ -183,16 +183,16 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           />
         )}
       </View>
-      <View className="self-start w-full mb-4">
+      <View className="mb-4 w-full self-start">
         <Text className="text-lg">Start Time</Text>
-        <View className="flex flex-row justify-between items-center">
+        <View className="flex flex-row items-center justify-between">
           <Text className="text-lg font-bold">
             {route.params.announcementId && loading
               ? "Loading..."
               : getTimeString(startTime)}
           </Text>
           <TouchableOpacity
-            className="px-2 py-1 bg-bot-orange rounded-md"
+            className="rounded-md bg-bot-orange px-2 py-1"
             onPress={() => {
               setIsStartTimeOpen((o) => !o);
             }}
@@ -212,16 +212,16 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           />
         )}
       </View>
-      <View className="self-start w-full">
+      <View className="w-full self-start">
         <Text className="text-lg">End Date</Text>
-        <View className="flex flex-row justify-between items-center">
+        <View className="flex flex-row items-center justify-between">
           <Text className="text-lg font-bold">
             {route.params.announcementId && loading
               ? "Loading..."
               : endDate.toLocaleDateString()}
           </Text>
           <TouchableOpacity
-            className="px-2 py-1 bg-bot-orange rounded-md"
+            className="rounded-md bg-bot-orange px-2 py-1"
             onPress={() => {
               setIsEndDateOpen((o) => !o);
             }}
@@ -241,16 +241,16 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           />
         )}
       </View>
-      <View className="self-start w-full mb-4">
+      <View className="mb-4 w-full self-start">
         <Text className="text-lg">End Time</Text>
-        <View className="flex flex-row justify-between items-center">
+        <View className="flex flex-row items-center justify-between">
           <Text className="text-lg font-bold">
             {route.params.announcementId && loading
               ? "Loading..."
               : getTimeString(endTime)}
           </Text>
           <TouchableOpacity
-            className="px-2 py-1 bg-bot-orange rounded-md"
+            className="rounded-md bg-bot-orange px-2 py-1"
             onPress={() => {
               setIsEndTimeOpen((o) => !o);
             }}
@@ -270,10 +270,10 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           />
         )}
       </View>
-      <ScrollView className="self-start w-full mb-4">
+      <ScrollView className="mb-4 w-full self-start">
         <Text className="text-lg">Location</Text>
         <TextInput
-          className={`w-full border-2 rounded-md border-black text-lg p-2 ${
+          className={`w-full rounded-md border-2 border-black p-2 text-lg ${
             loading ? "bg-slate-300" : "bg-white"
           }`}
           value={location}
@@ -285,8 +285,8 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           }
         />
       </ScrollView>
-      <Text className="text-lg self-start mb-2">Attachments</Text>
-      <View className="w-full flex flex-col justify-start items-center gap-y-2 mb-2">
+      <Text className="mb-2 self-start text-lg">Attachments</Text>
+      <View className="mb-2 flex w-full flex-col items-center justify-start gap-y-2">
         {attachments.map((attachment) => (
           <Attachment
             key={attachment.uri}
@@ -300,7 +300,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
         ))}
       </View>
       <TouchableOpacity
-        className="rounded-md bg-bot-orange p-2 w-full mb-4"
+        className="mb-4 w-full rounded-md bg-bot-orange p-2"
         disabled={loading}
         onPress={async () => {
           const res = await DocumentPicker.getDocumentAsync({
@@ -312,16 +312,16 @@ export default function NewAnnouncement({ navigation, route }: Props) {
             setAttachments((a) => [
               ...a,
               ...res.assets.filter(
-                (a) => !attachments.find((att) => att.uri === a.uri)
+                (a) => !attachments.find((att) => att.uri === a.uri),
               ),
             ]);
           }
         }}
       >
-        <Text className="text-xl text-center">Add Attachment</Text>
+        <Text className="text-center text-xl">Add Attachment</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        className="rounded-md bg-bot-orange p-2 mb-6 w-full"
+        className="mb-6 w-full rounded-md bg-bot-orange p-2"
         disabled={loading}
         onPress={async () => {
           if (!name) {
@@ -443,13 +443,13 @@ export default function NewAnnouncement({ navigation, route }: Props) {
               "An error occurred while creating the announcement. Please try again",
               {
                 delay: 100,
-              }
+              },
             );
             return;
           }
         }}
       >
-        <Text className="text-xl text-center">
+        <Text className="text-center text-xl">
           {route.params.announcementId ? "Update" : "Post"}
         </Text>
       </TouchableOpacity>

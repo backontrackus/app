@@ -38,12 +38,12 @@ const AccountPage = ({ navigation }: Props) => {
   return (
     <View className="relative h-full w-full">
       <View
-        className="absolute h-full w-full top-0 left-0 bg-gray-800 opacity-80 z-30"
+        className="absolute left-0 top-0 z-30 h-full w-full bg-gray-800 opacity-80"
         style={{
           display: modalVisible ? undefined : "none",
         }}
       ></View>
-      <View className="flex justify-center items-center h-full z-10">
+      <View className="z-10 flex h-full items-center justify-center">
         <Modal
           animationType="slide"
           transparent={true}
@@ -53,29 +53,29 @@ const AccountPage = ({ navigation }: Props) => {
             setModalVisible(!modalVisible);
           }}
         >
-          <View className="flex justify-center items-center h-full">
-            <View className="m-20 bg-white rounded-lg p-35 items-center shadow-md p-4">
-              <Text className="mb-15 text-center text-xl mb-2 font-semibold">
+          <View className="flex h-full items-center justify-center">
+            <View className="p-35 m-20 items-center rounded-lg bg-white p-4 shadow-md">
+              <Text className="mb-15 mb-2 text-center text-xl font-semibold">
                 Are you sure you want to delete your account?
               </Text>
-              <View className="flex flex-row justify-evenly items-center gap-x-2">
+              <View className="flex flex-row items-center justify-evenly gap-x-2">
                 <TouchableOpacity
-                  className="rounded-lg px-10 py-3 shadow-md bg-red-600"
+                  className="rounded-lg bg-red-600 px-10 py-3 shadow-md"
                   onPress={() => {
                     pb.collection("users").delete(pb.authStore.model?.id);
                     pb.authStore.clear();
                     navigation.navigate("Home");
                   }}
                 >
-                  <Text className="text-white font-bold text-center text-lg">
+                  <Text className="text-center text-lg font-bold text-white">
                     Yes
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  className="rounded-lg px-10 py-3 shadow-md bg-gray-500"
+                  className="rounded-lg bg-gray-500 px-10 py-3 shadow-md"
                   onPress={() => setModalVisible(false)}
                 >
-                  <Text className="text-white font-bold text-center text-lg">
+                  <Text className="text-center text-lg font-bold text-white">
                     No
                   </Text>
                 </TouchableOpacity>
@@ -84,33 +84,33 @@ const AccountPage = ({ navigation }: Props) => {
           </View>
         </Modal>
 
-        <View className="w-24 h-24 rounded-full bg-light-gray">
+        <View className="bg-light-gray h-24 w-24 rounded-full">
           <Image
             source={{ uri: user?.avatarUrl }}
-            className="w-24 h-24 rounded-full"
+            className="h-24 w-24 rounded-full"
           />
         </View>
 
-        <Text className="text-lg mt-2 font-bold">{user?.name}</Text>
-        <Text className="text-lg mt-2">{location}</Text>
+        <Text className="mt-2 text-lg font-bold">{user?.name}</Text>
+        <Text className="mt-2 text-lg">{location}</Text>
 
         <TouchableOpacity
-          className="bg-gray-500 rounded-md flex-row items-center p-2 mt-4 w-1/2"
+          className="mt-4 w-1/2 flex-row items-center rounded-md bg-gray-500 p-2"
           onPress={() => navigation.navigate("Setup", { logout: true })}
         >
           <MaterialCommunityIcons
             name="map-marker"
             size={24}
             color="black"
-            className="w-5 h-5"
+            className="h-5 w-5"
           />
-          <Text className="text-white text-lg text-center flex-1">
+          <Text className="flex-1 text-center text-lg text-white">
             Change Location
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="bg-red-600 rounded-md flex-row items-center p-2 mt-2 w-1/2"
+          className="mt-2 w-1/2 flex-row items-center rounded-md bg-red-600 p-2"
           onPress={() => {
             pb.authStore.clear();
             navigation.navigate("Home");
@@ -120,22 +120,22 @@ const AccountPage = ({ navigation }: Props) => {
             name="exit-to-app"
             size={24}
             color="black"
-            className="w-5 h-5"
+            className="h-5 w-5"
           />
-          <Text className="text-white text-lg text-center flex-1">Log Out</Text>
+          <Text className="flex-1 text-center text-lg text-white">Log Out</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="bg-red-600 rounded-md flex-row items-center p-2 mt-2 w-1/2"
+          className="mt-2 w-1/2 flex-row items-center rounded-md bg-red-600 p-2"
           onPress={() => setModalVisible(true)}
         >
           <MaterialCommunityIcons
             name="trash-can"
             size={24}
             color="black"
-            className="w-5 h-5"
+            className="h-5 w-5"
           />
-          <Text className="text-white text-lg text-center flex-1">
+          <Text className="flex-1 text-center text-lg text-white">
             Delete Account
           </Text>
         </TouchableOpacity>

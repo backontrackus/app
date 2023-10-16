@@ -16,7 +16,7 @@ export type AnnouncementData = {
 };
 
 export async function getAnnouncementData(
-  model: RecordModel
+  model: RecordModel,
 ): Promise<AnnouncementData> {
   const url = pb.files.getUrl(model, model.calendar);
 

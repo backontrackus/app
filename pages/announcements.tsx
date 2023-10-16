@@ -55,8 +55,8 @@ export default function AnnouncementsPage({ navigation }: Props) {
         setAnnouncements(
           newAnnouncements.items.sort(
             (a, b) =>
-              new Date(a.created).valueOf() - new Date(b.created).valueOf()
-          )
+              new Date(a.created).valueOf() - new Date(b.created).valueOf(),
+          ),
         );
       });
   }, [location]);
@@ -64,10 +64,10 @@ export default function AnnouncementsPage({ navigation }: Props) {
   useFocusEffect(refresh);
 
   return (
-    <View className="h-full w-full relative">
+    <View className="relative h-full w-full">
       <ScrollView
         ref={scrollViewRef}
-        className="flex flex-1 flex-col w-full px-7"
+        className="flex w-full flex-1 flex-col px-7"
         contentContainerStyle={{
           justifyContent: "flex-start",
           alignItems: "flex-start",
@@ -94,12 +94,12 @@ export default function AnnouncementsPage({ navigation }: Props) {
           style={{
             elevation: 2,
           }}
-          className="bg-gray-500 p-3 rounded-full aspect-square w-14 h-14 flex flex-col shadow-black justify-center items-center absolute right-5 bottom-5 "
+          className="absolute bottom-5 right-5 flex aspect-square h-14 w-14 flex-col items-center justify-center rounded-full bg-gray-500 p-3 shadow-black "
           onPress={() => {
             navigation.navigate("NewAnnouncement", {});
           }}
         >
-          <Text className="text-2xl text-white text-center">+</Text>
+          <Text className="text-center text-2xl text-white">+</Text>
         </TouchableOpacity>
       )}
     </View>

@@ -12,19 +12,19 @@ export default function Attachment(props: AttachmentData) {
   return (
     <View
       key={props.uri}
-      className="p-2 border-slate-400 bg-[#F2F2F2] rounded-md border-2 flex flex-row justify-between items-center w-full mb-2"
+      className="mb-2 flex w-full flex-row items-center justify-between rounded-md border-2 border-slate-400 bg-[#F2F2F2] p-2"
     >
-      <Text className="text-lg w-10/12">{props.name}</Text>
+      <Text className="w-10/12 text-lg">{props.name}</Text>
       {props.deleteable && (
         <TouchableOpacity
-          className="rounded-md p-1 w-2/12 flex flex-row justify-center items-center"
+          className="flex w-2/12 flex-row items-center justify-center rounded-md p-1"
           onPress={() => props.delete?.(props.uri)}
         >
           <MaterialCommunityIcons
             name="trash-can"
             size={24}
             color="red"
-            className="w-5 h-5"
+            className="h-5 w-5"
           />
         </TouchableOpacity>
       )}
@@ -39,7 +39,7 @@ export default function Attachment(props: AttachmentData) {
             name="download"
             size={24}
             color="black"
-            className="w-5 h-5"
+            className="h-5 w-5"
           />
         </TouchableOpacity>
       )}

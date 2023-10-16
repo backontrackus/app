@@ -79,7 +79,7 @@ export default function Announcement(props: AnnouncementData) {
   }, [props.model.attachments]);
 
   return (
-    <View className="flex flex-col justify-start items-start w-full mb-3">
+    <View className="mb-3 flex w-full flex-col items-start justify-start">
       <Modal
         animationType="slide"
         transparent={true}
@@ -89,28 +89,28 @@ export default function Announcement(props: AnnouncementData) {
           setModalVisible(!modalVisible);
         }}
       >
-        <View className="flex justify-center items-center h-full">
-          <View className="m-20 bg-white rounded-lg p-35 items-center shadow-md p-4">
-            <Text className="mb-15 text-center text-xl mb-2 font-semibold">
+        <View className="flex h-full items-center justify-center">
+          <View className="p-35 m-20 items-center rounded-lg bg-white p-4 shadow-md">
+            <Text className="mb-15 mb-2 text-center text-xl font-semibold">
               Are you sure you want to delete this announcement?
             </Text>
-            <View className="flex flex-row justify-evenly items-center gap-x-2">
+            <View className="flex flex-row items-center justify-evenly gap-x-2">
               <TouchableOpacity
-                className="rounded-lg px-10 py-3 shadow-md bg-red-600"
+                className="rounded-lg bg-red-600 px-10 py-3 shadow-md"
                 onPress={() => {
                   pb.collection("announcements").delete(props.model.id);
                   props.refresh();
                 }}
               >
-                <Text className="text-white font-bold text-center text-lg">
+                <Text className="text-center text-lg font-bold text-white">
                   Yes
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="rounded-lg px-10 py-3 shadow-md bg-gray-500"
+                className="rounded-lg bg-gray-500 px-10 py-3 shadow-md"
                 onPress={() => setModalVisible(false)}
               >
-                <Text className="text-white font-bold text-center text-lg">
+                <Text className="text-center text-lg font-bold text-white">
                   No
                 </Text>
               </TouchableOpacity>
@@ -118,19 +118,19 @@ export default function Announcement(props: AnnouncementData) {
           </View>
         </View>
       </Modal>
-      <View className="flex flex-row justify-start items-center pl-1">
+      <View className="flex flex-row items-center justify-start pl-1">
         <Text className="mr-2">{props.model.expand?.user?.name} </Text>
         <Text className="text-slate-900">
           {new Date(props.model.created).toLocaleString()}
         </Text>
       </View>
-      <View className="rounded-lg bg-bot-blue-1 flex flex-col justify-start items-start w-full p-2">
-        <View className="flex flex-row justify-between items-start w-full">
-          <Text className="text-white text-2xl w-4/5 font-semibold">
+      <View className="flex w-full flex-col items-start justify-start rounded-lg bg-bot-blue-1 p-2">
+        <View className="flex w-full flex-row items-start justify-between">
+          <Text className="w-4/5 text-2xl font-semibold text-white">
             {props.model.title}
           </Text>
           {props.isLeader && (
-            <View className="flex w-1/5 flex-row justify-end items-center gap-x-2">
+            <View className="flex w-1/5 flex-row items-center justify-end gap-x-2">
               {props.model.calendar && (
                 <TouchableOpacity
                   onPress={() => {
@@ -143,7 +143,7 @@ export default function Announcement(props: AnnouncementData) {
                     name="mode-edit"
                     size={24}
                     color="white"
-                    className="w-5 h-5"
+                    className="h-5 w-5"
                   />
                 </TouchableOpacity>
               )}
@@ -156,32 +156,32 @@ export default function Announcement(props: AnnouncementData) {
                   name="trash-can"
                   size={24}
                   color="red"
-                  className="w-5 h-5"
+                  className="h-5 w-5"
                 />
               </TouchableOpacity>
             </View>
           )}
         </View>
-        <View className="flex flex-row justify-evenly items-center flex-wrap mt-1">
-          <View className="flex flex-row justify-start items-center">
+        <View className="mt-1 flex flex-row flex-wrap items-center justify-evenly">
+          <View className="flex flex-row items-center justify-start">
             <MaterialIcons name="calendar-today" size={24} color="white" />
-            <Text className="text-white mx-1 text-sm">
+            <Text className="mx-1 text-sm text-white">
               {calendar?.start || calendar?.end
                 ? getDateIntervalString(calendar.start, calendar.end)
                 : "No Date"}
             </Text>
           </View>
-          <View className="flex flex-row justify-start items-center">
+          <View className="flex flex-row items-center justify-start">
             <MaterialCommunityIcons name="clock" size={24} color="white" />
-            <Text className="text-white mx-1 text-sm">
+            <Text className="mx-1 text-sm text-white">
               {calendar?.start || calendar?.end
                 ? getTimeIntervalString(calendar.start, calendar.end)
                 : "No Time"}
             </Text>
           </View>
-          <View className="flex flex-row justify-start items-center">
+          <View className="flex flex-row items-center justify-start">
             <MaterialCommunityIcons name="map-marker" size={24} color="white" />
-            <Text className="text-white mx-1 text-sm">
+            <Text className="mx-1 text-sm text-white">
               {calendar?.location ?? "No Location"}
             </Text>
           </View>
@@ -196,7 +196,7 @@ export default function Announcement(props: AnnouncementData) {
         >
           {props.model.content}
         </MarkdownView>
-        <View className="flex flex-col justify-start items-center gap-y-5 my-2 w-full">
+        <View className="my-2 flex w-full flex-col items-center justify-start gap-y-5">
           {images.map((image) => {
             const filename = image.split("/").at(-1) ?? "file.txt";
             const ext = filename.split(".").at(-1) ?? "txt";
@@ -215,7 +215,7 @@ export default function Announcement(props: AnnouncementData) {
                   <Image
                     source={image}
                     contentFit="fill"
-                    className="w-56 h-56"
+                    className="h-56 w-56"
                   />
                   <View className="h-2" />
                 </View>
@@ -233,15 +233,15 @@ export default function Announcement(props: AnnouncementData) {
             );
           })}
         </View>
-        <View className="flex flex-row justify-evenly items-center w-full">
+        <View className="flex w-full flex-row items-center justify-evenly">
           {props.model.rsvpUrl && (
             <TouchableOpacity
               onPress={() => {
                 Linking.openURL(props.model.rsvpUrl);
               }}
-              className="flex flex-col justify-center items-center rounded-full bg-bot-orange py-1 w-[30%]"
+              className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-orange py-1"
             >
-              <Text className="text-black text-lg font-semibold">RSVP</Text>
+              <Text className="text-lg font-semibold text-black">RSVP</Text>
             </TouchableOpacity>
           )}
           {calendar && (
@@ -257,7 +257,7 @@ export default function Announcement(props: AnnouncementData) {
 
                 const calendars = await RNCal.findCalendars();
                 const cal = calendars.find(
-                  (cal) => cal.allowsModifications && cal.isPrimary
+                  (cal) => cal.allowsModifications && cal.isPrimary,
                 );
                 if (!cal) {
                   return;
@@ -272,21 +272,21 @@ export default function Announcement(props: AnnouncementData) {
                     notes: `${props.model.content}\n(added by Back On Track)`,
                   },
                   // @ts-ignore
-                  { sync: true }
+                  { sync: true },
                 );
               }}
-              className="flex flex-col justify-center items-center rounded-full bg-bot-orange py-1 w-[30%]"
+              className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-orange py-1"
             >
-              <Text className="text-black text-lg font-semibold">Calendar</Text>
+              <Text className="text-lg font-semibold text-black">Calendar</Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity
             onPress={() => {
               // TODO: reply
             }}
-            className="flex flex-col justify-center items-center rounded-full bg-bot-orange py-1 w-[30%]"
+            className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-orange py-1"
           >
-            <Text className="text-black text-lg font-semibold">Reply</Text>
+            <Text className="text-lg font-semibold text-black">Reply</Text>
           </TouchableOpacity>
         </View>
       </View>

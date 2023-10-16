@@ -31,15 +31,15 @@ export default function SetupScreen({ navigation, route }: Props) {
   }, []);
 
   return (
-    <View className="bg-bot-blue-1 h-screen flex-1 flex-col relative justify-center items-center">
+    <View className="relative h-screen flex-1 flex-col items-center justify-center bg-bot-blue-1">
       <Image
-        className="w-32 aspect-square z-20"
+        className="z-20 aspect-square w-32"
         source={require("../assets/logo.png")}
       />
-      <Text className="text-white text-center text-4xl font-bold">
+      <Text className="text-center text-4xl font-bold text-white">
         Hi {user.name.split(" ")[0]}, welcome to Back On Track!
       </Text>
-      <Text className="text-white text-center text-2xl">
+      <Text className="text-center text-2xl text-white">
         Select your location to continue:
       </Text>
       <Picker
@@ -70,7 +70,7 @@ export default function SetupScreen({ navigation, route }: Props) {
           ))}
       </Picker>
       <TouchableOpacity
-        className="bg-bot-orange rounded-md py-2 px-5 my-2"
+        className="my-2 rounded-md bg-bot-orange px-5 py-2"
         disabled={!selectedLocationId}
         onPress={() => {
           if (selectedLocationId) {
@@ -87,7 +87,7 @@ export default function SetupScreen({ navigation, route }: Props) {
           }
         }}
       >
-        <Text className="text-2xl font-semibold text-center">Continue</Text>
+        <Text className="text-center text-2xl font-semibold">Continue</Text>
       </TouchableOpacity>
     </View>
   );

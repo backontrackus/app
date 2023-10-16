@@ -17,18 +17,18 @@ export default function HomeScreen({ navigation }: Props) {
   }
 
   return (
-    <View className="items-center flex-1 h-screen relative justify-end gap-5 flex-col">
+    <View className="relative h-screen flex-1 flex-col items-center justify-end gap-5">
       <Image
-        className="top-0 absolute z-0"
+        className="absolute top-0 z-0"
         source={require("../assets/lucas.jpg")}
       />
       <LinearGradient
         colors={["rgba(0, 0, 0, 0.30)", "rgba(0, 0, 0, 0.40)", "black"]}
-        className="top-0 absolute z-10 w-full h-full"
+        className="absolute top-0 z-10 h-full w-full"
       />
-      <View className="absolute bottom-0 flex-1 flex-col justify-end items-center py-2">
+      <View className="absolute bottom-0 flex-1 flex-col items-center justify-end py-2">
         <Image
-          className="w-32 aspect-square z-20"
+          className="z-20 aspect-square w-32"
           source={require("../assets/logo.png")}
         />
         <TouchableOpacity
@@ -60,13 +60,13 @@ export default function HomeScreen({ navigation }: Props) {
               }
             }
           }}
-          className="bg-bot-orange rounded-md py-2 px-5 z-20 flex flex-1 flex-row items-center"
+          className="z-20 flex flex-1 flex-row items-center rounded-md bg-bot-orange px-5 py-2"
         >
           <Image
-            className="w-10 h-10 aspect-square mr-2"
+            className="mr-2 aspect-square h-10 w-10"
             source={require("../assets/google.png")}
           />
-          <Text className="text-2xl font-bold text-center">
+          <Text className="text-center text-2xl font-bold">
             Log in with Google
           </Text>
         </TouchableOpacity>
