@@ -362,8 +362,6 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
                     attachment.name.split(".")[0]
                   }_${uuid.v4()}.${attachment.name.split(".").at(-1)}`;
 
-                  console.log(attachment.uri, uri);
-
                   await FileSystem.downloadAsync(attachment.uri, uri);
 
                   data.append("attachments", {

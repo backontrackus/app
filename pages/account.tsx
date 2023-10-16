@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { Alert, Modal, Pressable, Text, View, Image } from "react-native";
+import {
+  Alert,
+  Modal,
+  TouchableOpacity,
+  Text,
+  View,
+  Image,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import type { CompositeScreenProps } from "@react-navigation/native";
@@ -52,7 +59,7 @@ const AccountPage = ({ navigation }: Props) => {
                 Are you sure you want to delete your account?
               </Text>
               <View className="flex flex-row justify-evenly items-center gap-x-2">
-                <Pressable
+                <TouchableOpacity
                   className="rounded-lg px-10 py-3 shadow-md bg-red-600"
                   onPress={() => {
                     pb.collection("users").delete(pb.authStore.model?.id);
@@ -63,15 +70,15 @@ const AccountPage = ({ navigation }: Props) => {
                   <Text className="text-white font-bold text-center text-lg">
                     Yes
                   </Text>
-                </Pressable>
-                <Pressable
+                </TouchableOpacity>
+                <TouchableOpacity
                   className="rounded-lg px-10 py-3 shadow-md bg-gray-500"
                   onPress={() => setModalVisible(false)}
                 >
                   <Text className="text-white font-bold text-center text-lg">
                     No
                   </Text>
-                </Pressable>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -87,7 +94,7 @@ const AccountPage = ({ navigation }: Props) => {
         <Text className="text-lg mt-2 font-bold">{user?.name}</Text>
         <Text className="text-lg mt-2">{location}</Text>
 
-        <Pressable
+        <TouchableOpacity
           className="bg-gray-500 rounded-md flex-row items-center p-2 mt-4 w-1/2"
           onPress={() => navigation.navigate("Setup", { logout: true })}
         >
@@ -100,9 +107,9 @@ const AccountPage = ({ navigation }: Props) => {
           <Text className="text-white text-lg text-center flex-1">
             Change Location
           </Text>
-        </Pressable>
+        </TouchableOpacity>
 
-        <Pressable
+        <TouchableOpacity
           className="bg-red-600 rounded-md flex-row items-center p-2 mt-2 w-1/2"
           onPress={() => {
             pb.authStore.clear();
@@ -116,9 +123,9 @@ const AccountPage = ({ navigation }: Props) => {
             className="w-5 h-5"
           />
           <Text className="text-white text-lg text-center flex-1">Log Out</Text>
-        </Pressable>
+        </TouchableOpacity>
 
-        <Pressable
+        <TouchableOpacity
           className="bg-red-600 rounded-md flex-row items-center p-2 mt-2 w-1/2"
           onPress={() => setModalVisible(true)}
         >
@@ -131,7 +138,7 @@ const AccountPage = ({ navigation }: Props) => {
           <Text className="text-white text-lg text-center flex-1">
             Delete Account
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );
