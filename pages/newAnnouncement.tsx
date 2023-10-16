@@ -45,6 +45,9 @@ export default function NewAnnouncement({ navigation, route }: Props) {
   const [isEndTimeOpen, setIsEndTimeOpen] = useState(false);
   const [location, setLocation] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [loading, setLoading] = useState(
+    route.params.announcementId ? true : false
+  );
 
   useEffect(() => {
     if (route.params.announcementId) {
@@ -75,6 +78,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
             setEndDate(data.start);
             setEndTime(data.end);
             setLocation(data.location);
+            setLoading(false);
           });
         });
     }
@@ -92,10 +96,17 @@ export default function NewAnnouncement({ navigation, route }: Props) {
       <ScrollView className="self-start w-full mb-4">
         <Text className="text-lg">Name*</Text>
         <TextInput
-          className="w-full bg-white border-2 rounded-md border-black text-lg p-2"
+          className={`w-full border-2 rounded-md border-black text-lg p-2 ${
+            loading ? "bg-slate-300" : "bg-white"
+          }`}
           value={name}
           onChangeText={setName}
-          placeholder="Habitat for Humanity"
+          placeholder={
+            route.params.announcementId && loading
+              ? "Loading..."
+              : "Habitat for Humanity"
+          }
+          editable={!loading}
         />
       </ScrollView>
       <View className="self-start w-full mb-4">
@@ -113,29 +124,43 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           <Text className="italic">!</Text>
         </View>
         <TextInput
-          className="w-full bg-white border-2 rounded-md border-black text-lg p-2"
+          className={`w-full border-2 rounded-md border-black text-lg p-2 ${
+            loading ? "bg-slate-300" : "bg-white"
+          }`}
           value={description}
           onChangeText={setDescription}
           multiline
-          placeholder={`**Habitat for Humanity is a non-profit organization that builds homes for those in need.**
-Come volunteer with us on Saturday, August 10th and help paint and clean up a new house!`}
+          placeholder={
+            route.params.announcementId && loading
+              ? "Loading..."
+              : `**Habitat for Humanity is a non-profit organization that builds homes for those in need.**
+              Come volunteer with us on Saturday, August 10th and help paint and clean up a new house!`
+          }
           textAlignVertical="top"
         />
       </View>
       <ScrollView className="self-start w-full mb-4">
         <Text className="text-lg">RSVP Link</Text>
         <TextInput
-          className="w-full bg-white border-2 rounded-md border-black text-lg p-2 overflow-scroll"
+          className={`w-full border-2 rounded-md border-black text-lg p-2 ${
+            loading ? "bg-slate-300" : "bg-white"
+          }`}
           value={rsvp}
           onChangeText={setRsvp}
-          placeholder="https://www.example.com/sign-up"
+          placeholder={
+            route.params.announcementId && loading
+              ? "Loading..."
+              : "https://www.example.com/sign-up"
+          }
         />
       </ScrollView>
       <View className="self-start w-full">
         <Text className="text-lg">Start Date</Text>
         <View className="flex flex-row justify-between items-center">
           <Text className="text-lg font-bold">
-            {startDate.toLocaleDateString()}
+            {route.params.announcementId && loading
+              ? "Loading..."
+              : startDate.toLocaleDateString()}
           </Text>
           <TouchableOpacity
             className="px-2 py-1 bg-bot-orange rounded-md"
@@ -154,13 +179,18 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
               setIsStartDateOpen(false);
               setStartDate(d ?? new Date());
             }}
+            disabled={loading}
           />
         )}
       </View>
       <View className="self-start w-full mb-4">
         <Text className="text-lg">Start Time</Text>
         <View className="flex flex-row justify-between items-center">
-          <Text className="text-lg font-bold">{getTimeString(startTime)}</Text>
+          <Text className="text-lg font-bold">
+            {route.params.announcementId && loading
+              ? "Loading..."
+              : getTimeString(startTime)}
+          </Text>
           <TouchableOpacity
             className="px-2 py-1 bg-bot-orange rounded-md"
             onPress={() => {
@@ -178,6 +208,7 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
               setIsStartTimeOpen(false);
               setStartTime(d ?? new Date());
             }}
+            disabled={loading}
           />
         )}
       </View>
@@ -185,7 +216,9 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
         <Text className="text-lg">End Date</Text>
         <View className="flex flex-row justify-between items-center">
           <Text className="text-lg font-bold">
-            {endDate.toLocaleDateString()}
+            {route.params.announcementId && loading
+              ? "Loading..."
+              : endDate.toLocaleDateString()}
           </Text>
           <TouchableOpacity
             className="px-2 py-1 bg-bot-orange rounded-md"
@@ -204,13 +237,18 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
               setIsEndDateOpen(false);
               setEndDate(d ?? new Date());
             }}
+            disabled={loading}
           />
         )}
       </View>
       <View className="self-start w-full mb-4">
         <Text className="text-lg">End Time</Text>
         <View className="flex flex-row justify-between items-center">
-          <Text className="text-lg font-bold">{getTimeString(endTime)}</Text>
+          <Text className="text-lg font-bold">
+            {route.params.announcementId && loading
+              ? "Loading..."
+              : getTimeString(endTime)}
+          </Text>
           <TouchableOpacity
             className="px-2 py-1 bg-bot-orange rounded-md"
             onPress={() => {
@@ -228,16 +266,23 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
               setIsEndTimeOpen(false);
               setEndTime(d ?? new Date());
             }}
+            disabled={loading}
           />
         )}
       </View>
       <ScrollView className="self-start w-full mb-4">
         <Text className="text-lg">Location</Text>
         <TextInput
-          className="w-full bg-white border-2 rounded-md border-black text-lg p-2"
+          className={`w-full border-2 rounded-md border-black text-lg p-2 ${
+            loading ? "bg-slate-300" : "bg-white"
+          }`}
           value={location}
           onChangeText={setLocation}
-          placeholder="12345 Example St, Example, FL 12345"
+          placeholder={
+            route.params.announcementId && loading
+              ? "Loading..."
+              : "12345 Example St, Example, FL 12345"
+          }
         />
       </ScrollView>
       <Text className="text-lg self-start mb-2">Attachments</Text>
@@ -256,6 +301,7 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
       </View>
       <TouchableOpacity
         className="rounded-md bg-bot-orange p-2 w-full mb-4"
+        disabled={loading}
         onPress={async () => {
           const res = await DocumentPicker.getDocumentAsync({
             copyToCacheDirectory: true,
@@ -276,6 +322,7 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
       </TouchableOpacity>
       <TouchableOpacity
         className="rounded-md bg-bot-orange p-2 mb-6 w-full"
+        disabled={loading}
         onPress={async () => {
           if (!name) {
             Toast.show("Please enter a name for the announcement.", {
