@@ -358,15 +358,20 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
                 if (attachment.uri.startsWith("file://")) {
                   continue;
                 } else {
-                  const uri = `${FileSystem.cacheDirectory}${
-                    attachment.name.split(".")[0]
-                  }_${uuid.v4()}.${attachment.name.split(".").at(-1)}`;
+                  const newNameArr = attachment.name.split("_");
+                  newNameArr.pop();
+                  const newName = newNameArr.join("_");
+                  const uri = `${
+                    FileSystem.cacheDirectory
+                  }${newName}_${uuid.v4()}.${attachment.name
+                    .split(".")
+                    .at(-1)}`;
 
                   await FileSystem.downloadAsync(attachment.uri, uri);
 
                   data.append("attachments", {
                     uri,
-                    name: attachment.name,
+                    name: newName,
                     type: attachment.mimeType,
                   });
                 }
