@@ -385,8 +385,8 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
             }
 
             navigation.goBack();
-          } catch (e) {
-            console.error(e);
+          } catch (err) {
+            console.error(err);
             Toast.show(
               "An error occurred while creating the announcement. Please try again",
               {

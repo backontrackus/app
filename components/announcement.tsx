@@ -232,8 +232,6 @@ export default function Announcement(props: AnnouncementData) {
                   // @ts-ignore
                   { sync: true }
                 );
-
-                console.log(event);
               }}
               className="flex flex-col justify-center items-center rounded-full bg-bot-orange py-1 w-[30%]"
             >

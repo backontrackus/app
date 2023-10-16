@@ -25,7 +25,9 @@ export default function SetupScreen({ navigation, route }: Props) {
       .then((newLocations) => {
         setLocations(newLocations);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.error(err);
+      });
   }, []);
 
   return (
