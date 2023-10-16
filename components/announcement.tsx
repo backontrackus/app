@@ -188,7 +188,7 @@ export default function Announcement(props: AnnouncementData) {
             );
           })}
         </View>
-        <View className="flex w-full flex-row items-center justify-evenly">
+        <View className="mt-2 flex w-full flex-row items-center justify-evenly">
           {props.model.rsvpUrl && (
             <TouchableOpacity
               onPress={() => {
