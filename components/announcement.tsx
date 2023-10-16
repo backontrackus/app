@@ -1,11 +1,4 @@
-import {
-  Alert,
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  Linking,
-} from "react-native";
+import { View, Text, TouchableOpacity, Linking } from "react-native";
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
 import RNCal from "react-native-calendar-events";
@@ -38,11 +31,11 @@ type AnnouncementData = {
   isLeader: boolean;
   navigation: NavigationProp;
   refresh: () => void;
+  modal: (id: string) => void;
 };
 
 export default function Announcement(props: AnnouncementData) {
   const [calendar, setCalendar] = useState<CalendarData | null>(null);
-  const [modalVisible, setModalVisible] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<string[]>([]);
 
@@ -80,44 +73,6 @@ export default function Announcement(props: AnnouncementData) {
 
   return (
     <View className="mb-3 flex w-full flex-col items-start justify-start">
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View className="flex h-full items-center justify-center">
-          <View className="p-35 m-20 items-center rounded-lg bg-white p-4 shadow-md">
-            <Text className="mb-15 mb-2 text-center text-xl font-semibold">
-              Are you sure you want to delete this announcement?
-            </Text>
-            <View className="flex flex-row items-center justify-evenly gap-x-2">
-              <TouchableOpacity
-                className="rounded-lg bg-red-600 px-10 py-3 shadow-md"
-                onPress={() => {
-                  pb.collection("announcements").delete(props.model.id);
-                  props.refresh();
-                }}
-              >
-                <Text className="text-center text-lg font-bold text-white">
-                  Yes
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="rounded-lg bg-gray-500 px-10 py-3 shadow-md"
-                onPress={() => setModalVisible(false)}
-              >
-                <Text className="text-center text-lg font-bold text-white">
-                  No
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
       <View className="flex flex-row items-center justify-start pl-1">
         <Text className="mr-2">{props.model.expand?.user?.name} </Text>
         <Text className="text-slate-900">
@@ -149,7 +104,7 @@ export default function Announcement(props: AnnouncementData) {
               )}
               <TouchableOpacity
                 onPress={() => {
-                  setModalVisible(true);
+                  props.modal(props.model.id);
                 }}
               >
                 <MaterialCommunityIcons

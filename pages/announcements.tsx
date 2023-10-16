@@ -1,4 +1,11 @@
-import { TouchableOpacity, View, Text, ScrollView } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  ScrollView,
+  Modal,
+  Alert,
+} from "react-native";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -20,6 +27,7 @@ export default function AnnouncementsPage({ navigation }: Props) {
   const scrollViewRef = useRef<ScrollView>(null);
   const [announcements, setAnnouncements] = useState<RecordModel[]>([]);
   const [isLeader, setIsLeader] = useState(false);
+  const [modalId, setModalId] = useState<string | null>(null);
   const user = pb.authStore.model;
   if (!user) {
     navigation.navigate("Home");
@@ -65,6 +73,51 @@ export default function AnnouncementsPage({ navigation }: Props) {
 
   return (
     <View className="relative h-full w-full">
+      <View
+        className="absolute left-0 top-0 z-30 h-screen w-screen bg-gray-800 opacity-80"
+        style={{
+          display: modalId !== null ? undefined : "none",
+        }}
+      ></View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalId !== null}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalId(null);
+        }}
+      >
+        <View className="flex h-full items-center justify-center">
+          <View className="p-35 m-20 items-center rounded-lg bg-white p-4 shadow-md">
+            <Text className="mb-15 mb-2 text-center text-xl font-semibold">
+              Are you sure you want to delete this announcement?
+            </Text>
+            <View className="flex flex-row items-center justify-evenly gap-x-2">
+              <TouchableOpacity
+                className="rounded-lg bg-red-600 px-10 py-3 shadow-md"
+                onPress={() => {
+                  pb.collection("announcements").delete(modalId!);
+                  setModalId(null);
+                  refresh();
+                }}
+              >
+                <Text className="text-center text-lg font-bold text-white">
+                  Yes
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="rounded-lg bg-gray-500 px-10 py-3 shadow-md"
+                onPress={() => setModalId(null)}
+              >
+                <Text className="text-center text-lg font-bold text-white">
+                  No
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <ScrollView
         ref={scrollViewRef}
         className="flex w-full flex-1 flex-col px-7"
@@ -85,6 +138,9 @@ export default function AnnouncementsPage({ navigation }: Props) {
               isLeader={isLeader}
               navigation={navigation}
               refresh={refresh}
+              modal={(id) => {
+                setModalId(id);
+              }}
             />
           );
         })}
