@@ -20,6 +20,10 @@ export default function MainScreen({ navigation }: Props) {
     navigation.navigate("Home");
     return null;
   }
+  if (!user.location) {
+    navigation.navigate("Setup", { logout: false });
+    return null;
+  }
 
   return (
     <Tab.Navigator

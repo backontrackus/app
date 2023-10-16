@@ -72,9 +72,9 @@ export default function SetupScreen({ navigation, route }: Props) {
       <TouchableOpacity
         className="my-2 rounded-md bg-bot-orange px-5 py-2"
         disabled={!selectedLocationId}
-        onPress={() => {
+        onPress={async () => {
           if (selectedLocationId) {
-            pb.collection("users").update(user.id, {
+            await pb.collection("users").update(user.id, {
               location: selectedLocationId,
             });
 
