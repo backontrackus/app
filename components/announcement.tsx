@@ -1,7 +1,6 @@
-import { View, Text, TouchableOpacity, Linking } from "react-native";
+import { Alert, Modal, View, Text, TouchableOpacity, Linking } from "react-native";
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
-import IcalParser from "ical-js-parser";
 import RNCal from "react-native-calendar-events";
 // @ts-ignore
 import { MarkdownView } from "react-native-markdown-view";
@@ -17,7 +16,6 @@ import Attachment from "./attachment";
 import { getAnnouncementData } from "../util/ical";
 
 import type { RecordModel } from "pocketbase";
-import type { ICalJSON } from "ical-js-parser";
 import type { CompositeNavigationProp } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
@@ -38,6 +36,7 @@ type AnnouncementData = {
 
 export default function Announcement(props: AnnouncementData) {
   const [calendar, setCalendar] = useState<CalendarData | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<string[]>([]);
 
@@ -75,6 +74,44 @@ export default function Announcement(props: AnnouncementData) {
 
   return (
     <View className="flex flex-col justify-start items-start w-full mb-3">
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View className="flex justify-center items-center h-full">
+          <View className="m-20 bg-white rounded-lg p-35 items-center shadow-md p-4">
+            <Text className="mb-15 text-center text-xl mb-2 font-semibold">
+              Are you sure you want to delete this announcement?
+            </Text>
+            <View className="flex flex-row justify-evenly items-center gap-x-2">
+              <TouchableOpacity
+                className="rounded-lg px-10 py-3 shadow-md bg-red-600"
+                onPress={() => {
+                  pb.collection("announcements").delete(props.model.id);
+                  props.refresh();
+                }}
+              >
+                <Text className="text-white font-bold text-center text-lg">
+                  Yes
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="rounded-lg px-10 py-3 shadow-md bg-gray-500"
+                onPress={() => setModalVisible(false)}
+              >
+                <Text className="text-white font-bold text-center text-lg">
+                  No
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View className="flex flex-row justify-start items-center pl-1">
         <Text className="mr-2">{props.model.expand?.user?.name} </Text>
         <Text className="text-slate-900">
@@ -106,8 +143,7 @@ export default function Announcement(props: AnnouncementData) {
               )}
               <TouchableOpacity
                 onPress={() => {
-                  pb.collection("announcements").delete(props.model.id);
-                  props.refresh();
+                  setModalVisible(true);
                 }}
               >
                 <MaterialCommunityIcons
