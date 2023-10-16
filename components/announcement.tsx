@@ -1,4 +1,11 @@
-import { Alert, Modal, View, Text, TouchableOpacity, Linking } from "react-native";
+import {
+  Alert,
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
 import RNCal from "react-native-calendar-events";
@@ -8,7 +15,6 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import pb from "../util/pocketbase";
 import {
-  icalToDate,
   getDateIntervalString,
   getTimeIntervalString,
 } from "../util/dateUtils";
