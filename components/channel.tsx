@@ -8,25 +8,41 @@ import type { RecordModel } from "pocketbase";
 
 type ChannelProps = {
   model: RecordModel;
-  isLeader: boolean;
 };
 
 export default function Channel(props: ChannelProps) {
-  const [user, setUser] = useState<RecordModel | null>(null);
+  const [userNames, setUserNames] = useState<RecordModel[]>([]);
   const [latestMessageUser, setLatestMessageUser] =
     useState<RecordModel | null>(null);
 
   useEffect(() => {
-    if (props.model.user && props.isLeader) {
-      pb.collection("user_names").getOne(props.model.user).then(setUser);
+    if (props.model.users.length !== 0) {
+      pb.collection("user_names")
+        .getFullList({
+          filter: `"${props.model.users.join(",")}" ~ id`,
+          requestKey: `channel-${props.model.id}-user-names`,
+        })
+        .then((names) => {
+          setUserNames(
+            names.filter((name) => name.id !== pb.authStore.model?.id),
+          );
+        })
+        .catch((e) => {
+          console.error("Error fetching user names:");
+          console.error(Object.entries(e));
+        });
     }
-  }, [props.model.user, props.isLeader]);
+  }, [props.model.users]);
 
   useEffect(() => {
     if (props.model.expand?.latestMessage?.user) {
       pb.collection("user_names")
         .getOne(props.model.expand?.latestMessage?.user)
-        .then(setLatestMessageUser);
+        .then(setLatestMessageUser)
+        .catch((e) => {
+          console.error("Error fetching latest message user name:");
+          console.error(Object.entries(e));
+        });
     }
   }, [props.model.expand?.latestMessage?.user]);
 
@@ -42,29 +58,20 @@ export default function Channel(props: ChannelProps) {
     content = content.slice(0, 47) + "...";
   }
 
-  if (
-    (props.model.user && props.isLeader && !user?.name) ||
-    !latestMessageUser?.name
-  ) {
+  if (userNames.length === 0 || !latestMessageUser?.name) {
     return null;
   }
 
   return (
-    <View className="flex h-1/5 w-full flex-col items-center justify-start p-5">
+    <View className="mb-1 flex h-1/6 w-full flex-col items-center justify-start px-5 py-2">
       <View className="flex w-full flex-row items-start justify-start">
         <Image
-          source={
-            props.isLeader ? user?.avatarUrl : require("../assets/logo.png")
-          }
+          source={userNames[0].avatarUrl}
           className="mr-2 aspect-square w-1/6 rounded-full"
         />
         <View className="flex w-10/12 flex-col items-start justify-start">
           <Text className="text-xl font-bold">
-            {props.isLeader
-              ? user?.name ?? "Unknown"
-              : `Back On Track @ ${
-                  props.model.expand?.location?.name ?? "Unknown"
-                }`}
+            {userNames.map((n) => n.name).join(", ")}
           </Text>
           <Text className="w-full break-words text-lg">
             {latestMessageUser?.id === authUser?.id
@@ -73,7 +80,6 @@ export default function Channel(props: ChannelProps) {
           </Text>
         </View>
       </View>
-      <View className="m-2 h-1 w-11/12 self-center justify-self-end rounded-md bg-gray-300" />
     </View>
   );
 }

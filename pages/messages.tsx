@@ -18,7 +18,6 @@ type Props = CompositeScreenProps<
 
 export default function MessagesPage({ navigation }: Props) {
   const [channels, setChannels] = useState<RecordModel[]>([]);
-  const [isLeader, setIsLeader] = useState(false);
 
   const user = pb.authStore.model;
   if (!user) {
@@ -26,38 +25,27 @@ export default function MessagesPage({ navigation }: Props) {
     return null;
   }
 
-  const location = user.location;
-
-  useEffect(() => {
-    if (location) {
-      pb.collection("locations")
-        .getOne(location)
-        .then((locationData) => {
-          if (locationData.leaders.includes(user.id)) {
-            setIsLeader(true);
-          } else {
-            setIsLeader(false);
-          }
-        });
-    }
-  }, [user]);
-
   const refresh = useCallback(() => {
     pb.collection("channels")
       .getList(1, 20, {
-        expand: "location,latestMessage",
+        expand: "users,latestMessage",
       })
       .then((res) => {
+        console.log(res.items);
         setChannels(res.items);
+      })
+      .catch((e) => {
+        console.error("Error fetching channels:");
+        console.error(Object.entries(e));
       });
   }, [user]);
 
   useFocusEffect(refresh);
 
   return (
-    <View className="h-full">
+    <View className="flex h-full flex-col items-center justify-start py-3">
       {channels.map((channel) => (
-        <Channel key={channel.id} model={channel} isLeader={isLeader} />
+        <Channel key={channel.id} model={channel} />
       ))}
     </View>
   );
