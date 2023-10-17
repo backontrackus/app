@@ -63,22 +63,23 @@ export default function Channel(props: ChannelProps) {
   }
 
   return (
-    <View className="mb-1 flex h-1/6 w-full flex-col items-center justify-start px-5 py-2">
-      <View className="flex w-full flex-row items-start justify-start">
-        <Image
-          source={userNames[0].avatarUrl}
-          className="mr-2 aspect-square w-1/6 rounded-full"
-        />
-        <View className="flex w-10/12 flex-col items-start justify-start">
-          <Text className="text-xl font-bold">
-            {userNames.map((n) => n.name).join(", ")}
-          </Text>
-          <Text className="w-full break-words text-lg">
-            {latestMessageUser?.id === authUser?.id
-              ? content
-              : `${latestMessageUser?.name}: ${content}`}
-          </Text>
-        </View>
+    <View className="mb-1 flex h-1/6 w-full flex-row items-start justify-start px-5 py-2">
+      <Image
+        source={userNames[0].avatarUrl}
+        className="mr-2 aspect-square w-1/6 rounded-full"
+      />
+      <View className="flex w-10/12 flex-col items-start justify-start">
+        <Text className="text-xl font-bold">
+          {userNames.map((n) => n.name).join(", ")}
+        </Text>
+        <Text className="w-full break-words text-lg">
+          {latestMessageUser?.id !== authUser?.id && (
+            <Text className="mr-1 text-lg font-semibold">
+              {latestMessageUser?.name}:
+            </Text>
+          )}{" "}
+          {content}
+        </Text>
       </View>
     </View>
   );
