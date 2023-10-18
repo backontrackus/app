@@ -2,9 +2,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "react-native";
 
-import AnnouncementsPage from "./announcements";
-import MessagesPage from "./messages";
-import AccountPage from "./account";
+import AnnouncementsPage from "./main/announcements";
+import MessagesPage from "./main/messages";
+import AccountPage from "./main/account";
 import pb from "../util/pocketbase";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";

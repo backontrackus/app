@@ -1,13 +1,30 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
 
 import pb from "../util/pocketbase";
 
 import type { RecordModel } from "pocketbase";
+import type { CompositeNavigationProp } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import type {
+  RootStackParamList,
+  TabParamList,
+  MessagesStackParamList,
+} from "../util/pages";
+
+type NavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<MessagesStackParamList, "Channels">,
+  CompositeNavigationProp<
+    BottomTabNavigationProp<TabParamList>,
+    NativeStackNavigationProp<RootStackParamList>
+  >
+>;
 
 type ChannelProps = {
   model: RecordModel;
+  navigation: NavigationProp;
 };
 
 export default function Channel(props: ChannelProps) {
@@ -63,24 +80,31 @@ export default function Channel(props: ChannelProps) {
   }
 
   return (
-    <View className="mb-1 flex h-1/6 w-full flex-row items-start justify-start px-5 py-2">
-      <Image
-        source={userNames[0].avatarUrl}
-        className="mr-2 aspect-square w-1/6 rounded-full"
-      />
-      <View className="flex w-10/12 flex-col items-start justify-start">
-        <Text className="text-xl font-bold">
-          {userNames.map((n) => n.name).join(", ")}
-        </Text>
-        <Text className="w-full break-words text-lg">
-          {latestMessageUser?.id !== authUser?.id && (
-            <Text className="mr-1 text-lg font-semibold">
-              {latestMessageUser?.name}:
-            </Text>
-          )}{" "}
-          {content}
-        </Text>
+    <TouchableOpacity
+      className="h-1/6 w-full"
+      onPress={() => {
+        props.navigation.navigate("Channel", { channelId: props.model.id });
+      }}
+    >
+      <View className="mb-1 flex h-full w-full flex-row items-start justify-start py-2 pl-5 pr-8">
+        <Image
+          source={userNames[0].avatarUrl}
+          className="mr-3 aspect-square w-1/6 rounded-full"
+        />
+        <View className="flex w-10/12 flex-col items-start justify-start">
+          <Text className="text-xl font-bold">
+            {userNames.map((n) => n.name).join(", ")}
+          </Text>
+          <Text className="w-full break-words text-lg">
+            {latestMessageUser?.id !== authUser?.id && (
+              <Text className="mr-1 text-lg font-semibold">
+                {latestMessageUser?.name}:{" "}
+              </Text>
+            )}
+            {content}
+          </Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }

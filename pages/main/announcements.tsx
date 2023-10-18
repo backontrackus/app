@@ -9,13 +9,13 @@ import {
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-import Announcement from "../components/announcement";
-import pb from "../util/pocketbase";
+import Announcement from "../../components/announcement";
+import pb from "../../util/pocketbase";
 
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import type { RootStackParamList, TabParamList } from "../util/pages";
+import type { RootStackParamList, TabParamList } from "../../util/pages";
 import type { RecordModel } from "pocketbase";
 
 type Props = CompositeScreenProps<

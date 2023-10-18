@@ -12,8 +12,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import type { RootStackParamList, TabParamList } from "../util/pages";
-import pb from "../util/pocketbase";
+import type { RootStackParamList, TabParamList } from "../../util/pages";
+import pb from "../../util/pocketbase";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, "Account">,

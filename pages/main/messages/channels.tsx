@@ -1,22 +1,29 @@
 import { View } from "react-native";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-import pb from "../util/pocketbase";
-import Channel from "../components/channel";
+import pb from "../../../util/pocketbase";
+import Channel from "../../../components/channel";
 
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import type { RootStackParamList, TabParamList } from "../util/pages";
+import type {
+  RootStackParamList,
+  TabParamList,
+  MessagesStackParamList,
+} from "../../../util/pages";
 import type { RecordModel } from "pocketbase";
 
 type Props = CompositeScreenProps<
-  BottomTabScreenProps<TabParamList, "Messages">,
-  NativeStackScreenProps<RootStackParamList>
+  NativeStackScreenProps<MessagesStackParamList, "Channels">,
+  CompositeScreenProps<
+    BottomTabScreenProps<TabParamList>,
+    NativeStackScreenProps<RootStackParamList>
+  >
 >;
 
-export default function MessagesPage({ navigation }: Props) {
+export default function ChannelsPage({ navigation }: Props) {
   const [channels, setChannels] = useState<RecordModel[]>([]);
 
   const user = pb.authStore.model;
@@ -45,7 +52,7 @@ export default function MessagesPage({ navigation }: Props) {
   return (
     <View className="flex h-full flex-col items-center justify-start py-3">
       {channels.map((channel) => (
-        <Channel key={channel.id} model={channel} />
+        <Channel key={channel.id} model={channel} navigation={navigation} />
       ))}
     </View>
   );

@@ -13,3 +13,10 @@ export type TabParamList = {
   Messages: undefined;
   Account: undefined;
 };
+
+export type MessagesStackParamList = {
+  Channels: undefined;
+  Channel: {
+    channelId: string;
+  };
+};
