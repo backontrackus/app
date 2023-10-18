@@ -38,7 +38,6 @@ export default function ChannelsPage({ navigation }: Props) {
         expand: "users,latestMessage",
       })
       .then((res) => {
-        console.log(res.items);
         setChannels(res.items);
       })
       .catch((e) => {

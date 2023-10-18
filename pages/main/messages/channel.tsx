@@ -1,6 +1,13 @@
-import { View, Text, ScrollView } from "react-native";
-import { useCallback, useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import { useCallback, useState, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import pb from "../../../util/pocketbase";
 import { getTimeString } from "../../../util/dateUtils";
@@ -25,6 +32,9 @@ type Props = CompositeScreenProps<
 
 export default function ChannelPage({ navigation, route }: Props) {
   const [messages, setMessages] = useState<RecordModel[]>([]);
+  const [newMessage, setNewMessage] = useState<string>("");
+
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const user = pb.authStore.model;
   if (!user) {
@@ -75,47 +85,82 @@ export default function ChannelPage({ navigation, route }: Props) {
   useFocusEffect(refresh);
 
   return (
-    <ScrollView
-      className="flex h-full flex-col px-2 py-3"
-      contentContainerStyle={{
-        alignItems: "center",
-        justifyContent: "flex-start",
-      }}
-    >
-      {messages.map((message) => (
-        <View className="mb-2 flex w-full flex-col items-start justify-start">
+    <View className="h-full pt-2">
+      <ScrollView
+        className="flex h-full flex-col px-2"
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "flex-start",
+        }}
+        ref={scrollViewRef}
+        onContentSizeChange={() =>
+          scrollViewRef.current?.scrollToEnd({ animated: true })
+        }
+      >
+        {messages.map((message) => (
           <View
-            className={`flex w-full flex-row items-center gap-x-1 ${
-              message.user === user.id
-                ? "justify-end pr-2"
-                : "justify-start pl-2"
-            }`}
+            key={message.id}
+            className="mb-2 flex w-full flex-col items-start justify-start"
           >
-            {message.user !== user.id && (
-              <Text>{message.expand?.user.name}</Text>
-            )}
-            <Text className="text-gray-800">
-              {getTimeString(new Date(message.created))}
-            </Text>
-          </View>
-          <View
-            className={`w-3/4 rounded-md p-2 ${
-              message.user === user.id
-                ? "self-end rounded-br-none bg-blue-200"
-                : "self-start rounded-bl-none bg-gray-200"
-            }`}
-          >
-            <Text
-              className="text-lg"
-              style={{
-                lineHeight: 22,
-              }}
+            <View
+              className={`flex w-full flex-row items-center gap-x-1 ${
+                message.user === user.id
+                  ? "justify-end pr-2"
+                  : "justify-start pl-2"
+              }`}
             >
-              {message.content}
-            </Text>
+              {message.user !== user.id && (
+                <Text>{message.expand?.user.name}</Text>
+              )}
+              <Text className="text-gray-800">
+                {getTimeString(new Date(message.created))}
+              </Text>
+            </View>
+            <View
+              className={`w-3/4 rounded-md p-2 ${
+                message.user === user.id
+                  ? "self-end rounded-br-none bg-blue-200"
+                  : "self-start rounded-bl-none bg-gray-200"
+              }`}
+            >
+              <Text
+                className="text-lg"
+                style={{
+                  lineHeight: 22,
+                }}
+              >
+                {message.content}
+              </Text>
+            </View>
           </View>
-        </View>
-      ))}
-    </ScrollView>
+        ))}
+      </ScrollView>
+      <View className="flex flex-row items-center justify-center gap-x-2 border-t-2 border-black px-4 py-2">
+        <TextInput
+          className="flex-1 rounded-xl border-2 border-black bg-white px-2 py-1 text-lg"
+          placeholder="Type a message"
+          value={newMessage}
+          onChangeText={setNewMessage}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            pb.collection("messages")
+              .create({
+                channel: route.params.channelId,
+                user: user.id,
+                content: newMessage,
+              })
+              .then(() => {
+                refresh();
+              });
+
+            setNewMessage("");
+          }}
+          className="rounded-full bg-bot-blue-1 p-2"
+        >
+          <MaterialCommunityIcons name="send" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
