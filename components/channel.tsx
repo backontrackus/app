@@ -29,6 +29,7 @@ type ChannelProps = {
 
 export default function Channel(props: ChannelProps) {
   const [userNames, setUserNames] = useState<RecordModel[]>([]);
+  const [latestMessage, setLatestMessage] = useState<RecordModel | null>(null);
   const [latestMessageUser, setLatestMessageUser] =
     useState<RecordModel | null>(null);
 
@@ -49,26 +50,27 @@ export default function Channel(props: ChannelProps) {
           console.error(Object.entries(e));
         });
     }
-  }, [props.model.users]);
 
-  useEffect(() => {
-    if (props.model.expand?.latestMessage?.user) {
-      pb.collection("user_names")
-        .getOne(props.model.expand?.latestMessage?.user)
-        .then(setLatestMessageUser)
-        .catch((e) => {
-          console.error("Error fetching latest message user name:");
-          console.error(Object.entries(e));
-        });
-    }
-  }, [props.model.expand?.latestMessage?.user]);
+    pb.collection("latest_messages")
+      .getFirstListItem(`id = "${props.model.id}"`)
+      .then((lm) => {
+        setLatestMessage(lm);
+
+        pb.collection("user_names")
+          .getOne(lm.user)
+          .then(setLatestMessageUser)
+          .catch((e) => {
+            console.error("Error fetching latest message user name:");
+            console.error(Object.entries(e));
+          });
+      });
+  }, [props.model.users]);
 
   const authUser = pb.authStore.model;
   if (!authUser) {
     return null;
   }
 
-  const latestMessage = props.model.expand?.latestMessage;
   let content = (latestMessage?.content as string) ?? "Unable to load message";
 
   if (content.length > 50) {
@@ -81,29 +83,39 @@ export default function Channel(props: ChannelProps) {
 
   return (
     <TouchableOpacity
-      className="h-1/6 w-full"
+      className="w-full"
       onPress={() => {
         props.navigation.navigate("Channel", { channelId: props.model.id });
       }}
     >
-      <View className="mb-1 flex h-full w-full flex-row items-start justify-start py-2 pl-5 pr-8">
-        <Image
-          source={userNames[0].avatarUrl}
-          className="mr-3 aspect-square w-1/6 rounded-full"
-        />
-        <View className="flex w-10/12 flex-col items-start justify-start">
-          <Text className="text-xl font-bold">
-            {userNames.map((n) => n.name).join(", ")}
-          </Text>
-          <Text className="w-full break-words text-lg">
-            {latestMessageUser?.id !== authUser?.id && (
+      <View className="flex flex-col items-center justify-center py-2 pl-5 pr-8">
+        <View className="mb-4 flex w-full flex-row items-start justify-start ">
+          <Image
+            source={userNames[0].avatarUrl}
+            className="mr-3 aspect-square w-1/6 rounded-full"
+          />
+          <View className="flex w-10/12 flex-col items-start justify-start">
+            <Text className="text-xl font-bold">
+              {userNames.map((n) => n.name).join(", ")}
+            </Text>
+            <Text className="w-full break-words text-lg">
               <Text className="mr-1 text-lg font-semibold">
-                {latestMessageUser?.name}:{" "}
+                {latestMessageUser?.id !== authUser?.id
+                  ? latestMessageUser?.name
+                  : "You"}
+                :{" "}
               </Text>
-            )}
-            {content}
-          </Text>
+
+              {content}
+            </Text>
+          </View>
         </View>
+        <View
+          className="w-full bg-gray-300"
+          style={{
+            height: 1,
+          }}
+        />
       </View>
     </TouchableOpacity>
   );

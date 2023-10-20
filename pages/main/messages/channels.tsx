@@ -48,6 +48,8 @@ export default function ChannelsPage({ navigation }: Props) {
 
   useFocusEffect(refresh);
 
+  channels.reverse();
+
   return (
     <View className="flex h-full flex-col items-center justify-start py-3">
       {channels.map((channel) => (
