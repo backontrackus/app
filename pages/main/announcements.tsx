@@ -17,6 +17,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { RootStackParamList, TabParamList } from "../../util/pages";
 import type { RecordModel } from "pocketbase";
+import Confirmation from "../../components/confirmation";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, "Announcements">,
@@ -73,51 +74,18 @@ export default function AnnouncementsPage({ navigation }: Props) {
 
   return (
     <View className="relative h-full w-full">
-      <View
-        className="absolute left-0 top-0 z-30 h-screen w-screen bg-gray-800 opacity-80"
-        style={{
-          display: modalId !== null ? undefined : "none",
-        }}
-      ></View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalId !== null}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+      <Confirmation
+        modalVisible={modalId !== null}
+        setModalVisible={() => {
           setModalId(null);
         }}
-      >
-        <View className="flex h-full items-center justify-center">
-          <View className="p-35 m-20 items-center rounded-lg bg-white p-4 shadow-md">
-            <Text className="mb-15 mb-2 text-center text-xl font-semibold">
-              Are you sure you want to delete this announcement?
-            </Text>
-            <View className="flex flex-row items-center justify-evenly gap-x-2">
-              <TouchableOpacity
-                className="rounded-lg bg-red-600 px-10 py-3 shadow-md"
-                onPress={() => {
-                  pb.collection("announcements").delete(modalId!);
-                  setModalId(null);
-                  refresh();
-                }}
-              >
-                <Text className="text-center text-lg font-bold text-white">
-                  Yes
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="rounded-lg bg-gray-500 px-10 py-3 shadow-md"
-                onPress={() => setModalId(null)}
-              >
-                <Text className="text-center text-lg font-bold text-white">
-                  No
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        question="Are you sure you want to delete this announcement?"
+        yesCallback={() => {
+          pb.collection("announcements").delete(modalId!);
+          setModalId(null);
+          refresh();
+        }}
+      />
       <ScrollView
         ref={scrollViewRef}
         className="flex w-full flex-1 flex-col px-7"

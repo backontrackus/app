@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import Confirmation from "../../components/confirmation";
+
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -37,53 +39,17 @@ const AccountPage = ({ navigation }: Props) => {
 
   return (
     <View className="relative h-full w-full">
-      <View
-        className="absolute left-0 top-0 z-30 h-full w-full bg-gray-800 opacity-80"
-        style={{
-          display: modalVisible ? undefined : "none",
+      <Confirmation
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        question="Are you sure you want to delete your account?"
+        yesCallback={() => {
+          pb.collection("users").delete(pb.authStore.model?.id);
+          pb.authStore.clear();
+          navigation.navigate("Home");
         }}
-      ></View>
+      />
       <View className="z-10 flex h-full items-center justify-center">
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View className="flex h-full items-center justify-center">
-            <View className="p-35 m-20 items-center rounded-lg bg-white p-4 shadow-md">
-              <Text className="mb-15 mb-2 text-center text-xl font-semibold">
-                Are you sure you want to delete your account?
-              </Text>
-              <View className="flex flex-row items-center justify-evenly gap-x-2">
-                <TouchableOpacity
-                  className="rounded-lg bg-red-600 px-10 py-3 shadow-md"
-                  onPress={() => {
-                    pb.collection("users").delete(pb.authStore.model?.id);
-                    pb.authStore.clear();
-                    navigation.navigate("Home");
-                  }}
-                >
-                  <Text className="text-center text-lg font-bold text-white">
-                    Yes
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="rounded-lg bg-gray-500 px-10 py-3 shadow-md"
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Text className="text-center text-lg font-bold text-white">
-                    No
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
-
         <View className="bg-light-gray h-24 w-24 rounded-full">
           <Image
             source={{ uri: user?.avatarUrl }}
