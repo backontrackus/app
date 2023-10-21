@@ -15,13 +15,13 @@ import ical from "ical-js-parser";
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
 
-import Attachment from "../components/attachment";
-import { getAnnouncementData } from "../util/ical";
-import { getTimeString, dateToIcal } from "../util/dateUtils";
-import pb from "../util/pocketbase";
+import Attachment from "@/components/attachment";
+import { getAnnouncementData } from "@/util/ical";
+import { getTimeString, dateToIcal } from "@/util/dateUtils";
+import pb from "@/util/pocketbase";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { RootStackParamList } from "../util/pages";
+import type { RootStackParamList } from "@/util/pages";
 
 type Props = NativeStackScreenProps<RootStackParamList, "NewAnnouncement">;
 

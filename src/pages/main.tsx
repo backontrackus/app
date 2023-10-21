@@ -5,10 +5,10 @@ import { Image } from "react-native";
 import AnnouncementsPage from "./main/announcements";
 import MessagesPage from "./main/messages";
 import AccountPage from "./main/account";
-import pb from "../util/pocketbase";
+import pb from "@/util/pocketbase";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { RootStackParamList, TabParamList } from "../util/pages";
+import type { RootStackParamList, TabParamList } from "@/util/pages";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Main">;
 

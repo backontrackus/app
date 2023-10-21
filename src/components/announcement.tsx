@@ -6,20 +6,17 @@ import RNCal from "react-native-calendar-events";
 import { MarkdownView } from "react-native-markdown-view";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-import pb from "../util/pocketbase";
-import {
-  getDateIntervalString,
-  getTimeIntervalString,
-} from "../util/dateUtils";
+import pb from "@/util/pocketbase";
+import { getDateIntervalString, getTimeIntervalString } from "@/util/dateUtils";
+import { getAnnouncementData } from "@/util/ical";
 import Attachment from "./attachment";
-import { getAnnouncementData } from "../util/ical";
 
 import type { RecordModel } from "pocketbase";
 import type { CompositeNavigationProp } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import type { RootStackParamList, TabParamList } from "../util/pages";
-import type { AnnouncementData as CalendarData } from "../util/ical";
+import type { RootStackParamList, TabParamList } from "@/util/pages";
+import type { AnnouncementData as CalendarData } from "@/util/ical";
 
 type NavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<TabParamList, "Announcements">,

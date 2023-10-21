@@ -1,5 +1,4 @@
 import { Alert, Modal, TouchableOpacity, View, Text } from "react-native";
-import { useState } from "react";
 
 import type { Dispatch, SetStateAction } from "react";
 

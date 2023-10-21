@@ -2,8 +2,8 @@ import { View } from "react-native";
 import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-import pb from "../../../util/pocketbase";
-import Channel from "../../../components/channel";
+import pb from "@/util/pocketbase";
+import Channel from "@/components/channel";
 
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -12,7 +12,7 @@ import type {
   RootStackParamList,
   TabParamList,
   MessagesStackParamList,
-} from "../../../util/pages";
+} from "@/util/pages";
 import type { RecordModel } from "pocketbase";
 
 type Props = CompositeScreenProps<

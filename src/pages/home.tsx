@@ -2,8 +2,8 @@ import { TouchableOpacity, View, Text, Image, Linking } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { RootStackParamList } from "../util/pages";
-import pb from "../util/pocketbase";
+import type { RootStackParamList } from "@/util/pages";
+import pb from "@/util/pocketbase";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 

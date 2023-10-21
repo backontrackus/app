@@ -10,7 +10,7 @@ import type {
   RootStackParamList,
   TabParamList,
   MessagesStackParamList,
-} from "../../util/pages";
+} from "@/util/pages";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, "Messages">,

@@ -2,10 +2,11 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
 
+import pb from "@/util/pocketbase";
+
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { RootStackParamList } from "../util/pages";
+import type { RootStackParamList } from "@/util/pages";
 import type { RecordModel } from "pocketbase";
-import pb from "../util/pocketbase";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Setup">;
 

@@ -9,8 +9,8 @@ import { useCallback, useState, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import pb from "../../../util/pocketbase";
-import { getTimeString } from "../../../util/dateUtils";
+import pb from "@/util/pocketbase";
+import { getTimeString } from "@/util/dateUtils";
 
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -19,7 +19,7 @@ import type {
   RootStackParamList,
   TabParamList,
   MessagesStackParamList,
-} from "../../../util/pages";
+} from "@/util/pages";
 import type { RecordModel } from "pocketbase";
 
 type Props = CompositeScreenProps<

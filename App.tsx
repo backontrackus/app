@@ -3,12 +3,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { RootSiblingParent } from "react-native-root-siblings";
 
-import HomeScreen from "./pages/home";
-import SetupScreen from "./pages/setup";
-import MainScreen from "./pages/main";
-import NewAnnouncement from "./pages/newAnnouncement";
+import HomeScreen from "./src/pages/home";
+import SetupScreen from "./src/pages/setup";
+import MainScreen from "./src/pages/main";
+import NewAnnouncement from "./src/pages/newAnnouncement";
 
-import type { RootStackParamList } from "./util/pages";
+import type { RootStackParamList } from "./src/util/pages";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
 
-import pb from "../util/pocketbase";
+import pb from "@/util/pocketbase";
 
 import type { RecordModel } from "pocketbase";
 import type { CompositeNavigationProp } from "@react-navigation/native";
@@ -12,7 +12,7 @@ import type {
   RootStackParamList,
   TabParamList,
   MessagesStackParamList,
-} from "../util/pages";
+} from "@/util/pages";
 
 type NavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<MessagesStackParamList, "Channels">,
