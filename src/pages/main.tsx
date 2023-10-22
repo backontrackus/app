@@ -23,7 +23,7 @@ export default function MainScreen({ navigation, route }: Props) {
     if (!route.params?.expoPushToken) return;
 
     pb.collection("devices")
-      .getFirstListItem(`token = "${route.params.expoPushToken}"`)
+      .getFirstListItem(`token ~ "${route.params.expoPushToken?.data}"`)
       .catch(async () => {
         const device = await pb.collection("devices").create({
           token: route.params.expoPushToken?.data,
