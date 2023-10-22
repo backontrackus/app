@@ -10,7 +10,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 export default function HomeScreen({ navigation }: Props) {
   if (pb.authStore.model) {
     if (pb.authStore.model?.location) {
-      navigation.navigate("Main");
+      navigation.navigate("Main", {});
     } else {
       navigation.navigate("Setup", { logout: false });
     }
@@ -42,7 +42,7 @@ export default function HomeScreen({ navigation }: Props) {
                 },
               })
               .catch((err) => {
-                console.error(err);
+                console.error(Object.entries(err));
               });
 
             if (userData) {
@@ -54,7 +54,7 @@ export default function HomeScreen({ navigation }: Props) {
               });
 
               if (pb.authStore.model?.location) {
-                navigation.navigate("Main");
+                navigation.navigate("Main", {});
               } else {
                 navigation.navigate("Setup", { logout: false });
               }

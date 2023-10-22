@@ -1,7 +1,11 @@
+import type { ExpoPushToken } from "expo-notifications";
+
 export type RootStackParamList = {
   Home: undefined;
   Setup: { logout: boolean };
-  Main: undefined;
+  Main: {
+    expoPushToken?: ExpoPushToken;
+  };
   Announcements: undefined;
   NewAnnouncement: {
     announcementId?: string;

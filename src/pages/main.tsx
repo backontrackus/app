@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "react-native";
+import { useEffect } from "react";
 
 import AnnouncementsPage from "./main/announcements";
 import MessagesPage from "./main/messages";
@@ -14,8 +15,30 @@ type Props = NativeStackScreenProps<RootStackParamList, "Main">;
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
-export default function MainScreen({ navigation }: Props) {
+export default function MainScreen({ navigation, route }: Props) {
   const user = pb.authStore.model;
+
+  useEffect(() => {
+    if (!user) return;
+    if (!route.params?.expoPushToken) return;
+
+    pb.collection("devices")
+      .getFirstListItem(`token = "${route.params.expoPushToken}"`)
+      .catch(async () => {
+        const device = await pb.collection("devices").create({
+          token: route.params.expoPushToken?.data,
+        });
+
+        pb.collection("users")
+          .update(user.id, {
+            devices: [...user.devices, device.id],
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      });
+  }, [route.params.expoPushToken, user]);
+
   if (!user) {
     navigation.navigate("Home");
     return null;
