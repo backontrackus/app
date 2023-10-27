@@ -8,6 +8,8 @@ import {
 import { useCallback, useState, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+// @ts-ignore
+import { MarkdownView } from "react-native-markdown-view";
 
 import pb from "@/util/pocketbase";
 import { getTimeString } from "@/util/dateUtils";
@@ -85,7 +87,7 @@ export default function ChannelPage({ navigation, route }: Props) {
   useFocusEffect(refresh);
 
   return (
-    <View className="h-full pt-2">
+    <View className="relative h-full pt-2">
       <ScrollView
         className="flex h-full flex-col px-2"
         contentContainerStyle={{
@@ -117,25 +119,29 @@ export default function ChannelPage({ navigation, route }: Props) {
               </Text>
             </View>
             <View
-              className={`w-3/4 rounded-md p-2 ${
+              className={`w-3/4 rounded-md px-2 ${
                 message.user === user.id
                   ? "self-end rounded-br-none bg-blue-200"
                   : "self-start rounded-bl-none bg-gray-200"
               }`}
             >
-              <Text
-                className="text-lg"
-                style={{
-                  lineHeight: 22,
+              <MarkdownView
+                styles={{
+                  paragraph: {
+                    color: "black",
+                    fontSize: 18,
+                    lineHeight: 22,
+                  },
                 }}
               >
                 {message.content}
-              </Text>
+              </MarkdownView>
             </View>
           </View>
         ))}
+        <View className="pt-14" />
       </ScrollView>
-      <View className="flex flex-row items-center justify-center gap-x-2 border-t-2 border-black px-4 py-2">
+      <View className="absolute bottom-0 flex flex-row items-center justify-center gap-x-2 px-4 py-2">
         <TextInput
           className="flex-1 rounded-xl border-2 border-black bg-white px-2 py-1 text-lg"
           placeholder="Type a message"
@@ -152,7 +158,8 @@ export default function ChannelPage({ navigation, route }: Props) {
               })
               .then(() => {
                 refresh();
-              });
+              })
+              .catch(console.error);
 
             setNewMessage("");
           }}
