@@ -35,7 +35,7 @@ export default function ChannelsPage({ navigation }: Props) {
   const refresh = useCallback(() => {
     pb.collection("channels")
       .getList(1, 20, {
-        expand: "users,latestMessage",
+        expand: "users",
       })
       .then((res) => {
         setChannels(res.items);

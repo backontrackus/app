@@ -186,16 +186,23 @@ export default function Announcement(props: AnnouncementData) {
           })}
         </View>
         <View className="mt-2 flex w-full flex-row items-center justify-evenly">
-          {props.model.rsvpUrl && (
-            <TouchableOpacity
-              onPress={() => {
-                Linking.openURL(props.model.rsvpUrl);
-              }}
-              className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-orange py-1"
-            >
-              <Text className="text-lg font-semibold text-black">RSVP</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            onPress={() => {
+              fetch(
+                `${process.env.EXPO_PUBLIC_POCKETBASE_URL}/rsvp?announcement_id=${props.model.id}`,
+                {
+                  method: "POST",
+                  headers: {
+                    Authorization: `${pb.authStore.token}`,
+                  },
+                },
+              );
+              if (props.model.rsvpUrl) Linking.openURL(props.model.rsvpUrl);
+            }}
+            className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-orange py-1"
+          >
+            <Text className="text-lg font-semibold text-black">RSVP</Text>
+          </TouchableOpacity>
           {calendar && (
             <TouchableOpacity
               onPress={async () => {

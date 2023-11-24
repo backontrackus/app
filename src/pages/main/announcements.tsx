@@ -74,9 +74,12 @@ export default function AnnouncementsPage({ navigation }: Props) {
         }}
         question="Are you sure you want to delete this announcement?"
         yesCallback={() => {
-          pb.collection("announcements").delete(modalId!);
+          pb.collection("announcements")
+            .delete(modalId!)
+            .then(() => {
+              refresh();
+            });
           setModalId(null);
-          refresh();
         }}
       />
       <ScrollView

@@ -57,7 +57,9 @@ export default function Channel(props: ChannelProps) {
         setLatestMessage(lm);
 
         pb.collection("user_names")
-          .getOne(lm.user)
+          .getOne(lm.user, {
+            requestKey: `channel-${props.model.id}-latest-message-user-name`,
+          })
           .then(setLatestMessageUser)
           .catch((e) => {
             console.error("Error fetching latest message user name:");
