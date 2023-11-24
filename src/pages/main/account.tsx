@@ -1,13 +1,7 @@
 import { useState, useEffect } from "react";
-import {
-  Alert,
-  Modal,
-  TouchableOpacity,
-  Text,
-  View,
-  Image,
-} from "react-native";
+import { TouchableOpacity, Text, View, Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
 
 import Confirmation from "@/components/confirmation";
 
@@ -15,6 +9,7 @@ import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { RootStackParamList, TabParamList } from "@/util/pages";
+import type { RecordModel } from "pocketbase";
 import pb from "@/util/pocketbase";
 
 type Props = CompositeScreenProps<
@@ -23,7 +18,7 @@ type Props = CompositeScreenProps<
 >;
 
 const AccountPage = ({ navigation }: Props) => {
-  const [location, setLocation] = useState<String | null>(null);
+  const [location, setLocation] = useState<RecordModel | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const user = pb.authStore.model;
 
@@ -32,7 +27,7 @@ const AccountPage = ({ navigation }: Props) => {
       pb.collection("locations")
         .getOne(user.location)
         .then((location) => {
-          setLocation(location?.name);
+          setLocation(location);
         });
     }
   }, [user]);
@@ -58,10 +53,29 @@ const AccountPage = ({ navigation }: Props) => {
         </View>
 
         <Text className="mt-2 text-lg font-bold">{user?.name}</Text>
-        <Text className="mt-2 text-lg">{location}</Text>
+        <Text className="mt-2 text-lg">{location?.name}</Text>
 
         <TouchableOpacity
           className="mt-4 w-1/2 flex-row items-center rounded-md bg-gray-500 p-2"
+          onPress={() =>
+            Clipboard.setStringAsync(
+              `${process.env.EXPO_PUBLIC_POCKETBASE_URL}/${location?.id}.ics`,
+            )
+          }
+        >
+          <MaterialCommunityIcons
+            name="content-copy"
+            size={24}
+            color="black"
+            className="h-5 w-5"
+          />
+          <Text className="flex-1 text-center text-lg text-white">
+            Copy Calendar URL
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="mt-2 w-1/2 flex-row items-center rounded-md bg-gray-500 p-2"
           onPress={() => navigation.navigate("Setup", { logout: true })}
         >
           <MaterialCommunityIcons
