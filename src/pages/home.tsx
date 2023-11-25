@@ -1,5 +1,6 @@
 import { TouchableOpacity, View, Text, Image, Linking } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import * as WebBrowser from "expo-web-browser";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/util/pages";
@@ -38,7 +39,7 @@ export default function HomeScreen({ navigation }: Props) {
               .authWithOAuth2({
                 provider: "google",
                 urlCallback: async (url) => {
-                  Linking.openURL(url);
+                  WebBrowser.openAuthSessionAsync(url);
                 },
               })
               .catch((err) => {
