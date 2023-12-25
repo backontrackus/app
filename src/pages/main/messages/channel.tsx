@@ -1,18 +1,16 @@
 import {
   View,
-  Text,
-  ScrollView,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
 } from "react-native";
 import { useCallback, useState, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-// @ts-ignore
-import { MarkdownView } from "react-native-markdown-view";
 
 import pb from "@/util/pocketbase";
-import { getTimeString } from "@/util/dateUtils";
+import Message from "@/components/message";
 
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -33,10 +31,12 @@ type Props = CompositeScreenProps<
 >;
 
 export default function ChannelPage({ navigation, route }: Props) {
+  const nextPageRef = useRef<number>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFirstPageReceived, setIsFirstPageReceived] = useState(false);
   const [messages, setMessages] = useState<RecordModel[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
-
-  const scrollViewRef = useRef<ScrollView>(null);
+  const [width, setWidth] = useState(0);
 
   const user = pb.authStore.model;
   if (!user) {
@@ -44,7 +44,30 @@ export default function ChannelPage({ navigation, route }: Props) {
     return null;
   }
 
+  const fetchMessages = (erase: boolean) => {
+    setIsLoading(true);
+    pb.collection("messages")
+      .getList(erase ? 1 : nextPageRef.current, 15, {
+        filter: `"${route.params.channelId}" ~ channel`,
+        expand: "user",
+        sort: "-created",
+      })
+      .then((res) => {
+        setMessages(erase ? res.items : [...messages, ...res.items]);
+        nextPageRef.current =
+          res.page == res.totalPages ? undefined : res.page + 1;
+        setIsLoading(false);
+        !isFirstPageReceived && setIsFirstPageReceived(true);
+      })
+      .catch((err) => {
+        console.error("Error fetching messages:");
+        console.error(Object.entries(err));
+      });
+  };
+
   const refresh = useCallback(() => {
+    fetchMessages(true);
+
     pb.collection("channels")
       .getOne(route.params.channelId)
       .then((channel) => {
@@ -68,79 +91,50 @@ export default function ChannelPage({ navigation, route }: Props) {
         console.error("Error fetching channel:");
         console.error(Object.entries(e));
       });
-
-    pb.collection("messages")
-      .getFullList({
-        filter: `"${route.params.channelId}" ~ channel`,
-        expand: "user",
-      })
-      .then((msgs) => {
-        setMessages(
-          msgs.sort(
-            (a, b) =>
-              new Date(a.created).valueOf() - new Date(b.created).valueOf(),
-          ),
-        );
-      });
   }, [user, route.params.channelId]);
 
   useFocusEffect(refresh);
 
+  const ListEndLoader = () => {
+    if (!isFirstPageReceived && isLoading) {
+      return <ActivityIndicator size={"large"} />;
+    }
+  };
+
+  if (!isFirstPageReceived && isLoading) {
+    return <ActivityIndicator size={"small"} />;
+  }
+
   return (
-    <View className="relative h-full pt-2">
-      <ScrollView
-        className="flex h-full flex-col px-2"
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "flex-start",
-        }}
-        ref={scrollViewRef}
-        onContentSizeChange={() =>
-          scrollViewRef.current?.scrollToEnd({ animated: true })
-        }
-      >
-        {messages.map((message) => (
-          <View
-            key={message.id}
-            className="mb-2 flex w-full flex-col items-start justify-start"
-          >
-            <View
-              className={`flex w-full flex-row items-center gap-x-1 ${
-                message.user === user.id
-                  ? "justify-end pr-2"
-                  : "justify-start pl-2"
-              }`}
-            >
-              {message.user !== user.id && (
-                <Text>{message.expand?.user.name}</Text>
-              )}
-              <Text className="text-gray-800">
-                {getTimeString(new Date(message.created))}
-              </Text>
-            </View>
-            <View
-              className={`w-3/4 rounded-md px-2 ${
-                message.user === user.id
-                  ? "self-end rounded-br-none bg-blue-200"
-                  : "self-start rounded-bl-none bg-gray-200"
-              }`}
-            >
-              <MarkdownView
-                styles={{
-                  paragraph: {
-                    color: "black",
-                    fontSize: 18,
-                    lineHeight: 22,
-                  },
-                }}
-              >
-                {message.content}
-              </MarkdownView>
-            </View>
+    <View
+      className="relative h-full w-full pt-2"
+      onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+    >
+      <FlatList
+        data={messages}
+        renderItem={({ item: message }) => (
+          <View style={{ width }} className="px-2">
+            <Message key={message.id} message={message} user={user} />
           </View>
-        ))}
-        <View className="pt-14" />
-      </ScrollView>
+        )}
+        onEndReached={() => {
+          if (nextPageRef.current === undefined) {
+            return;
+          }
+          fetchMessages(false);
+        }}
+        onEndReachedThreshold={0.8}
+        ListFooterComponent={ListEndLoader}
+        className="flex flex-col px-2"
+        contentContainerStyle={{
+          justifyContent: "flex-start",
+          alignItems: "center",
+        }}
+        inverted
+        onRefresh={refresh}
+        refreshing={isLoading}
+      />
+      <View className="pt-14" />
       <View className="absolute bottom-0 flex flex-row items-center justify-center gap-x-2 px-4 py-2">
         <TextInput
           className="flex-1 rounded-xl border-2 border-black bg-white px-2 py-1 text-lg"

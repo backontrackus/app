@@ -1,4 +1,4 @@
-import { View, ActivityIndicator, FlatList } from "react-native";
+import { ActivityIndicator, FlatList } from "react-native";
 import { useState, useCallback, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -92,10 +92,5 @@ export default function ChannelsPage({ navigation }: Props) {
       onRefresh={refresh}
       refreshing={isLoading}
     />
-    // <View className="flex h-full flex-col items-center justify-start py-3">
-    //   {channels.map((channel) => (
-    //     <Channel key={channel.id} model={channel} navigation={navigation} />
-    //   ))}
-    // </View>
   );
 }
