@@ -1,5 +1,5 @@
-import { View } from "react-native";
-import { useState, useCallback } from "react";
+import { View, ActivityIndicator, FlatList } from "react-native";
+import { useState, useCallback, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
 import pb from "@/util/pocketbase";
@@ -24,6 +24,9 @@ type Props = CompositeScreenProps<
 >;
 
 export default function ChannelsPage({ navigation }: Props) {
+  const nextPageRef = useRef<number>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFirstPageReceived, setIsFirstPageReceived] = useState(false);
   const [channels, setChannels] = useState<RecordModel[]>([]);
 
   const user = pb.authStore.model;
@@ -32,29 +35,67 @@ export default function ChannelsPage({ navigation }: Props) {
     return null;
   }
 
-  const refresh = useCallback(() => {
+  const fetchData = (erase: boolean) => {
+    setIsLoading(true);
     pb.collection("channels")
-      .getList(1, 20, {
+      .getList(erase ? 1 : nextPageRef.current, 5, {
         expand: "users",
+        requestKey: "channels",
       })
       .then((res) => {
-        setChannels(res.items);
+        setChannels(erase ? res.items : [...channels, ...res.items]);
+        nextPageRef.current =
+          res.page == res.totalPages ? undefined : res.page + 1;
+        setIsLoading(false);
+        !isFirstPageReceived && setIsFirstPageReceived(true);
       })
-      .catch((e) => {
+      .catch((err) => {
         console.error("Error fetching channels:");
-        console.error(Object.entries(e));
+        console.error(Object.entries(err));
       });
-  }, [user]);
+  };
+  const refresh = useCallback(() => {
+    fetchData(true);
+  }, []);
 
   useFocusEffect(refresh);
 
-  channels.reverse();
+  const ListEndLoader = () => {
+    if (!isFirstPageReceived && isLoading) {
+      return <ActivityIndicator size={"large"} />;
+    }
+  };
+
+  if (!isFirstPageReceived && isLoading) {
+    return <ActivityIndicator size={"small"} />;
+  }
 
   return (
-    <View className="flex h-full flex-col items-center justify-start py-3">
-      {channels.map((channel) => (
+    <FlatList
+      data={channels}
+      renderItem={({ item: channel }) => (
         <Channel key={channel.id} model={channel} navigation={navigation} />
-      ))}
-    </View>
+      )}
+      onEndReached={() => {
+        if (nextPageRef.current === undefined) {
+          return;
+        }
+        fetchData(false);
+      }}
+      onEndReachedThreshold={0.8}
+      ListFooterComponent={ListEndLoader}
+      className="flex w-full flex-col px-2 py-3"
+      contentContainerStyle={{
+        justifyContent: "flex-start",
+        alignItems: "center",
+      }}
+      onRefresh={refresh}
+      refreshing={isLoading}
+    />
+    // <View className="flex h-full flex-col items-center justify-start py-3">
+    //   {channels.map((channel) => (
+    //     <Channel key={channel.id} model={channel} navigation={navigation} />
+    //   ))}
+    // </View>
   );
 }
