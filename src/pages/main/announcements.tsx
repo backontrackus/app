@@ -1,4 +1,10 @@
-import { TouchableOpacity, View, Text, ScrollView } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  ActivityIndicator,
+  FlatList,
+} from "react-native";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -18,7 +24,9 @@ type Props = CompositeScreenProps<
 >;
 
 export default function AnnouncementsPage({ navigation }: Props) {
-  const scrollViewRef = useRef<ScrollView>(null);
+  const nextPageRef = useRef<number>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFirstPageReceived, setIsFirstPageReceived] = useState(false);
   const [announcements, setAnnouncements] = useState<RecordModel[]>([]);
   const [isLeader, setIsLeader] = useState(false);
   const [modalId, setModalId] = useState<string | null>(null);
@@ -29,6 +37,32 @@ export default function AnnouncementsPage({ navigation }: Props) {
   }
 
   const location = user.location;
+
+  const fetchData = (erase: boolean) => {
+    setIsLoading(true);
+    pb.collection("announcements")
+      .getList(erase ? 1 : nextPageRef.current, 5, {
+        expand: "user",
+        sort: "-created",
+      })
+      .then((newAnnouncements) => {
+        setAnnouncements(
+          erase
+            ? newAnnouncements.items
+            : [...announcements, ...newAnnouncements.items],
+        );
+        nextPageRef.current =
+          newAnnouncements.page == newAnnouncements.totalPages
+            ? undefined
+            : newAnnouncements.page + 1;
+        setIsLoading(false);
+        !isFirstPageReceived && setIsFirstPageReceived(true);
+      })
+      .catch((err) => {
+        console.error("Error fetching announcements:");
+        console.error(Object.entries(err));
+      });
+  };
 
   useEffect(() => {
     if (location) {
@@ -49,21 +83,20 @@ export default function AnnouncementsPage({ navigation }: Props) {
       return;
     }
 
-    pb.collection("announcements")
-      .getList(1, 20, {
-        expand: "user",
-      })
-      .then((newAnnouncements) => {
-        setAnnouncements(
-          newAnnouncements.items.sort(
-            (a, b) =>
-              new Date(a.created).valueOf() - new Date(b.created).valueOf(),
-          ),
-        );
-      });
+    fetchData(true);
   }, [location]);
 
   useFocusEffect(refresh);
+
+  const ListEndLoader = () => {
+    if (!isFirstPageReceived && isLoading) {
+      return <ActivityIndicator size={"large"} />;
+    }
+  };
+
+  if (!isFirstPageReceived && isLoading) {
+    return <ActivityIndicator size={"small"} />;
+  }
 
   return (
     <View className="relative h-full w-full">
@@ -82,33 +115,37 @@ export default function AnnouncementsPage({ navigation }: Props) {
           setModalId(null);
         }}
       />
-      <ScrollView
-        ref={scrollViewRef}
-        className="flex w-full flex-1 flex-col px-7"
+      <FlatList
+        data={announcements}
+        renderItem={({ item }) => (
+          <Announcement
+            key={item.id}
+            model={item}
+            isLeader={isLeader}
+            navigation={navigation}
+            refresh={refresh}
+            modal={(id) => {
+              setModalId(id);
+            }}
+          />
+        )}
+        onEndReached={() => {
+          if (nextPageRef.current === undefined) {
+            return;
+          }
+          fetchData(false);
+        }}
+        inverted
+        onEndReachedThreshold={0.8}
+        ListFooterComponent={ListEndLoader}
+        className="flex w-full flex-col px-2"
         contentContainerStyle={{
           justifyContent: "flex-start",
-          alignItems: "flex-start",
+          alignItems: "center",
         }}
-        onContentSizeChange={() =>
-          scrollViewRef.current?.scrollToEnd({ animated: true })
-        }
-      >
-        <View className="h-5 w-full"></View>
-        {announcements.map((announcement) => {
-          return (
-            <Announcement
-              key={announcement.id}
-              model={announcement}
-              isLeader={isLeader}
-              navigation={navigation}
-              refresh={refresh}
-              modal={(id) => {
-                setModalId(id);
-              }}
-            />
-          );
-        })}
-      </ScrollView>
+        onRefresh={refresh}
+        refreshing={isLoading}
+      />
       {isLeader && (
         <TouchableOpacity
           style={{

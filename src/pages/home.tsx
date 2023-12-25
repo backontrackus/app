@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text, Image, Linking } from "react-native";
+import { TouchableOpacity, View, Text, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as WebBrowser from "expo-web-browser";
 

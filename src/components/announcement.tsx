@@ -69,7 +69,7 @@ export default function Announcement(props: AnnouncementData) {
   }, [props.model.attachments]);
 
   return (
-    <View className="mb-3 flex w-full flex-col items-start justify-start">
+    <View className="mb-3 flex w-11/12 flex-col items-start justify-start">
       <View className="flex flex-row items-center justify-start pl-1">
         <Text className="mr-2">{props.model.expand?.user?.name} </Text>
         <Text className="text-slate-900">
