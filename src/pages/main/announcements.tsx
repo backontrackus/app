@@ -11,6 +11,13 @@ import { useFocusEffect } from "@react-navigation/native";
 import Announcement from "@/components/announcement";
 import Confirmation from "@/components/confirmation";
 import pb from "@/util/pocketbase";
+import {
+  cache,
+  getLatestPage,
+  getCachedPage,
+  getCachedItem,
+  getLatestItem,
+} from "@/util/announcementCache";
 
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -38,30 +45,68 @@ export default function AnnouncementsPage({ navigation }: Props) {
 
   const location = user.location;
 
-  const fetchData = (erase: boolean) => {
+  const fetchData = async (erase: boolean) => {
     setIsLoading(true);
-    pb.collection("announcements")
-      .getList(erase ? 1 : nextPageRef.current, 5, {
-        expand: "user",
-        sort: "-created",
-      })
-      .then((newAnnouncements) => {
-        setAnnouncements(
-          erase
-            ? newAnnouncements.items
-            : [...announcements, ...newAnnouncements.items],
-        );
+
+    if (erase) {
+      nextPageRef.current = 1;
+      cache.clearAll();
+
+      const res = await getLatestPage(nextPageRef.current);
+
+      if (!res) {
+        // TODO: error handling
+        return;
+      }
+
+      setAnnouncements(res?.items);
+      nextPageRef.current =
+        res.page >= res.totalPages ? undefined : res.page + 1;
+    } else {
+      const cachedPage = await getCachedPage(nextPageRef.current ?? 1);
+
+      console.log("cpage: ", cachedPage);
+
+      if (!cachedPage) {
+        const res = await getLatestPage(nextPageRef.current ?? 1);
+
+        console.log("lpage: ", res);
+
+        if (!res) {
+          // TODO: error handling
+          return;
+        }
+
+        setAnnouncements((prev) => [...prev, ...res?.items]);
         nextPageRef.current =
-          newAnnouncements.page == newAnnouncements.totalPages
-            ? undefined
-            : newAnnouncements.page + 1;
-        setIsLoading(false);
-        !isFirstPageReceived && setIsFirstPageReceived(true);
-      })
-      .catch((err) => {
-        console.error("Error fetching announcements:");
-        console.error(Object.entries(err));
-      });
+          res.page >= res.totalPages ? undefined : res.page + 1;
+      } else {
+        refresh();
+        for (const id of cachedPage.items) {
+          const cachedItem = await getCachedItem(id);
+
+          if (!cachedItem) {
+            const res = await getLatestItem(id);
+            console.log(res);
+
+            if (!res) {
+              // TODO: error handling
+              return;
+            }
+
+            setAnnouncements((prev) => [...prev, res]);
+          } else {
+            setAnnouncements((prev) => [...prev, cachedItem]);
+          }
+        }
+
+        nextPageRef.current =
+          cachedPage.page >= cachedPage.total ? undefined : cachedPage.page + 1;
+      }
+    }
+
+    setIsLoading(false);
+    !isFirstPageReceived && setIsFirstPageReceived(true);
   };
 
   useEffect(() => {
@@ -83,7 +128,7 @@ export default function AnnouncementsPage({ navigation }: Props) {
       return;
     }
 
-    fetchData(true);
+    fetchData(isFirstPageReceived ? true : false);
   }, [location]);
 
   useFocusEffect(refresh);
