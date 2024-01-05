@@ -74,6 +74,10 @@ export default function AnnouncementsPage({ navigation }: Props) {
           } else {
             setIsLeader(false);
           }
+        })
+        .catch((err) => {
+          console.error("Error fetching location:");
+          console.error(Object.entries(err));
         });
     }
   }, [user]);

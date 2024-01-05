@@ -1,6 +1,7 @@
 import { TouchableOpacity, View, Text, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as WebBrowser from "expo-web-browser";
+import { useEffect } from "react";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/util/pages";
@@ -9,13 +10,27 @@ import pb from "@/util/pocketbase";
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
 export default function HomeScreen({ navigation }: Props) {
-  if (pb.authStore.model) {
-    if (pb.authStore.model?.location) {
-      navigation.navigate("Main", {});
-    } else {
-      navigation.navigate("Setup", { logout: false });
+  function checkAuth(model: any) {
+    if (model) {
+      if (model.location) {
+        navigation.navigate("Main", {});
+      } else {
+        navigation.navigate("Setup", { logout: false });
+      }
     }
   }
+
+  useEffect(() => {
+    const unsubscribe = pb.authStore.onChange((token, model) => {
+      checkAuth(model);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  checkAuth(pb.authStore.model);
 
   return (
     <View className="relative h-screen flex-1 flex-col items-center justify-end gap-5">
