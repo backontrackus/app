@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { TouchableOpacity, Text, View, Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
+import { useColorScheme } from "nativewind";
 
 import Confirmation from "@/components/confirmation";
 
@@ -18,6 +19,7 @@ type Props = CompositeScreenProps<
 >;
 
 const AccountPage = ({ navigation }: Props) => {
+  const { colorScheme, toggleColorScheme } = useColorScheme();
   const [location, setLocation] = useState<RecordModel | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const user = pb.authStore.model;
@@ -52,8 +54,10 @@ const AccountPage = ({ navigation }: Props) => {
           />
         </View>
 
-        <Text className="mt-2 text-lg font-bold">{user?.name}</Text>
-        <Text className="mt-2 text-lg">{location?.name}</Text>
+        <Text className="mt-2 text-lg font-bold dark:text-white">
+          {user?.name}
+        </Text>
+        <Text className="mt-2 text-lg dark:text-white">{location?.name}</Text>
 
         <TouchableOpacity
           className="mt-4 w-1/2 flex-row items-center rounded-md bg-gray-500 p-2"
@@ -86,6 +90,17 @@ const AccountPage = ({ navigation }: Props) => {
           />
           <Text className="flex-1 text-center text-lg text-white">
             Change Location
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="mt-2 w-1/2 flex-row items-center rounded-md bg-gray-500 p-2"
+          onPress={() => {
+            toggleColorScheme();
+          }}
+        >
+          <Text className="flex-1 text-center text-lg text-white">
+            Switch to {colorScheme === "dark" ? "Light Mode" : "Dark Mode"}
           </Text>
         </TouchableOpacity>
 

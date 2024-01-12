@@ -1,11 +1,16 @@
-import { useState, useRef, useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { useState, useEffect } from "react";
+import {
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { registerRootComponent } from "expo";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
+import { useColorScheme } from "nativewind";
 
 import HomeScreen from "./pages/home";
 import SetupScreen from "./pages/setup";
@@ -59,6 +64,7 @@ async function registerForPushNotificationsAsync() {
 }
 
 function App() {
+  const { colorScheme } = useColorScheme();
   const [expoPushToken, setExpoPushToken] =
     useState<Notifications.ExpoPushToken>();
 
@@ -70,7 +76,9 @@ function App() {
 
   return (
     <RootSiblingParent>
-      <NavigationContainer>
+      <NavigationContainer
+        theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      >
         <Stack.Navigator initialRouteName="Home">
           <Stack.Screen
             name="Home"

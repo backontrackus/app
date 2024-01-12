@@ -97,11 +97,11 @@ export default function Channel(props: ChannelProps) {
             className="mr-3 aspect-square w-1/6 rounded-full"
           />
           <View className="flex w-10/12 flex-col items-start justify-start">
-            <Text className="text-xl font-bold">
+            <Text className="text-xl font-bold dark:text-white">
               {userNames.map((n) => n.name).join(", ")}
             </Text>
-            <Text className="w-full break-words text-lg">
-              <Text className="mr-1 text-lg font-semibold">
+            <Text className="w-full break-words text-lg dark:text-white">
+              <Text className="mr-1 text-lg font-semibold dark:text-white">
                 {latestMessageUser?.id !== authUser?.id
                   ? latestMessageUser?.name
                   : "You"}

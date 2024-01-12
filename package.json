@@ -39,7 +39,8 @@
     "react-native-sse": "^1.1.0",
     "react-native-uuid": "^2.0.1",
     "expo-clipboard": "~4.3.1",
-    "expo-web-browser": "~12.3.2"
+    "expo-web-browser": "~12.3.2",
+    "expo-system-ui": "~2.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

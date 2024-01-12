@@ -92,12 +92,17 @@ export default function NewAnnouncement({ navigation, route }: Props) {
         justifyContent: "flex-start",
       }}
     >
-      <Text className="text-3xl font-bold">New Announcement</Text>
+      <Text className="text-3xl font-bold dark:text-white">
+        New Announcement
+      </Text>
       <ScrollView className="mb-4 w-full self-start">
-        <Text className="text-lg">Name*</Text>
+        <Text className="text-lg dark:text-white">Name*</Text>
         <TextInput
-          className={`w-full rounded-md border-2 border-black p-2 text-lg ${
-            loading ? "bg-slate-300" : "bg-white"
+          placeholderTextColor={"gray"}
+          className={` w-full rounded-md border-2 border-black p-2 text-lg ${
+            loading
+              ? "bg-slate-300 dark:bg-zinc-900 dark:text-white"
+              : "bg-white dark:bg-zinc-800 dark:text-white"
           }`}
           value={name}
           onChangeText={setName}
@@ -110,22 +115,25 @@ export default function NewAnnouncement({ navigation, route }: Props) {
         />
       </ScrollView>
       <View className="mb-4 w-full self-start">
-        <Text className="text-lg">Description*</Text>
+        <Text className="text-lg dark:text-white">Description*</Text>
         <View className="flex flex-row items-center justify-start">
-          <Text className="italic">You can use</Text>
+          <Text className="italic dark:text-white">You can use</Text>
           <Text
-            className="ml-1 italic text-blue-500"
+            className="ml-1 italic text-blue-500 dark:text-white"
             onPress={() => {
               Linking.openURL("https://www.markdownguide.org/basic-syntax/");
             }}
           >
             Markdown
           </Text>
-          <Text className="italic">!</Text>
+          <Text className="italic dark:text-white">!</Text>
         </View>
         <TextInput
-          className={`w-full rounded-md border-2 border-black p-2 text-lg ${
-            loading ? "bg-slate-300" : "bg-white"
+          placeholderTextColor={"gray"}
+          className={`w-full rounded-md border-2 border-black p-2 text-lg dark:text-white ${
+            loading
+              ? "bg-slate-300 dark:bg-zinc-900"
+              : "bg-white dark:bg-zinc-800"
           }`}
           value={description}
           onChangeText={setDescription}
@@ -140,10 +148,13 @@ export default function NewAnnouncement({ navigation, route }: Props) {
         />
       </View>
       <ScrollView className="mb-4 w-full self-start">
-        <Text className="text-lg">RSVP Link</Text>
+        <Text className="text-lg dark:text-white">RSVP Link</Text>
         <TextInput
-          className={`w-full rounded-md border-2 border-black p-2 text-lg ${
-            loading ? "bg-slate-300" : "bg-white"
+          placeholderTextColor={"gray"}
+          className={`w-full rounded-md border-2 border-black p-2 text-lg dark:text-white ${
+            loading
+              ? "bg-slate-300 dark:bg-zinc-900"
+              : "bg-white dark:bg-zinc-800"
           }`}
           value={rsvp}
           onChangeText={setRsvp}
@@ -155,9 +166,9 @@ export default function NewAnnouncement({ navigation, route }: Props) {
         />
       </ScrollView>
       <View className="w-full self-start">
-        <Text className="text-lg">Start Date</Text>
+        <Text className="text-lg dark:text-white">Start Date</Text>
         <View className="flex flex-row items-center justify-between">
-          <Text className="text-lg font-bold">
+          <Text className="text-lg font-bold dark:text-white">
             {route.params.announcementId && loading
               ? "Loading..."
               : startDate.toLocaleDateString()}
@@ -184,9 +195,9 @@ export default function NewAnnouncement({ navigation, route }: Props) {
         )}
       </View>
       <View className="mb-4 w-full self-start">
-        <Text className="text-lg">Start Time</Text>
+        <Text className="text-lg dark:text-white">Start Time</Text>
         <View className="flex flex-row items-center justify-between">
-          <Text className="text-lg font-bold">
+          <Text className="text-lg font-bold dark:text-white">
             {route.params.announcementId && loading
               ? "Loading..."
               : getTimeString(startTime)}
@@ -213,9 +224,9 @@ export default function NewAnnouncement({ navigation, route }: Props) {
         )}
       </View>
       <View className="w-full self-start">
-        <Text className="text-lg">End Date</Text>
+        <Text className="text-lg dark:text-white">End Date</Text>
         <View className="flex flex-row items-center justify-between">
-          <Text className="text-lg font-bold">
+          <Text className="text-lg font-bold dark:text-white">
             {route.params.announcementId && loading
               ? "Loading..."
               : endDate.toLocaleDateString()}
@@ -226,7 +237,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
               setIsEndDateOpen((o) => !o);
             }}
           >
-            <Text className="text-lg">Change</Text>
+            <Text className="text-lg ">Change</Text>
           </TouchableOpacity>
         </View>
         {isEndDateOpen && (
@@ -242,9 +253,9 @@ export default function NewAnnouncement({ navigation, route }: Props) {
         )}
       </View>
       <View className="mb-4 w-full self-start">
-        <Text className="text-lg">End Time</Text>
+        <Text className="text-lg dark:text-white">End Time</Text>
         <View className="flex flex-row items-center justify-between">
-          <Text className="text-lg font-bold">
+          <Text className="text-lg font-bold dark:text-white">
             {route.params.announcementId && loading
               ? "Loading..."
               : getTimeString(endTime)}
@@ -271,10 +282,13 @@ export default function NewAnnouncement({ navigation, route }: Props) {
         )}
       </View>
       <ScrollView className="mb-4 w-full self-start">
-        <Text className="text-lg">Location</Text>
+        <Text className="text-lg dark:text-white">Location</Text>
         <TextInput
-          className={`w-full rounded-md border-2 border-black p-2 text-lg ${
-            loading ? "bg-slate-300" : "bg-white"
+          placeholderTextColor={"gray"}
+          className={`w-full rounded-md border-2 border-black p-2 text-lg dark:text-white ${
+            loading
+              ? "bg-slate-300 dark:bg-zinc-900"
+              : "bg-white dark:bg-zinc-800"
           }`}
           value={location}
           onChangeText={setLocation}
@@ -285,7 +299,9 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           }
         />
       </ScrollView>
-      <Text className="mb-2 self-start text-lg">Attachments</Text>
+      <Text className="mb-2 self-start text-lg dark:text-white">
+        Attachments
+      </Text>
       <View className="mb-2 flex w-full flex-col items-center justify-start gap-y-2">
         {attachments.map((attachment) => (
           <Attachment
@@ -449,7 +465,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           }
         }}
       >
-        <Text className="text-center text-xl">
+        <Text className="text-center text-xl ">
           {route.params.announcementId ? "Update" : "Post"}
         </Text>
       </TouchableOpacity>

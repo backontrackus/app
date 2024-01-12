@@ -8,6 +8,7 @@ import {
 import { useCallback, useState, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useColorScheme } from "nativewind";
 
 import pb from "@/util/pocketbase";
 import Message from "@/components/message";
@@ -31,6 +32,7 @@ type Props = CompositeScreenProps<
 >;
 
 export default function ChannelPage({ navigation, route }: Props) {
+  const { colorScheme } = useColorScheme();
   const nextPageRef = useRef<number>();
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstPageReceived, setIsFirstPageReceived] = useState(false);
@@ -137,7 +139,8 @@ export default function ChannelPage({ navigation, route }: Props) {
       <View className="pt-14" />
       <View className="absolute bottom-0 flex flex-row items-center justify-center gap-x-2 px-4 py-2">
         <TextInput
-          className="flex-1 rounded-xl border-2 border-black bg-white px-2 py-1 text-lg"
+          placeholderTextColor={"gray"}
+          className="flex-1 rounded-xl border-2 border-black bg-white px-2 py-1 text-lg dark:bg-zinc-900 dark:text-white"
           placeholder="Type a message"
           value={newMessage}
           onChangeText={setNewMessage}
