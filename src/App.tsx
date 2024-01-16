@@ -12,7 +12,7 @@ import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import { useColorScheme } from "nativewind";
 import * as Sentry from "sentry-expo";
-
+import { ExtraErrorData } from "@sentry/integrations";
 import HomeScreen from "./pages/home";
 import SetupScreen from "./pages/setup";
 import MainScreen from "./pages/main";
@@ -31,6 +31,8 @@ Sentry.init({
     new Sentry.Native.ReactNativeTracing({
       routingInstrumentation,
     }),
+    // @ts-expect-error
+    new ExtraErrorData(),
   ],
   environment: process.env.EXPO_PUBLIC_SENTRY_ENVIRONMENT,
 });
@@ -80,7 +82,8 @@ async function registerForPushNotificationsAsync() {
 }
 
 function App() {
-  const navigation = useRef<NavigationContainerRef<RootStackParamList>>(null);
+  const navigationRef =
+    useRef<NavigationContainerRef<RootStackParamList>>(null);
   const { colorScheme } = useColorScheme();
   const [expoPushToken, setExpoPushToken] =
     useState<Notifications.ExpoPushToken>();
@@ -94,10 +97,10 @@ function App() {
   return (
     <RootSiblingParent>
       <NavigationContainer
-        ref={navigation}
+        ref={navigationRef}
         theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         onReady={() => {
-          routingInstrumentation.registerNavigationContainer(navigation);
+          routingInstrumentation.registerNavigationContainer(navigationRef);
         }}
       >
         <Stack.Navigator initialRouteName="Home">

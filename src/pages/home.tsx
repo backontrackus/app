@@ -2,6 +2,7 @@ import { TouchableOpacity, View, Text, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect } from "react";
+import * as Sentry from "sentry-expo";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/util/pages";
@@ -12,6 +13,14 @@ type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 export default function HomeScreen({ navigation }: Props) {
   function checkAuth(model: any) {
     if (model) {
+      Sentry.Native.setUser({
+        id: pb.authStore.model?.id,
+        username: pb.authStore.model?.username,
+        email: pb.authStore.model?.email,
+        ip_address: "{{auto}}",
+        name: pb.authStore.model?.name,
+      });
+
       if (model.location) {
         navigation.navigate("Main", {});
       } else {
@@ -49,21 +58,37 @@ export default function HomeScreen({ navigation }: Props) {
         />
         <TouchableOpacity
           onPress={async () => {
-            const userData = await pb
-              .collection("users")
-              .authWithOAuth2({
+            Sentry.Native.addBreadcrumb({
+              type: "auth",
+              category: "login",
+              level: "info",
+            });
+
+            let userData;
+
+            try {
+              userData = await pb.collection("users").authWithOAuth2({
                 provider: "google",
                 urlCallback: async (url) => {
                   WebBrowser.openAuthSessionAsync(url);
                 },
-              })
-              .catch((err) => {
-                console.error(Object.entries(err));
               });
+            } catch (e) {
+              Sentry.Native.captureException(e);
+            }
 
             if (userData) {
               const avatarUrl = userData?.meta?.avatarUrl;
               const name = userData?.meta?.name;
+
+              Sentry.Native.setUser({
+                id: pb.authStore.model?.id,
+                username: pb.authStore.model?.username,
+                email: pb.authStore.model?.email,
+                ip_address: "{{auto}}",
+                name,
+              });
+
               pb.collection("users").update(pb?.authStore?.model?.id, {
                 avatarUrl,
                 name,

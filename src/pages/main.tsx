@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "react-native";
 import { useEffect } from "react";
+import * as Sentry from "sentry-expo";
 
 import AnnouncementsPage from "./main/announcements";
 import MessagesPage from "./main/messages";
@@ -22,20 +23,36 @@ export default function MainScreen({ navigation, route }: Props) {
     if (!user) return;
     if (!route.params?.expoPushToken) return;
 
+    Sentry.Native.addBreadcrumb({
+      type: "pb-fetch",
+      category: "devices",
+      level: "info",
+    });
+
     pb.collection("devices")
       .getFirstListItem(`token ~ "${route.params.expoPushToken?.data}"`)
       .catch(async () => {
+        Sentry.Native.addBreadcrumb({
+          type: "pb-create",
+          category: "devices",
+          level: "info",
+        });
+
         const device = await pb.collection("devices").create({
           token: route.params.expoPushToken?.data,
+        });
+
+        Sentry.Native.addBreadcrumb({
+          type: "pb-update",
+          category: "users",
+          level: "info",
         });
 
         pb.collection("users")
           .update(user.id, {
             devices: [...user.devices, device.id],
           })
-          .catch((err) => {
-            console.error(err);
-          });
+          .catch(Sentry.Native.captureException);
       });
   }, [route.params.expoPushToken, user]);
 

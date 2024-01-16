@@ -9,6 +9,7 @@ import { useCallback, useState, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useColorScheme } from "nativewind";
+import * as Sentry from "sentry-expo";
 
 import pb from "@/util/pocketbase";
 import Message from "@/components/message";
@@ -48,6 +49,13 @@ export default function ChannelPage({ navigation, route }: Props) {
 
   const fetchMessages = (erase: boolean) => {
     setIsLoading(true);
+
+    Sentry.Native.addBreadcrumb({
+      type: "pb-fetch",
+      category: "messages",
+      level: "info",
+    });
+
     pb.collection("messages")
       .getList(erase ? 1 : nextPageRef.current, 15, {
         filter: `"${route.params.channelId}" ~ channel`,
@@ -61,14 +69,17 @@ export default function ChannelPage({ navigation, route }: Props) {
         setIsLoading(false);
         !isFirstPageReceived && setIsFirstPageReceived(true);
       })
-      .catch((err) => {
-        console.error("Error fetching messages:");
-        console.error(Object.entries(err));
-      });
+      .catch(Sentry.Native.captureException);
   };
 
   const refresh = useCallback(() => {
     fetchMessages(true);
+
+    Sentry.Native.addBreadcrumb({
+      type: "pb-fetch",
+      category: "channels",
+      level: "info",
+    });
 
     pb.collection("channels")
       .getOne(route.params.channelId)
@@ -89,10 +100,7 @@ export default function ChannelPage({ navigation, route }: Props) {
           navigation.navigate("Messages");
         }
       })
-      .catch((e) => {
-        console.error("Error fetching channel:");
-        console.error(Object.entries(e));
-      });
+      .catch(Sentry.Native.captureException);
   }, [user, route.params.channelId]);
 
   useFocusEffect(refresh);
@@ -147,6 +155,12 @@ export default function ChannelPage({ navigation, route }: Props) {
         />
         <TouchableOpacity
           onPress={() => {
+            Sentry.Native.addBreadcrumb({
+              type: "pb-create",
+              category: "messages",
+              level: "info",
+            });
+
             pb.collection("messages")
               .create({
                 channel: route.params.channelId,
@@ -156,7 +170,7 @@ export default function ChannelPage({ navigation, route }: Props) {
               .then(() => {
                 refresh();
               })
-              .catch(console.error);
+              .catch(Sentry.Native.captureException);
 
             setNewMessage("");
           }}

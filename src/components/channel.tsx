@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
+import * as Sentry from "sentry-expo";
 
 import pb from "@/util/pocketbase";
 
@@ -35,6 +36,11 @@ export default function Channel(props: ChannelProps) {
 
   useEffect(() => {
     if (props.model.users.length !== 0) {
+      Sentry.Native.addBreadcrumb({
+        type: "pb-fetch",
+        category: "user_names",
+        level: "info",
+      });
       pb.collection("user_names")
         .getFullList({
           filter: `"${props.model.users.join(",")}" ~ id`,
@@ -45,26 +51,32 @@ export default function Channel(props: ChannelProps) {
             names.filter((name) => name.id !== pb.authStore.model?.id),
           );
         })
-        .catch((e) => {
-          console.error("Error fetching user names:");
-          console.error(Object.entries(e));
-        });
+        .catch(Sentry.Native.captureException);
     }
+
+    Sentry.Native.addBreadcrumb({
+      type: "pb-fetch",
+      category: "latest_messages",
+      level: "info",
+    });
 
     pb.collection("latest_messages")
       .getFirstListItem(`id = "${props.model.id}"`)
       .then((lm) => {
         setLatestMessage(lm);
 
+        Sentry.Native.addBreadcrumb({
+          type: "pb-fetch",
+          category: "user_names",
+          level: "info",
+        });
+
         pb.collection("user_names")
           .getOne(lm.user, {
             requestKey: `channel-${props.model.id}-latest-message-user-name`,
           })
           .then(setLatestMessageUser)
-          .catch((e) => {
-            console.error("Error fetching latest message user name:");
-            console.error(Object.entries(e));
-          });
+          .catch(Sentry.Native.captureException);
       });
   }, [props.model.users]);
 

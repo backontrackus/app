@@ -3,6 +3,7 @@ import { TouchableOpacity, Text, View, Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import { useColorScheme } from "nativewind";
+import * as Sentry from "sentry-expo";
 
 import Confirmation from "@/components/confirmation";
 
@@ -107,6 +108,7 @@ const AccountPage = ({ navigation }: Props) => {
         <TouchableOpacity
           className="mt-2 w-1/2 flex-row items-center rounded-md bg-red-600 p-2"
           onPress={() => {
+            Sentry.Native.setUser(null);
             pb.authStore.clear();
             navigation.navigate("Home");
           }}

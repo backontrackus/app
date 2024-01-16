@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
+import * as Sentry from "sentry-expo";
 
 import Announcement from "@/components/announcement";
 import Confirmation from "@/components/confirmation";
@@ -40,6 +41,13 @@ export default function AnnouncementsPage({ navigation }: Props) {
 
   const fetchData = (erase: boolean) => {
     setIsLoading(true);
+
+    Sentry.Native.addBreadcrumb({
+      type: "pb-fetch",
+      category: "announcements",
+      level: "info",
+    });
+
     pb.collection("announcements")
       .getList(erase ? 1 : nextPageRef.current, 5, {
         expand: "user",
@@ -58,14 +66,17 @@ export default function AnnouncementsPage({ navigation }: Props) {
         setIsLoading(false);
         !isFirstPageReceived && setIsFirstPageReceived(true);
       })
-      .catch((err) => {
-        console.error("Error fetching announcements:");
-        console.error(Object.entries(err));
-      });
+      .catch(Sentry.Native.captureException);
   };
 
   useEffect(() => {
     if (location) {
+      Sentry.Native.addBreadcrumb({
+        type: "pb-fetch",
+        category: "locations",
+        level: "info",
+      });
+
       pb.collection("locations")
         .getOne(location)
         .then((locationData) => {
@@ -75,10 +86,7 @@ export default function AnnouncementsPage({ navigation }: Props) {
             setIsLeader(false);
           }
         })
-        .catch((err) => {
-          console.error("Error fetching location:");
-          console.error(Object.entries(err));
-        });
+        .catch(Sentry.Native.captureException);
     }
   }, [user]);
 

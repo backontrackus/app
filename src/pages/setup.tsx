@@ -1,6 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
+import * as Sentry from "sentry-expo";
 
 import pb from "@/util/pocketbase";
 
@@ -21,14 +22,18 @@ export default function SetupScreen({ navigation, route }: Props) {
   }
 
   useEffect(() => {
+    Sentry.Native.addBreadcrumb({
+      type: "pb-fetch",
+      category: "locations",
+      level: "info",
+    });
+
     pb.collection("locations")
       .getFullList()
       .then((newLocations) => {
         setLocations(newLocations);
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch(Sentry.Native.captureException);
   }, []);
 
   return (

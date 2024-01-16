@@ -14,6 +14,7 @@ import FormData from "form-data";
 import ical from "ical-js-parser";
 import uuid from "react-native-uuid";
 import * as FileSystem from "expo-file-system";
+import * as Sentry from "sentry-expo";
 
 import Attachment from "@/components/attachment";
 import { getAnnouncementData } from "@/util/ical";
@@ -340,6 +341,12 @@ export default function NewAnnouncement({ navigation, route }: Props) {
         className="mb-6 w-full rounded-md bg-bot-orange p-2"
         disabled={loading}
         onPress={async () => {
+          Sentry.Native.addBreadcrumb({
+            type: "interaction",
+            category: "create-announcement",
+            level: "info",
+          });
+
           if (!name) {
             Toast.show("Please enter a name for the announcement.", {
               delay: 100,
@@ -454,7 +461,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
 
             navigation.goBack();
           } catch (err) {
-            console.error(err);
+            Sentry.Native.captureException(err);
             Toast.show(
               "An error occurred while creating the announcement. Please try again",
               {
