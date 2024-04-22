@@ -35,4 +35,5 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-google-services.json
+# Android Studio
+.idea/
