@@ -46,7 +46,9 @@ export function getTimeString(date: Date) {
   const hour = date.getHours();
   const min = date.getMinutes();
   const str =
-    hour > 12
+    hour == 12
+      ? `12:${pad(min)} pm`
+      : hour > 12
       ? `${hour - 12}:${pad(min)} pm`
       : hour == 0
       ? `12:${pad(min)} am`
