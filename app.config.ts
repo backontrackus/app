@@ -4,7 +4,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "Back On Track",
   slug: "bot-app",
-  version: "1.0.0",
+  version: "1.0.1",
   orientation: "portrait",
   icon: "./src/assets/icon.png",
   userInterfaceStyle: "automatic",
