@@ -76,6 +76,10 @@ def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInRelea
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+project.ext.sentryCli=[collectModulesScript: new File(["node", "--print", "require.resolve('@sentry/react-native/package.json')"].execute().text.trim(), "../dist/js/tools/collectModules.js")]
+
+apply from: new File(["node", "--print", "require.resolve('@sentry/react-native/package.json')"].execute().text.trim(), "../sentry.gradle")
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 

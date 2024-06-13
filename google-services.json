@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "69776731819",
+    "project_id": "back-on-track-testing",
+    "storage_bucket": "back-on-track-testing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69776731819:android:aa27a9f3b84cad09c091ee",
+        "android_client_info": {
+          "package_name": "org.backontrackus.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69776731819-4o47ar7mvmv93i0g0kbfmc80om5lkjcb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtToyEG0CoiQViXX1LjFekbHJXbnViCpg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69776731819-4o47ar7mvmv93i0g0kbfmc80om5lkjcb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
