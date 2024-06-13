@@ -240,8 +240,15 @@ export default function Announcement(props: AnnouncementData) {
             </TouchableOpacity>
           )}
           <TouchableOpacity
-            onPress={() => {
-              // TODO: reply
+            onPress={async () => {
+              const channel = await pb
+                .collection("channels")
+                .getFirstListItem(`announcement ~ "${props.model.id}"`);
+              // @ts-expect-error
+              props.navigation.navigate("Messages", {
+                screen: "Channel",
+                params: { channelId: channel.id },
+              });
             }}
             className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-orange py-1"
           >
