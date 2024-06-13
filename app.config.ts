@@ -17,6 +17,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: "org.backontrackus.app",
+    infoPlist: {
+      NSCalendarsUsageDescription:
+        "This app requires access to your calendar to add events from your location's announcements.",
+    },
   },
   android: {
     adaptiveIcon: {
@@ -40,5 +44,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
       },
     ],
+  },
+  extra: {
+    eas: {
+      projectId: "a3af5358-9a31-49de-83c4-38cfc632784b",
+    },
   },
 });
