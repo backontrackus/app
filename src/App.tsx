@@ -13,6 +13,8 @@ import { Platform } from "react-native";
 import { useColorScheme } from "nativewind";
 import * as Sentry from "sentry-expo";
 import { ExtraErrorData } from "@sentry/integrations";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
 import HomeScreen from "./pages/home";
 import SetupScreen from "./pages/setup";
 import MainScreen from "./pages/main";
@@ -95,48 +97,50 @@ function App() {
   }, []);
 
   return (
-    <RootSiblingParent>
-      <NavigationContainer
-        ref={navigationRef}
-        theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        onReady={() => {
-          routingInstrumentation.registerNavigationContainer(navigationRef);
-        }}
-      >
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Setup"
-            component={SetupScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Main"
-            component={MainScreen}
-            options={{
-              headerShown: false,
-            }}
-            initialParams={{ expoPushToken }}
-          />
-          <Stack.Screen
-            name="NewAnnouncement"
-            component={NewAnnouncement}
-            options={{
-              presentation: "modal",
-              headerShown: false,
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </RootSiblingParent>
+    <SafeAreaProvider>
+      <RootSiblingParent>
+        <NavigationContainer
+          ref={navigationRef}
+          theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          onReady={() => {
+            routingInstrumentation.registerNavigationContainer(navigationRef);
+          }}
+        >
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="Setup"
+              component={SetupScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="Main"
+              component={MainScreen}
+              options={{
+                headerShown: false,
+              }}
+              initialParams={{ expoPushToken }}
+            />
+            <Stack.Screen
+              name="NewAnnouncement"
+              component={NewAnnouncement}
+              options={{
+                presentation: "modal",
+                headerShown: false,
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </RootSiblingParent>
+    </SafeAreaProvider>
   );
 }
 

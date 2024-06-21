@@ -3,6 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect } from "react";
 import * as Sentry from "sentry-expo";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/util/pages";
@@ -42,7 +43,7 @@ export default function HomeScreen({ navigation }: Props) {
   checkAuth(pb.authStore.model);
 
   return (
-    <View className="relative h-screen flex-1 flex-col items-center justify-end gap-5">
+    <SafeAreaView className="relative h-screen flex-1 flex-col items-center justify-end gap-5">
       <Image
         className="absolute top-0 z-0"
         source={require("../assets/lucas.jpg")}
@@ -112,6 +113,6 @@ export default function HomeScreen({ navigation }: Props) {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
