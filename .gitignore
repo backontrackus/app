@@ -39,3 +39,6 @@ yarn-error.*
 .idea/
 
 certs
+
+# ios builds
+build-*.tar.gz
