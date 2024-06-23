@@ -45,7 +45,8 @@
     "react-native-screens": "~3.22.0",
     "react-native-sse": "^1.1.0",
     "react-native-uuid": "^2.0.1",
-    "sentry-expo": "~7.1.0"
+    "sentry-expo": "~7.1.0",
+    "expo-dev-client": "~2.4.13"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

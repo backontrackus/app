@@ -44,15 +44,7 @@ export default function HomeScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView className="relative h-screen flex-1 flex-col items-center justify-end gap-5">
-      <Image
-        className="absolute top-0 z-0"
-        source={require("../assets/lucas.jpg")}
-      />
-      <LinearGradient
-        colors={["rgba(0, 0, 0, 0.30)", "rgba(0, 0, 0, 0.40)", "black"]}
-        className="absolute top-0 z-10 h-full w-full"
-      />
-      <View className="absolute bottom-0 flex-1 flex-col items-center justify-end py-2">
+      <View className="absolute bottom-0 z-20 flex-1 flex-col items-center justify-end py-2">
         <Image
           className="z-20 aspect-square w-32"
           source={require("../assets/logo.png")}
@@ -113,6 +105,14 @@ export default function HomeScreen({ navigation }: Props) {
           </Text>
         </TouchableOpacity>
       </View>
+      <LinearGradient
+        colors={["rgba(0, 0, 0, 0.30)", "rgba(0, 0, 0, 0.40)", "black"]}
+        className="absolute top-0 z-10 h-full w-full"
+      />
+      <Image
+        className="absolute top-0 z-0"
+        source={require("../assets/lucas.jpg")}
+      />
     </SafeAreaView>
   );
 }
