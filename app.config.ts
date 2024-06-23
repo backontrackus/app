@@ -4,7 +4,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "Back On Track",
   slug: "bot-app",
-  version: "1.0.1",
+  version: "1.0.2",
   orientation: "portrait",
   icon: "./src/assets/icon.png",
   userInterfaceStyle: "automatic",
@@ -34,7 +34,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     favicon: "./src/assets/favicon.png",
   },
   plugins: ["sentry-expo"],
-  hooks: {
+  /*  hooks: {
     postPublish: [
       {
         file: "sentry-expo/upload-sourcemaps",
@@ -44,7 +44,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
       },
     ],
-  },
+  }, */
   extra: {
     eas: {
       projectId: "a3af5358-9a31-49de-83c4-38cfc632784b",
