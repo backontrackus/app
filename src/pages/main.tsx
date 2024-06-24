@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image, BackHandler } from "react-native";
 import { useEffect, useCallback } from "react";
-import * as Sentry from "sentry-expo";
+import * as Sentry from "@sentry/react-native";
 import { useFocusEffect } from "@react-navigation/native";
 
 import AnnouncementsPage from "./main/announcements";
@@ -24,7 +24,7 @@ export default function MainScreen({ navigation, route }: Props) {
     if (!user) return;
     if (!route.params?.expoPushToken) return;
 
-    Sentry.Native.addBreadcrumb({
+    Sentry.addBreadcrumb({
       type: "pb-fetch",
       category: "devices",
       level: "info",
@@ -33,7 +33,7 @@ export default function MainScreen({ navigation, route }: Props) {
     pb.collection("devices")
       .getFirstListItem(`token ~ "${route.params.expoPushToken?.data}"`)
       .catch(async () => {
-        Sentry.Native.addBreadcrumb({
+        Sentry.addBreadcrumb({
           type: "pb-create",
           category: "devices",
           level: "info",
@@ -43,7 +43,7 @@ export default function MainScreen({ navigation, route }: Props) {
           token: route.params.expoPushToken?.data,
         });
 
-        Sentry.Native.addBreadcrumb({
+        Sentry.addBreadcrumb({
           type: "pb-update",
           category: "users",
           level: "info",
@@ -53,7 +53,7 @@ export default function MainScreen({ navigation, route }: Props) {
           .update(user.id, {
             devices: [...user.devices, device.id],
           })
-          .catch(Sentry.Native.captureException);
+          .catch(Sentry.captureException);
       });
   }, [route.params.expoPushToken, user]);
 

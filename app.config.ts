@@ -33,18 +33,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   web: {
     favicon: "./src/assets/favicon.png",
   },
-  plugins: ["sentry-expo"],
-  /*  hooks: {
-    postPublish: [
+  plugins: [
+    [
+      "@sentry/react-native/expo",
       {
-        file: "sentry-expo/upload-sourcemaps",
-        config: {
-          organization: process.env.SENTRY_ORG,
-          project: process.env.SENTRY_PROJECT,
-        },
+        organization: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
       },
     ],
-  }, */
+  ],
   extra: {
     eas: {
       projectId: "a3af5358-9a31-49de-83c4-38cfc632784b",

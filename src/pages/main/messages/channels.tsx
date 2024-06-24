@@ -1,7 +1,7 @@
 import { ActivityIndicator, FlatList } from "react-native";
 import { useState, useCallback, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import * as Sentry from "sentry-expo";
+import * as Sentry from "@sentry/react-native";
 
 import pb from "@/util/pocketbase";
 import Channel from "@/components/channel";
@@ -41,7 +41,7 @@ export default function ChannelsPage({ navigation }: Props) {
   const fetchData = (erase: boolean) => {
     setIsLoading(true);
 
-    Sentry.Native.addBreadcrumb({
+    Sentry.addBreadcrumb({
       type: "pb-fetch",
       category: "users",
       level: "info",
@@ -89,7 +89,7 @@ export default function ChannelsPage({ navigation }: Props) {
           setChannels(modifiedChannels);
         });
       })
-      .catch(Sentry.Native.captureException);
+      .catch(Sentry.captureException);
   };
   const refresh = useCallback(() => {
     fetchData(true);

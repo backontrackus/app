@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import * as Sentry from "sentry-expo";
+import * as Sentry from "@sentry/react-native";
 
 import pb from "@/util/pocketbase";
 
@@ -36,7 +36,7 @@ export default function Channel(props: ChannelProps) {
 
   useEffect(() => {
     if (props.model.users.length !== 0) {
-      Sentry.Native.addBreadcrumb({
+      Sentry.addBreadcrumb({
         type: "pb-fetch",
         category: "user_names",
         level: "info",
@@ -51,10 +51,10 @@ export default function Channel(props: ChannelProps) {
             names.filter((name) => name.id !== pb.authStore.model?.id),
           );
         })
-        .catch(Sentry.Native.captureException);
+        .catch(Sentry.captureException);
     }
 
-    Sentry.Native.addBreadcrumb({
+    Sentry.addBreadcrumb({
       type: "pb-fetch",
       category: "latest_messages",
       level: "info",
@@ -65,7 +65,7 @@ export default function Channel(props: ChannelProps) {
       .then((lm) => {
         setLatestMessage(lm);
 
-        Sentry.Native.addBreadcrumb({
+        Sentry.addBreadcrumb({
           type: "pb-fetch",
           category: "user_names",
           level: "info",
@@ -76,7 +76,7 @@ export default function Channel(props: ChannelProps) {
             requestKey: `channel-${props.model.id}-latest-message-user-name`,
           })
           .then(setLatestMessageUser)
-          .catch(Sentry.Native.captureException);
+          .catch(Sentry.captureException);
       });
   }, [props.model.users]);
 

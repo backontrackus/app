@@ -11,7 +11,7 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import { useColorScheme } from "nativewind";
-import * as Sentry from "sentry-expo";
+import * as Sentry from "@sentry/react-native";
 import { ExtraErrorData } from "@sentry/integrations";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -23,14 +23,12 @@ import NewAnnouncement from "./pages/newAnnouncement";
 import type { RootStackParamList } from "./util/pages";
 import type { NavigationContainerRef } from "@react-navigation/native";
 
-const routingInstrumentation =
-  new Sentry.Native.ReactNavigationInstrumentation();
+const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
-  enableInExpoDevelopment: true,
   tracesSampleRate: 1.0,
   integrations: [
-    new Sentry.Native.ReactNativeTracing({
+    new Sentry.ReactNativeTracing({
       routingInstrumentation,
     }),
     // @ts-expect-error
@@ -145,5 +143,4 @@ function App() {
   );
 }
 
-// @ts-expect-error
-registerRootComponent(Sentry.Native.wrap(App));
+registerRootComponent(Sentry.wrap(App));

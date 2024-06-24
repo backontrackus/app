@@ -9,7 +9,7 @@ import { useCallback, useState, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useColorScheme } from "nativewind";
-import * as Sentry from "sentry-expo";
+import * as Sentry from "@sentry/react-native";
 
 import pb from "@/util/pocketbase";
 import Message from "@/components/message";
@@ -50,7 +50,7 @@ export default function ChannelPage({ navigation, route }: Props) {
   const fetchMessages = (erase: boolean) => {
     setIsLoading(true);
 
-    Sentry.Native.addBreadcrumb({
+    Sentry.addBreadcrumb({
       type: "pb-fetch",
       category: "messages",
       level: "info",
@@ -69,13 +69,13 @@ export default function ChannelPage({ navigation, route }: Props) {
         setIsLoading(false);
         !isFirstPageReceived && setIsFirstPageReceived(true);
       })
-      .catch(Sentry.Native.captureException);
+      .catch(Sentry.captureException);
   };
 
   const refresh = useCallback(() => {
     fetchMessages(true);
 
-    Sentry.Native.addBreadcrumb({
+    Sentry.addBreadcrumb({
       type: "pb-fetch",
       category: "channels",
       level: "info",
@@ -100,7 +100,7 @@ export default function ChannelPage({ navigation, route }: Props) {
           navigation.navigate("Messages");
         }
       })
-      .catch(Sentry.Native.captureException);
+      .catch(Sentry.captureException);
   }, [user, route.params.channelId]);
 
   useFocusEffect(refresh);
@@ -155,7 +155,7 @@ export default function ChannelPage({ navigation, route }: Props) {
         />
         <TouchableOpacity
           onPress={() => {
-            Sentry.Native.addBreadcrumb({
+            Sentry.addBreadcrumb({
               type: "pb-create",
               category: "messages",
               level: "info",
@@ -170,7 +170,7 @@ export default function ChannelPage({ navigation, route }: Props) {
               .then(() => {
                 refresh();
               })
-              .catch(Sentry.Native.captureException);
+              .catch(Sentry.captureException);
 
             setNewMessage("");
           }}

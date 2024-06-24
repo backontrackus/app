@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import * as Sentry from "sentry-expo";
+import * as Sentry from "@sentry/react-native";
 
 import Announcement from "@/components/announcement";
 import Confirmation from "@/components/confirmation";
@@ -42,7 +42,7 @@ export default function AnnouncementsPage({ navigation }: Props) {
   const fetchData = (erase: boolean) => {
     setIsLoading(true);
 
-    Sentry.Native.addBreadcrumb({
+    Sentry.addBreadcrumb({
       type: "pb-fetch",
       category: "announcements",
       level: "info",
@@ -66,12 +66,12 @@ export default function AnnouncementsPage({ navigation }: Props) {
         setIsLoading(false);
         !isFirstPageReceived && setIsFirstPageReceived(true);
       })
-      .catch(Sentry.Native.captureException);
+      .catch(Sentry.captureException);
   };
 
   useEffect(() => {
     if (location) {
-      Sentry.Native.addBreadcrumb({
+      Sentry.addBreadcrumb({
         type: "pb-fetch",
         category: "locations",
         level: "info",
@@ -86,7 +86,7 @@ export default function AnnouncementsPage({ navigation }: Props) {
             setIsLeader(false);
           }
         })
-        .catch(Sentry.Native.captureException);
+        .catch(Sentry.captureException);
     }
   }, [user]);
 

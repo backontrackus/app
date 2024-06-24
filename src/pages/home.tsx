@@ -2,7 +2,7 @@ import { TouchableOpacity, View, Text, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect } from "react";
-import * as Sentry from "sentry-expo";
+import * as Sentry from "@sentry/react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -14,7 +14,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 export default function HomeScreen({ navigation }: Props) {
   function checkAuth(model: any) {
     if (model) {
-      Sentry.Native.setUser({
+      Sentry.setUser({
         id: pb.authStore.model?.id,
         username: pb.authStore.model?.username,
         email: pb.authStore.model?.email,
@@ -51,7 +51,7 @@ export default function HomeScreen({ navigation }: Props) {
         />
         <TouchableOpacity
           onPress={async () => {
-            Sentry.Native.addBreadcrumb({
+            Sentry.addBreadcrumb({
               type: "auth",
               category: "login",
               level: "info",
@@ -67,14 +67,14 @@ export default function HomeScreen({ navigation }: Props) {
                 },
               });
             } catch (e) {
-              Sentry.Native.captureException(e);
+              Sentry.captureException(e);
             }
 
             if (userData) {
               const avatarUrl = userData?.meta?.avatarUrl;
               const name = userData?.meta?.name;
 
-              Sentry.Native.setUser({
+              Sentry.setUser({
                 id: pb.authStore.model?.id,
                 username: pb.authStore.model?.username,
                 email: pb.authStore.model?.email,
