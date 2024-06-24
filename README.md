@@ -15,8 +15,3 @@ The Back on Track America App is released under the [GPL-3.0 license](LICENSE).
 ## Technical Information
 
 This app is built with Expo and React Native.
-
-A technical annoyance to note about this app is that it uses Expo config plugins, but also has native directories.
-This is because there's an issue with the React Native Flipper plugin that Expo uses that causes Pocketbase to not work correctly.
-For that reason, whenever you make a config plugin change, you should re-run `npx expo prebuild`, just comment out lines 41-49 in
-`android/app/src/debug/java/org/backontrackus/app/ReactNativeFlipper.java`.

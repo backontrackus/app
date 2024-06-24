@@ -42,3 +42,7 @@ certs
 
 # ios builds
 build-*.tar.gz
+
+# no more prebuild
+ios
+android
