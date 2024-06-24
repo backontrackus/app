@@ -28,7 +28,9 @@ export default function ChannelsPage({ navigation }: Props) {
   const nextPageRef = useRef<number>();
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstPageReceived, setIsFirstPageReceived] = useState(false);
-  const [channels, setChannels] = useState<RecordModel[]>([]);
+  const [channels, setChannels] = useState<(RecordModel & { ts: number })[]>(
+    [],
+  );
 
   const user = pb.authStore.model;
   if (!user) {
@@ -51,11 +53,41 @@ export default function ChannelsPage({ navigation }: Props) {
         requestKey: "channels",
       })
       .then((res) => {
-        setChannels(erase ? res.items : [...channels, ...res.items]);
+        let newChannels = erase ? res.items : [...channels, ...res.items];
+        let modifiedChannels = newChannels.map((c) => {
+          const newModel = {
+            ...c,
+            ts: 0,
+          };
+          return newModel;
+        });
+
         nextPageRef.current =
           res.page == res.totalPages ? undefined : res.page + 1;
         setIsLoading(false);
         !isFirstPageReceived && setIsFirstPageReceived(true);
+
+        const latestPromises = [];
+
+        for (let i = 0; i < modifiedChannels.length; i++) {
+          const channel = modifiedChannels[i];
+          const p = pb
+            .collection("latest_messages")
+            .getFirstListItem(`id = "${channel.id}"`, {
+              fields: "created,updated",
+            })
+            .then((res) => {
+              const dateStr = (res.updated ?? res.created).replace(" ", "T");
+              modifiedChannels[i].ts = Date.parse(dateStr).valueOf();
+            });
+
+          latestPromises.push(p);
+        }
+
+        Promise.all(latestPromises).then(() => {
+          modifiedChannels.sort((a, b) => b.ts - a.ts);
+          setChannels(modifiedChannels);
+        });
       })
       .catch(Sentry.Native.captureException);
   };
