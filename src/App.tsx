@@ -126,6 +126,7 @@ function App() {
               component={MainScreen}
               options={{
                 headerShown: false,
+                gestureEnabled: false,
               }}
               initialParams={{ expoPushToken }}
             />

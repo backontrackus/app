@@ -1,8 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Image } from "react-native";
-import { useEffect } from "react";
+import { Image, BackHandler } from "react-native";
+import { useEffect, useCallback } from "react";
 import * as Sentry from "sentry-expo";
+import { useFocusEffect } from "@react-navigation/native";
 
 import AnnouncementsPage from "./main/announcements";
 import MessagesPage from "./main/messages";
@@ -55,6 +56,18 @@ export default function MainScreen({ navigation, route }: Props) {
           .catch(Sentry.Native.captureException);
       });
   }, [route.params.expoPushToken, user]);
+
+  // disable the back button
+  useFocusEffect(
+    useCallback(() => {
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        () => true,
+      );
+
+      return () => subscription.remove();
+    }, []),
+  );
 
   if (!user) {
     navigation.navigate("Home");
