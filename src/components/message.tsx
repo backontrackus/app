@@ -27,7 +27,7 @@ export default function Message({ message, user }: MessageProps) {
         }`}
       >
         {message.user !== user.id && <Text>{message.expand?.user.name}</Text>}
-        <Text className="text-gray-800">
+        <Text className="text-gray-800 dark:text-gray-400">
           {getTimeString(new Date(message.created))}
         </Text>
       </View>
