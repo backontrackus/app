@@ -12,7 +12,6 @@ import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import { useColorScheme } from "nativewind";
 import * as Sentry from "@sentry/react-native";
-import { ExtraErrorData } from "@sentry/integrations";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import HomeScreen from "./pages/home";
@@ -31,8 +30,6 @@ Sentry.init({
     new Sentry.ReactNativeTracing({
       routingInstrumentation,
     }),
-    // @ts-expect-error
-    new ExtraErrorData(),
   ],
   environment: process.env.EXPO_PUBLIC_SENTRY_ENVIRONMENT,
 });

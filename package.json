@@ -9,13 +9,14 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.2.3",
+    "@expo-google-fonts/oswald": "^0.2.3",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/datetimepicker": "8.0.1",
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/bottom-tabs": "^6.5.9",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
-    "@sentry/integrations": "^7.93.0",
     "@sentry/react-native": "~5.22.0",
     "expo": "^51.0.14",
     "expo-application": "~5.9.1",
@@ -25,6 +26,7 @@
     "expo-device": "~6.0.2",
     "expo-document-picker": "~12.0.2",
     "expo-file-system": "~17.0.1",
+    "expo-font": "~12.0.7",
     "expo-image": "~1.12.12",
     "expo-linear-gradient": "~13.0.2",
     "expo-notifications": "~0.28.9",

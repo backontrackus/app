@@ -43,12 +43,22 @@ export default function HomeScreen({ navigation }: Props) {
   checkAuth(pb.authStore.model);
 
   return (
-    <SafeAreaView className="relative h-screen flex-1 flex-col items-center justify-end gap-5">
-      <View className="absolute bottom-0 z-20 flex-1 flex-col items-center justify-end py-2">
-        <Image
-          className="z-20 aspect-square w-32"
-          source={require("../assets/logo.png")}
-        />
+    <SafeAreaView className="relative h-full flex-1 flex-col items-center justify-end">
+      <View className="absolute bottom-0 z-20 flex-1 flex-col items-center justify-end">
+        <View className="my-2 flex flex-row items-center justify-between gap-x-2">
+          <Image
+            className="z-20 aspect-square w-24"
+            source={require("../assets/logo.png")}
+          />
+          <Text
+            className="w-fit text-center text-3xl text-white"
+            style={{
+              fontFamily: "Oswald_600SemiBold",
+            }}
+          >
+            Back on Track{"\n"}America
+          </Text>
+        </View>
         <TouchableOpacity
           onPress={async () => {
             Sentry.addBreadcrumb({
@@ -107,10 +117,10 @@ export default function HomeScreen({ navigation }: Props) {
       </View>
       <LinearGradient
         colors={["rgba(0, 0, 0, 0.30)", "rgba(0, 0, 0, 0.40)", "black"]}
-        className="absolute top-0 z-10 h-full w-full"
+        className="absolute bottom-0 z-10 h-full w-full"
       />
       <Image
-        className="absolute top-0 z-0"
+        className="absolute bottom-0 z-0 h-full"
         source={require("../assets/lucas.jpg")}
       />
     </SafeAreaView>
