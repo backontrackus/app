@@ -2,6 +2,7 @@ import { ActivityIndicator, FlatList } from "react-native";
 import { useState, useCallback, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import pb from "@/util/pocketbase";
 import Channel from "@/components/channel";
@@ -108,26 +109,28 @@ export default function ChannelsPage({ navigation }: Props) {
   }
 
   return (
-    <FlatList
-      data={channels}
-      renderItem={({ item: channel }) => (
-        <Channel key={channel.id} model={channel} navigation={navigation} />
-      )}
-      onEndReached={() => {
-        if (nextPageRef.current === undefined) {
-          return;
-        }
-        fetchData(false);
-      }}
-      onEndReachedThreshold={0.8}
-      ListFooterComponent={ListEndLoader}
-      className="flex w-full flex-col px-2 py-3"
-      contentContainerStyle={{
-        justifyContent: "flex-start",
-        alignItems: "center",
-      }}
-      onRefresh={refresh}
-      refreshing={isLoading}
-    />
+    <SafeAreaView>
+      <FlatList
+        data={channels}
+        renderItem={({ item: channel }) => (
+          <Channel key={channel.id} model={channel} navigation={navigation} />
+        )}
+        onEndReached={() => {
+          if (nextPageRef.current === undefined) {
+            return;
+          }
+          fetchData(false);
+        }}
+        onEndReachedThreshold={0.8}
+        ListFooterComponent={ListEndLoader}
+        className="flex w-full flex-col px-2 py-3"
+        contentContainerStyle={{
+          justifyContent: "flex-start",
+          alignItems: "center",
+        }}
+        onRefresh={refresh}
+        refreshing={isLoading}
+      />
+    </SafeAreaView>
   );
 }

@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import { useColorScheme } from "nativewind";
 import * as Sentry from "@sentry/react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import Confirmation from "@/components/confirmation";
 
@@ -36,7 +37,7 @@ const AccountPage = ({ navigation }: Props) => {
   }, [user]);
 
   return (
-    <View className="relative h-full w-full">
+    <SafeAreaView className="relative h-full w-full">
       <Confirmation
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -137,7 +138,7 @@ const AccountPage = ({ navigation }: Props) => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

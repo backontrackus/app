@@ -8,6 +8,7 @@ import {
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import Announcement from "@/components/announcement";
 import Confirmation from "@/components/confirmation";
@@ -111,7 +112,7 @@ export default function AnnouncementsPage({ navigation }: Props) {
   }
 
   return (
-    <View className="relative h-full w-full">
+    <SafeAreaView className="relative h-full w-full">
       <Confirmation
         modalVisible={modalId !== null}
         setModalVisible={() => {
@@ -171,6 +172,6 @@ export default function AnnouncementsPage({ navigation }: Props) {
           <Text className="text-center text-2xl text-white">+</Text>
         </TouchableOpacity>
       )}
-    </View>
+    </SafeAreaView>
   );
 }

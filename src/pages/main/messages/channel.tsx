@@ -8,8 +8,8 @@ import {
 import { useCallback, useState, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useColorScheme } from "nativewind";
 import * as Sentry from "@sentry/react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import pb from "@/util/pocketbase";
 import Message from "@/components/message";
@@ -33,7 +33,6 @@ type Props = CompositeScreenProps<
 >;
 
 export default function ChannelPage({ navigation, route }: Props) {
-  const { colorScheme } = useColorScheme();
   const nextPageRef = useRef<number>();
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstPageReceived, setIsFirstPageReceived] = useState(false);
@@ -116,7 +115,7 @@ export default function ChannelPage({ navigation, route }: Props) {
   }
 
   return (
-    <View
+    <SafeAreaView
       className="relative h-full w-full pt-2"
       onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
     >
@@ -179,6 +178,6 @@ export default function ChannelPage({ navigation, route }: Props) {
           <MaterialCommunityIcons name="send" size={24} color="white" />
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

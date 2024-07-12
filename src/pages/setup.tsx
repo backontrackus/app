@@ -2,6 +2,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
 import * as Sentry from "@sentry/react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import pb from "@/util/pocketbase";
 
@@ -37,7 +38,7 @@ export default function SetupScreen({ navigation, route }: Props) {
   }, []);
 
   return (
-    <View className="relative h-screen flex-1 flex-col items-center justify-center bg-bot-blue-1">
+    <SafeAreaView className="relative h-screen flex-1 flex-col items-center justify-center bg-bot-blue-1">
       <Image
         className="z-20 aspect-square w-32"
         source={require("../assets/logo.png")}
@@ -95,6 +96,6 @@ export default function SetupScreen({ navigation, route }: Props) {
       >
         <Text className="text-center text-2xl font-semibold">Continue</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
