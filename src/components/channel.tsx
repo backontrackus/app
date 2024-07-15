@@ -110,7 +110,7 @@ export default function Channel(props: ChannelProps) {
           />
           <View className="flex w-10/12 flex-col items-start justify-start">
             <Text className="text-xl font-bold dark:text-white">
-              {userNames.map((n) => n.name).join(", ")}
+              {props.model.title}
             </Text>
             <Text className="w-full break-words text-lg dark:text-white">
               <Text className="mr-1 text-lg font-semibold dark:text-white">

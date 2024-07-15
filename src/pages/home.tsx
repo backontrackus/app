@@ -77,6 +77,7 @@ export default function HomeScreen({ navigation }: Props) {
                 },
               });
             } catch (e) {
+              console.error(e.originalError);
               Sentry.captureException(e);
             }
 

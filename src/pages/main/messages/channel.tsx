@@ -58,7 +58,6 @@ export default function ChannelPage({ navigation, route }: Props) {
     pb.collection("messages")
       .getList(erase ? 1 : nextPageRef.current, 15, {
         filter: `"${route.params.channelId}" ~ channel`,
-        expand: "user",
         sort: "-created",
       })
       .then((res) => {
