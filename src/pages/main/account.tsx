@@ -23,7 +23,8 @@ type Props = CompositeScreenProps<
 const AccountPage = ({ navigation }: Props) => {
   const { colorScheme, toggleColorScheme } = useColorScheme();
   const [location, setLocation] = useState<RecordModel | null>(null);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [locationModalVisible, setLocationModalVisible] = useState(false);
   const user = pb.authStore.model;
 
   useEffect(() => {
@@ -39,13 +40,21 @@ const AccountPage = ({ navigation }: Props) => {
   return (
     <SafeAreaView className="relative h-full w-full">
       <Confirmation
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
+        modalVisible={deleteModalVisible}
+        setModalVisible={setDeleteModalVisible}
         question="Are you sure you want to delete your account?"
         yesCallback={() => {
           pb.collection("users").delete(pb.authStore.model?.id);
           pb.authStore.clear();
           navigation.navigate("Home");
+        }}
+      />
+      <Confirmation
+        modalVisible={locationModalVisible}
+        setModalVisible={setLocationModalVisible}
+        question="Are you sure you want to change your location? You will be signed out after changing your location."
+        yesCallback={() => {
+          navigation.navigate("Setup", { logout: true });
         }}
       />
       <View className="z-10 flex h-full items-center justify-center">
@@ -82,7 +91,7 @@ const AccountPage = ({ navigation }: Props) => {
 
         <TouchableOpacity
           className="mt-2 w-1/2 flex-row items-center rounded-md bg-gray-500 p-2"
-          onPress={() => navigation.navigate("Setup", { logout: true })}
+          onPress={() => setLocationModalVisible(true)}
         >
           <MaterialCommunityIcons
             name="map-marker"
@@ -125,7 +134,7 @@ const AccountPage = ({ navigation }: Props) => {
 
         <TouchableOpacity
           className="mt-2 w-1/2 flex-row items-center rounded-md bg-red-600 p-2"
-          onPress={() => setModalVisible(true)}
+          onPress={() => setDeleteModalVisible(true)}
         >
           <MaterialCommunityIcons
             name="trash-can"
