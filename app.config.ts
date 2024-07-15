@@ -52,6 +52,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         ],
       },
     ],
+    [
+      "expo-build-properties",
+      {
+        android: {
+          // Network inspector breaks react-native-sse
+          networkInspector: false,
+        },
+      },
+    ],
   ],
   extra: {
     eas: {
