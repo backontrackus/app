@@ -82,21 +82,9 @@ export default function ChannelPage({ navigation, route }: Props) {
     pb.collection("channels")
       .getOne(route.params.channelId)
       .then((channel) => {
-        if (channel.users.includes(user.id)) {
-          pb.collection("user_names")
-            .getFullList({
-              filter: `"${channel.users
-                .filter((u: RecordModel) => u !== user.id)
-                .join(",")}" ~ id`,
-            })
-            .then((userNames) => {
-              navigation.setOptions({
-                title: userNames.map((un) => un.name).join(", "),
-              });
-            });
-        } else {
-          navigation.navigate("Messages");
-        }
+        navigation.setOptions({
+          title: channel.title,
+        });
       })
       .catch(Sentry.captureException);
   }, [user, route.params.channelId]);

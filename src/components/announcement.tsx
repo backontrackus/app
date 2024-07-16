@@ -246,8 +246,10 @@ export default function Announcement(props: AnnouncementData) {
                 .getFirstListItem(`announcement ~ "${props.model.id}"`);
               // @ts-expect-error
               props.navigation.navigate("Messages", {
-                screen: "Channel",
-                params: { channelId: channel.id },
+                screen: "Channels",
+                params: {
+                  next: channel.id,
+                },
               });
             }}
             className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-orange py-1"

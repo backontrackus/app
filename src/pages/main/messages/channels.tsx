@@ -25,7 +25,7 @@ type Props = CompositeScreenProps<
   >
 >;
 
-export default function ChannelsPage({ navigation }: Props) {
+export default function ChannelsPage({ navigation, route }: Props) {
   const nextPageRef = useRef<number>();
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstPageReceived, setIsFirstPageReceived] = useState(false);
@@ -39,6 +39,12 @@ export default function ChannelsPage({ navigation }: Props) {
     return null;
   }
 
+  // Hacky thing to get the back button to exist on reply
+  if (route.params?.next) {
+    navigation.setParams({ next: undefined });
+    navigation.navigate("Channel", { channelId: route.params.next });
+  }
+
   const fetchData = (erase: boolean) => {
     setIsLoading(true);
 
@@ -49,7 +55,7 @@ export default function ChannelsPage({ navigation }: Props) {
     });
 
     pb.collection("channels")
-      .getList(erase ? 1 : nextPageRef.current, 5, {
+      .getList(erase ? 1 : nextPageRef.current, 500, {
         expand: "users",
         requestKey: "channels",
       })

@@ -19,7 +19,9 @@ export type TabParamList = {
 };
 
 export type MessagesStackParamList = {
-  Channels: undefined;
+  Channels: {
+    next?: string;
+  };
   Channel: {
     channelId: string;
   };
