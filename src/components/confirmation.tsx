@@ -29,12 +29,12 @@ export default function Confirmation(props: ConfirmationData) {
         >
           <View className="flex h-full items-center justify-center">
             <View className="p-35 m-20 items-center rounded-lg bg-white p-4 shadow-md">
-              <Text className="mb-15 mb-2 text-center text-xl font-semibold">
+              <Text className="mb-2 text-center text-xl font-semibold">
                 {props.question}
               </Text>
-              <View className="flex flex-row items-center justify-evenly gap-x-2">
+              <View className="flex w-full flex-row items-center justify-start">
                 <TouchableOpacity
-                  className="rounded-lg bg-red-600 px-10 py-3 shadow-md"
+                  className="rounded-lg bg-red-600 px-5 py-3 shadow-md"
                   onPress={() => props.yesCallback()}
                 >
                   <Text className="text-center text-lg font-bold text-white">
@@ -42,7 +42,7 @@ export default function Confirmation(props: ConfirmationData) {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  className="rounded-lg bg-gray-500 px-10 py-3 shadow-md"
+                  className="ml-3 rounded-lg bg-gray-500 px-5 py-3 shadow-md"
                   onPress={() => props.setModalVisible(false)}
                 >
                   <Text className="text-center text-lg font-bold text-white">
