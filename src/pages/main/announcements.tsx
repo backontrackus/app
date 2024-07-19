@@ -40,8 +40,10 @@ export default function AnnouncementsPage({ navigation }: Props) {
 
   const location = user.location;
 
-  const fetchData = (erase: boolean) => {
-    setIsLoading(true);
+  const fetchData = (erase: boolean, noIndicator?: boolean) => {
+    if (noIndicator !== true) {
+      setIsLoading(true);
+    }
 
     Sentry.addBreadcrumb({
       type: "pb-fetch",
@@ -91,15 +93,18 @@ export default function AnnouncementsPage({ navigation }: Props) {
     }
   }, [user]);
 
-  const refresh = useCallback(() => {
-    if (!location) {
-      return;
-    }
+  const refresh = useCallback(
+    (noIndicator?: boolean) => {
+      if (!location) {
+        return;
+      }
 
-    fetchData(true);
-  }, [location]);
+      fetchData(true, noIndicator);
+    },
+    [location],
+  );
 
-  useFocusEffect(refresh);
+  useFocusEffect(() => refresh(true));
 
   const ListEndLoader = () => {
     if (!isFirstPageReceived && isLoading) {

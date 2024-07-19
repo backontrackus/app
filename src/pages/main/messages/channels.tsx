@@ -45,8 +45,10 @@ export default function ChannelsPage({ navigation, route }: Props) {
     navigation.navigate("Channel", { channelId: route.params.next });
   }
 
-  const fetchData = (erase: boolean) => {
-    setIsLoading(true);
+  const fetchData = (erase: boolean, noIndicator?: boolean) => {
+    if (noIndicator !== true) {
+      setIsLoading(true);
+    }
 
     Sentry.addBreadcrumb({
       type: "pb-fetch",
@@ -101,11 +103,11 @@ export default function ChannelsPage({ navigation, route }: Props) {
       })
       .catch(Sentry.captureException);
   };
-  const refresh = useCallback(() => {
-    fetchData(true);
+  const refresh = useCallback((noIndicator?: boolean) => {
+    fetchData(true, noIndicator);
   }, []);
 
-  useFocusEffect(refresh);
+  useFocusEffect(() => refresh(true));
 
   const ListEndLoader = () => {
     if (!isFirstPageReceived && isLoading) {
