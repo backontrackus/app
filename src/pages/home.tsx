@@ -14,6 +14,11 @@ type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 export default function HomeScreen({ navigation }: Props) {
   function checkAuth(model: any) {
     if (model) {
+      if (pb.authStore.isValid !== true) {
+        pb.authStore.clear();
+        return;
+      }
+
       Sentry.setUser({
         id: pb.authStore.model?.id,
         username: pb.authStore.model?.username,
