@@ -44,7 +44,7 @@ export default function SetupScreen({ navigation, route }: Props) {
         source={require("../assets/logo.png")}
       />
       <Text className="mx-10 text-center text-4xl font-bold text-white">
-        Hi {user.name.split(" ")[0]}, welcome to Back On Track!
+        Hi {user.name.split(" ")[0]}, welcome to Back on Track!
       </Text>
       <Text className="text-center text-2xl text-white">
         Select your location to continue:
