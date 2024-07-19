@@ -30,7 +30,9 @@ type ChannelProps = {
 
 export default function Channel(props: ChannelProps) {
   const [userNames, setUserNames] = useState<RecordModel[]>([]);
-  const [latestMessage, setLatestMessage] = useState<RecordModel | null>(null);
+  const [latestMessage, setLatestMessage] = useState<
+    RecordModel | null | false
+  >(null);
   const [latestMessageUser, setLatestMessageUser] =
     useState<RecordModel | null>(null);
 
@@ -77,6 +79,9 @@ export default function Channel(props: ChannelProps) {
           })
           .then(setLatestMessageUser)
           .catch(Sentry.captureException);
+      })
+      .catch(() => {
+        setLatestMessage(false);
       });
   }, [props.model.users]);
 
@@ -85,13 +90,19 @@ export default function Channel(props: ChannelProps) {
     return null;
   }
 
-  let content = (latestMessage?.content as string) ?? "Unable to load message";
+  let content =
+    latestMessage !== false
+      ? (latestMessage?.content as string) ?? "Loading..."
+      : "No message";
 
   if (content.length > 50) {
     content = content.slice(0, 47) + "...";
   }
 
-  if (userNames.length === 0 || !latestMessageUser?.name) {
+  if (
+    userNames.length === 0 ||
+    (latestMessage !== false && !latestMessageUser?.name)
+  ) {
     return null;
   }
 
@@ -113,12 +124,14 @@ export default function Channel(props: ChannelProps) {
               {props.model.title}
             </Text>
             <Text className="w-full break-words text-lg dark:text-white">
-              <Text className="mr-1 text-lg font-semibold dark:text-white">
-                {latestMessageUser?.id !== authUser?.id
-                  ? latestMessageUser?.name
-                  : "You"}
-                :{" "}
-              </Text>
+              {latestMessageUser !== null && (
+                <Text className="mr-1 text-lg font-semibold dark:text-white">
+                  {latestMessageUser?.id !== authUser?.id
+                    ? latestMessageUser?.name
+                    : "You"}
+                  :{" "}
+                </Text>
+              )}
 
               {content}
             </Text>

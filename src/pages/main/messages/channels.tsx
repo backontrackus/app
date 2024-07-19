@@ -86,6 +86,9 @@ export default function ChannelsPage({ navigation, route }: Props) {
             .then((res) => {
               const dateStr = (res.updated ?? res.created).replace(" ", "T");
               modifiedChannels[i].ts = Date.parse(dateStr).valueOf();
+            })
+            .catch(() => {
+              modifiedChannels[i].ts = new Date().valueOf();
             });
 
           latestPromises.push(p);
