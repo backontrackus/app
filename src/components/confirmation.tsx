@@ -12,7 +12,7 @@ type ConfirmationData = {
 export default function Confirmation(props: ConfirmationData) {
   return (
     <View
-      className="absolute left-0 top-0 z-30 h-full w-full bg-gray-800 opacity-80"
+      className="absolute left-0 top-0 z-30 h-screen w-full bg-gray-800 opacity-80"
       style={{
         display: props.modalVisible ? undefined : "none",
       }}
