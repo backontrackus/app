@@ -35,7 +35,10 @@ export default function Confirmation(props: ConfirmationData) {
               <View className="flex w-full flex-row items-center justify-start">
                 <TouchableOpacity
                   className="rounded-lg bg-red-600 px-5 py-3 shadow-md"
-                  onPress={() => props.yesCallback()}
+                  onPress={() => {
+                    props.setModalVisible(false);
+                    props.yesCallback();
+                  }}
                 >
                   <Text className="text-center text-lg font-bold text-white">
                     Yes
