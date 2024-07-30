@@ -98,7 +98,6 @@ export default function ChannelsPage({ navigation, route }: Props) {
 
         Promise.all(latestPromises).then(() => {
           modifiedChannels.sort((a, b) => b.ts - a.ts);
-          console.log("setting");
           setChannels(modifiedChannels);
         });
       })
