@@ -98,6 +98,7 @@ export default function ChannelsPage({ navigation, route }: Props) {
 
         Promise.all(latestPromises).then(() => {
           modifiedChannels.sort((a, b) => b.ts - a.ts);
+          console.log("setting");
           setChannels(modifiedChannels);
         });
       })
@@ -107,13 +108,7 @@ export default function ChannelsPage({ navigation, route }: Props) {
     fetchData(true, noIndicator);
   }, []);
 
-  useFocusEffect(() => refresh(true));
-
-  const ListEndLoader = () => {
-    if (!isFirstPageReceived && isLoading) {
-      return <ActivityIndicator size={"large"} />;
-    }
-  };
+  useFocusEffect(useCallback(() => refresh(true), []));
 
   if (!isFirstPageReceived && isLoading) {
     return <ActivityIndicator size={"small"} />;
@@ -126,14 +121,6 @@ export default function ChannelsPage({ navigation, route }: Props) {
         renderItem={({ item: channel }) => (
           <Channel key={channel.id} model={channel} navigation={navigation} />
         )}
-        onEndReached={() => {
-          if (nextPageRef.current === undefined) {
-            return;
-          }
-          fetchData(false);
-        }}
-        onEndReachedThreshold={0.8}
-        ListFooterComponent={ListEndLoader}
         className="flex w-full flex-col px-2 py-3"
         contentContainerStyle={{
           justifyContent: "flex-start",
