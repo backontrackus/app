@@ -19,7 +19,7 @@
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_POCKETBASE_URL": "https://backontrack.lukeo.hackclub.app",
+        "EXPO_PUBLIC_POCKETBASE_URL": "https://pb.backontrackus.org/",
         "EXPO_PUBLIC_PROJECT_ID": "a3af5358-9a31-49de-83c4-38cfc632784b",
         "EXPO_PUBLIC_SENTRY_DSN": "https://17a384bcc4a3d40e85ab303851a46bc7@o4506577135403008.ingest.sentry.io/4506577139728384",
         "EXPO_PUBLIC_SENTRY_ENVIRONMENT": "production",
