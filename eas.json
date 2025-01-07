@@ -1,6 +1,7 @@
 {
   "cli": {
-    "version": ">= 5.4.0"
+    "version": ">= 5.4.0",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
@@ -18,6 +19,7 @@
       "distribution": "internal"
     },
     "production": {
+      "autoIncrement": true,
       "env": {
         "EXPO_PUBLIC_POCKETBASE_URL": "https://pb.backontrackus.org/",
         "EXPO_PUBLIC_PROJECT_ID": "a3af5358-9a31-49de-83c4-38cfc632784b",

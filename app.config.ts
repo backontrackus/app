@@ -4,7 +4,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "Back On Track",
   slug: "bot-app",
-  version: "1.0.5",
+  version: "1.0.0",
   orientation: "portrait",
   icon: "./src/assets/icon.png",
   userInterfaceStyle: "automatic",
@@ -16,7 +16,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "org.backontrackus.app",
+    bundleIdentifier: "org.backontrackus.mobile",
     infoPlist: {
       NSCalendarsUsageDescription:
         "This app requires access to your calendar to add events from your location's announcements.",
