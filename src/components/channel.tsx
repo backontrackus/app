@@ -120,7 +120,7 @@ export default function Channel(props: ChannelProps) {
             className="mr-3 aspect-square w-1/6 rounded-full"
           />
           <View className="flex w-10/12 flex-col items-start justify-start">
-            <Text className="text-xl font-bold dark:text-white">
+            <Text className="text-lg font-bold leading-tight dark:text-white">
               {props.model.title}
             </Text>
             <Text className="w-full break-words text-lg dark:text-white">

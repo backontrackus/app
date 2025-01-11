@@ -107,6 +107,7 @@ function App() {
               component={HomeScreen}
               options={{
                 headerShown: false,
+                headerTransparent: true,
               }}
             />
             <Stack.Screen

@@ -71,12 +71,15 @@ export default function Announcement(props: AnnouncementData) {
   return (
     <View className="mb-3 flex w-11/12 flex-col items-start justify-start">
       <View className="flex flex-row items-center justify-start pl-1">
-        <Text className="mr-2">{props.model.expand?.user?.name} </Text>
+        <Text className="mr-1">{props.model.expand?.user?.name} on</Text>
         <Text className="text-slate-900">
-          {new Date(props.model.created).toLocaleString()}
+          {new Date(props.model.created).toLocaleString([], {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })}
         </Text>
       </View>
-      <View className="flex w-full flex-col items-start justify-start rounded-lg bg-bot-blue-1 p-2">
+      <View className="flex w-full flex-col items-start justify-start rounded-xl rounded-bl-none bg-bot-blue-1 p-2">
         <View className="flex w-full flex-row items-start justify-between">
           <Text className="w-4/5 text-2xl font-semibold text-white">
             {props.model.title}
@@ -115,25 +118,25 @@ export default function Announcement(props: AnnouncementData) {
           )}
         </View>
         <View className="mt-1 flex flex-row flex-wrap items-center justify-evenly">
-          <View className="flex flex-row items-center justify-start">
+          <View className="flex flex-row items-center justify-start py-1">
             <MaterialIcons name="calendar-today" size={24} color="white" />
-            <Text className="mx-1 text-sm text-white">
+            <Text className="mx-2 text-sm text-white">
               {calendar?.start || calendar?.end
                 ? getDateIntervalString(calendar.start, calendar.end)
                 : "No Date"}
             </Text>
           </View>
-          <View className="flex flex-row items-center justify-start">
+          <View className="flex flex-row items-center justify-start py-1">
             <MaterialCommunityIcons name="clock" size={24} color="white" />
-            <Text className="mx-1 text-sm text-white">
+            <Text className="mx-2 text-sm text-white">
               {calendar?.start || calendar?.end
                 ? getTimeIntervalString(calendar.start, calendar.end)
                 : "No Time"}
             </Text>
           </View>
-          <View className="flex flex-row items-center justify-start">
+          <View className="flex flex-row items-center justify-start py-1">
             <MaterialCommunityIcons name="map-marker" size={24} color="white" />
-            <Text className="mx-1 text-sm text-white">
+            <Text className="mx-2 text-sm text-white">
               {calendar?.location ?? "No Location"}
             </Text>
           </View>
@@ -148,7 +151,7 @@ export default function Announcement(props: AnnouncementData) {
         >
           {props.model.content}
         </MarkdownView>
-        <View className="my-2 flex w-full flex-col items-center justify-start gap-y-5">
+        <View className="my-3 flex w-full flex-col items-center justify-start gap-y-5">
           {images.map((image) => {
             const filename = image.split("/").at(-1) ?? "file.txt";
             const ext = filename.split(".").at(-1) ?? "txt";
@@ -185,7 +188,7 @@ export default function Announcement(props: AnnouncementData) {
             );
           })}
         </View>
-        <View className="mt-2 flex w-full flex-row items-center justify-evenly">
+        <View className="my-1 flex w-full flex-row items-center justify-evenly">
           <TouchableOpacity
             onPress={() => {
               fetch(
@@ -199,9 +202,9 @@ export default function Announcement(props: AnnouncementData) {
               );
               if (props.model.rsvpUrl) Linking.openURL(props.model.rsvpUrl);
             }}
-            className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-orange py-1"
+            className="bg-bot-blue-2 flex w-[30%] flex-col items-center justify-center rounded-full py-1"
           >
-            <Text className="text-lg font-semibold text-black">RSVP</Text>
+            <Text className="text-lg font-semibold text-white">RSVP</Text>
           </TouchableOpacity>
           {calendar && (
             <TouchableOpacity
@@ -234,9 +237,9 @@ export default function Announcement(props: AnnouncementData) {
                   { sync: true },
                 );
               }}
-              className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-orange py-1"
+              className="bg-bot-blue-2 flex w-[30%] flex-col items-center justify-center rounded-full py-1"
             >
-              <Text className="text-lg font-semibold text-black">Calendar</Text>
+              <Text className="text-lg font-semibold text-white">Calendar</Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity
@@ -252,9 +255,9 @@ export default function Announcement(props: AnnouncementData) {
                 },
               });
             }}
-            className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-orange py-1"
+            className="bg-bot-blue-2 flex w-[30%] flex-col items-center justify-center rounded-full py-1"
           >
-            <Text className="text-lg font-semibold text-black">Reply</Text>
+            <Text className="text-lg font-semibold text-white">Reply</Text>
           </TouchableOpacity>
         </View>
       </View>

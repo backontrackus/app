@@ -1,9 +1,10 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Image, BackHandler } from "react-native";
-import { useEffect, useCallback } from "react";
+import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
+import { Image, BackHandler, Platform, TouchableOpacity } from "react-native";
+import React, { useEffect, useCallback, useState } from "react";
 import * as Sentry from "@sentry/react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 import AnnouncementsPage from "./main/announcements";
 import MessagesPage from "./main/messages";
@@ -18,7 +19,10 @@ type Props = NativeStackScreenProps<RootStackParamList, "Main">;
 const Tab = createBottomTabNavigator<TabParamList>();
 
 export default function MainScreen({ navigation, route }: Props) {
+  const [isLeader, setIsLeader] = useState(false);
+
   const user = pb.authStore.model;
+  const location = user?.location;
 
   useEffect(() => {
     if (!user) return;
@@ -57,6 +61,27 @@ export default function MainScreen({ navigation, route }: Props) {
       });
   }, [route.params.expoPushToken, user]);
 
+  useEffect(() => {
+    if (location) {
+      Sentry.addBreadcrumb({
+        type: "pb-fetch",
+        category: "locations",
+        level: "info",
+      });
+
+      pb.collection("locations")
+        .getOne(location)
+        .then((locationData) => {
+          if (locationData.leaders.includes(user.id)) {
+            setIsLeader(true);
+          } else {
+            setIsLeader(false);
+          }
+        })
+        .catch(Sentry.captureException);
+    }
+  }, [user]);
+
   // disable the back button
   useFocusEffect(
     useCallback(() => {
@@ -79,56 +104,85 @@ export default function MainScreen({ navigation, route }: Props) {
   }
 
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarStyle: {
-          height: 100,
-        },
-        tabBarLabelStyle: {
-          fontSize: 16,
-          marginBottom: 5,
-        },
-        headerTitleStyle: {
-          fontSize: 25,
-          fontWeight: "bold",
-        },
-        tabBarIcon: ({ focused, color, size: oldSize }) => {
-          let iconName;
-          const size = oldSize + 5;
+    <>
+      <StatusBar style="dark" />
 
-          switch (route.name) {
-            case "Announcements":
-              iconName = "bullhorn";
-              break;
-            case "Messages":
-              iconName = "android-messages";
-              break;
-            case "Account":
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarStyle: {
+            height: Platform.OS == "ios" ? 100 : 60,
+          },
+          tabBarLabelStyle: {
+            fontSize: 16,
+            marginBottom: 5,
+          },
+          headerTitleStyle: {
+            fontSize: 25,
+            fontWeight: "bold",
+          },
+          tabBarIcon: ({ focused, color, size: oldSize }) => {
+            let iconName;
+            const size = oldSize + 5;
+
+            switch (route.name) {
+              case "Announcements":
+                iconName = "bullhorn";
+                break;
+              case "Messages":
+                iconName = "android-messages";
+                break;
+              case "Account":
+                return (
+                  <Image
+                    source={{ uri: user.avatarUrl }}
+                    width={size}
+                    height={size}
+                    style={{ marginTop: 5, borderRadius: 9999 }}
+                  />
+                );
+            }
+
+            return (
+              <MaterialCommunityIcons
+                // @ts-ignore
+                name={iconName}
+                size={size}
+                color={color}
+                style={{ marginTop: 5 }}
+              />
+            );
+          },
+        })}
+      >
+        <Tab.Screen
+          name="Announcements"
+          component={AnnouncementsPage}
+          options={{
+            headerRight: () => {
+              if (!isLeader) return null;
               return (
-                <Image
-                  source={{ uri: user.avatarUrl }}
-                  width={size}
-                  height={size}
-                  style={{ marginTop: 5, borderRadius: 9999 }}
-                />
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("NewAnnouncement", {});
+                  }}
+                  style={{
+                    marginRight: 10,
+                  }}
+                >
+                  <AntDesign
+                    name="pluscircleo"
+                    size={24}
+                    color="#F90"
+                    className="h-5 w-5"
+                  />
+                </TouchableOpacity>
               );
-          }
-
-          return (
-            <MaterialCommunityIcons
-              // @ts-ignore
-              name={iconName}
-              size={size}
-              color={color}
-              style={{ marginTop: 5 }}
-            />
-          );
-        },
-      })}
-    >
-      <Tab.Screen name="Announcements" component={AnnouncementsPage} />
-      <Tab.Screen name="Messages" component={MessagesPage} />
-      <Tab.Screen name="Account" component={AccountPage} />
-    </Tab.Navigator>
+            },
+          }}
+        />
+        <Tab.Screen name="Messages" component={MessagesPage} />
+        <Tab.Screen name="Account" component={AccountPage} />
+      </Tab.Navigator>
+    </>
   );
 }

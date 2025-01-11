@@ -1,9 +1,10 @@
-import { TouchableOpacity, View, Text, Image } from "react-native";
+import { TouchableOpacity, View, Text, Image, Platform } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect } from "react";
 import * as Sentry from "@sentry/react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/util/pages";
@@ -49,6 +50,7 @@ export default function HomeScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView className="relative h-full flex-1 flex-col items-center justify-end">
+      <StatusBar backgroundColor="black" style="light" />
       <View className="absolute bottom-0 z-20 flex-1 flex-col items-center justify-end">
         <View className="my-2 flex flex-row items-center justify-between gap-x-2">
           <Image
@@ -82,6 +84,7 @@ export default function HomeScreen({ navigation }: Props) {
                 },
               });
             } catch (e) {
+              // @ts-expect-error
               console.error(e.originalError);
               Sentry.captureException(e);
             }
@@ -110,7 +113,9 @@ export default function HomeScreen({ navigation }: Props) {
               }
             }
           }}
-          className="z-20 flex flex-1 flex-row items-center rounded-md bg-bot-orange px-5 py-2"
+          className={`z-20 flex flex-1 flex-row items-center rounded-md bg-bot-orange px-5 py-2 ${
+            Platform.OS === "ios" ? "mb-10" : ""
+          }`}
         >
           <Image
             className="mr-2 aspect-square h-10 w-10"

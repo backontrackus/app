@@ -5,6 +5,7 @@ module.exports = {
       colors: {
         "bot-orange": "#F90",
         "bot-blue-1": "#007BC1",
+        "bot-blue-2": "#03649c",
       },
     },
   },
