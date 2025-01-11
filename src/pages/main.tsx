@@ -82,7 +82,7 @@ export default function MainScreen({ navigation, route }: Props) {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarStyle: {
-          height: 60,
+          height: 100,
         },
         tabBarLabelStyle: {
           fontSize: 16,
