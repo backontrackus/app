@@ -60,6 +60,7 @@ export default function ChannelsPage({ navigation, route }: Props) {
       .getList(erase ? 1 : nextPageRef.current, 500, {
         expand: "users",
         requestKey: "channels",
+        sort: "-created",
       })
       .then((res) => {
         let newChannels = erase ? res.items : [...channels, ...res.items];
@@ -90,7 +91,8 @@ export default function ChannelsPage({ navigation, route }: Props) {
               modifiedChannels[i].ts = Date.parse(dateStr).valueOf();
             })
             .catch(() => {
-              modifiedChannels[i].ts = new Date().valueOf();
+              const dateStr = channel.created.replace(" ", "T");
+              modifiedChannels[i].ts = Date.parse(dateStr).valueOf();
             });
 
           latestPromises.push(p);
@@ -114,20 +116,20 @@ export default function ChannelsPage({ navigation, route }: Props) {
   }
 
   return (
-    <SafeAreaView>
-      <FlatList
-        data={channels}
-        renderItem={({ item: channel }) => (
-          <Channel key={channel.id} model={channel} navigation={navigation} />
-        )}
-        className="flex w-full flex-col px-2 py-3"
-        contentContainerStyle={{
-          justifyContent: "flex-start",
-          alignItems: "center",
-        }}
-        onRefresh={refresh}
-        refreshing={isLoading}
-      />
-    </SafeAreaView>
+    // <SafeAreaView>
+    <FlatList
+      data={channels}
+      renderItem={({ item: channel }) => (
+        <Channel key={channel.id} model={channel} navigation={navigation} />
+      )}
+      className="flex w-full flex-col px-2 py-3"
+      contentContainerStyle={{
+        justifyContent: "flex-start",
+        alignItems: "center",
+      }}
+      onRefresh={refresh}
+      refreshing={isLoading}
+    />
+    // </SafeAreaView>
   );
 }

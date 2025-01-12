@@ -368,7 +368,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
             data.append("content", description);
             data.append("location", pb.authStore.model?.location!);
             data.append("user", pb.authStore.model?.id!);
-            data.append("rsvpUrl", rsvp);
+            data.append("rsvpUrl", rsvp.trim());
 
             const sDate = new Date(startDate);
             sDate.setHours(startTime.getHours());

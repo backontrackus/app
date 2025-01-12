@@ -10,8 +10,7 @@ export function icalToDate(ical: string, tz: string = "America/New_York") {
     ":" +
     ical.slice(11, 13) +
     ":" +
-    ical.slice(13, 15) +
-    "Z";
+    ical.slice(13, 15);
   const date = new Date(newStr);
   return date;
 }
@@ -23,7 +22,7 @@ export function dateToIcal(date: Date) {
   const hour = pad(date.getHours());
   const min = pad(date.getMinutes());
   const sec = pad(date.getSeconds());
-  return `${year}${month}${day}T${hour}${min}${sec}Z`;
+  return `${year}${month}${day}T${hour}${min}${sec}`;
 }
 
 export function getDateIntervalString(start: Date, end: Date) {

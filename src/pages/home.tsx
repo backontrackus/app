@@ -3,7 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect } from "react";
 import * as Sentry from "@sentry/react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import ExpoFont from "expo-font";
 import { StatusBar } from "expo-status-bar";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -49,7 +49,7 @@ export default function HomeScreen({ navigation }: Props) {
   checkAuth(pb.authStore.model);
 
   return (
-    <SafeAreaView className="relative h-full flex-1 flex-col items-center justify-end">
+    <View className="relative h-full flex-1 flex-col items-center justify-end">
       <StatusBar backgroundColor="black" style="light" />
       <View className="absolute bottom-0 z-20 flex-1 flex-col items-center justify-end">
         <View className="my-2 flex flex-row items-center justify-between gap-x-2">
@@ -134,6 +134,6 @@ export default function HomeScreen({ navigation }: Props) {
         className="absolute bottom-0 z-0 h-full"
         source={require("../assets/lucas.jpg")}
       />
-    </SafeAreaView>
+    </View>
   );
 }

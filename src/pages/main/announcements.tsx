@@ -117,7 +117,7 @@ export default function AnnouncementsPage({ navigation }: Props) {
   }
 
   return (
-    <SafeAreaView className="relative h-full w-full">
+    <View className="relative h-full w-full">
       <Confirmation
         modalVisible={modalId !== null}
         setModalVisible={() => {
@@ -177,6 +177,6 @@ export default function AnnouncementsPage({ navigation }: Props) {
           <Text className="text-center text-2xl text-white">+</Text>
         </TouchableOpacity>
       )}
-    </SafeAreaView>
+    </View>
   );
 }
