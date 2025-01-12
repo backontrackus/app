@@ -3,12 +3,13 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect } from "react";
 import * as Sentry from "@sentry/react-native";
-import ExpoFont from "expo-font";
+import { getLoadedFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@/util/pages";
 import pb from "@/util/pocketbase";
+import { oswald } from "@/util/fonts";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -60,7 +61,7 @@ export default function HomeScreen({ navigation }: Props) {
           <Text
             className="w-fit text-center text-3xl text-white"
             style={{
-              fontFamily: "Oswald_600SemiBold",
+              fontFamily: oswald,
             }}
           >
             Back on Track{"\n"}America

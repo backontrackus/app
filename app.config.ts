@@ -45,10 +45,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "expo-font",
       {
         fonts: [
-          "node_modules/@expo-google-fonts/oswald/Oswald_400Regular.ttf",
           "node_modules/@expo-google-fonts/oswald/Oswald_600SemiBold.ttf",
-          "node_modules/@expo-google-fonts/inter/Inter_400Regular.ttf",
-          "node_modules/@expo-google-fonts/inter/Inter_700Bold.ttf",
         ],
       },
     ],

@@ -53,7 +53,6 @@ export default function AnnouncementsPage({ navigation }: Props) {
 
     pb.collection("announcements")
       .getList(erase ? 1 : nextPageRef.current, 5, {
-        expand: "user",
         sort: "-created",
       })
       .then((newAnnouncements) => {

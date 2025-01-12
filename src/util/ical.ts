@@ -25,17 +25,17 @@ export async function getAnnouncementData(
   const json = IcalParser.toJSON(text);
 
   return {
-    summary: json.events[0].summary ?? "No Summary",
-    uid: json.events[0].uid ?? UUID.v4().toString(),
-    stamp: json.events[0].dtstamp?.value
+    summary: json.events[0]?.summary ?? "No Summary",
+    uid: json.events[0]?.uid ?? UUID.v4().toString(),
+    stamp: json.events[0]?.dtstamp?.value
       ? icalToDate(json.events[0].dtstamp?.value)
       : new Date(),
-    start: json.events[0].dtstart?.value
+    start: json.events[0]?.dtstart?.value
       ? icalToDate(json.events[0].dtstart?.value)
       : new Date(),
-    end: json.events[0].dtend?.value
+    end: json.events[0]?.dtend?.value
       ? icalToDate(json.events[0].dtend?.value)
       : new Date(),
-    location: json.events[0].location ?? "No Location",
+    location: json.events[0]?.location ?? "No Location",
   };
 }

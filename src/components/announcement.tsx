@@ -35,6 +35,35 @@ export default function Announcement(props: AnnouncementData) {
   const [calendar, setCalendar] = useState<CalendarData | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<string[]>([]);
+  const [userName, setUserName] = useState("");
+  const [announcementChannel, setAnnouncementChannel] = useState<string | null>(
+    null,
+  );
+
+  async function fetchAnnouncementChannel() {
+    pb.collection("channels")
+      .getFirstListItem(`announcement ~ "${props.model.id}"`)
+      .then((r) => {
+        setAnnouncementChannel(r.id);
+      })
+      .catch(() => {
+        setAnnouncementChannel(null);
+      });
+  }
+
+  useEffect(() => {
+    fetchAnnouncementChannel();
+  }, []);
+
+  useEffect(() => {
+    pb.collection("user_names")
+      .getOne(props.model.user, {
+        requestKey: `announcement-${props.model.id}-user-name-${props.model.user}`,
+      })
+      .then((r) => {
+        setUserName(r.name);
+      });
+  }, [props.model.user]);
 
   useEffect(() => {
     if (props.model.calendar) {
@@ -71,7 +100,7 @@ export default function Announcement(props: AnnouncementData) {
   return (
     <View className="mb-3 flex w-11/12 flex-col items-start justify-start">
       <View className="flex flex-row items-center justify-start pl-1">
-        <Text className="mr-1">{props.model.expand?.user?.name} on</Text>
+        <Text className="mr-1">{userName} on</Text>
         <Text className="text-slate-900">
           {new Date(props.model.created).toLocaleString([], {
             dateStyle: "medium",
@@ -189,23 +218,46 @@ export default function Announcement(props: AnnouncementData) {
           })}
         </View>
         <View className="my-1 flex w-full flex-row items-center justify-evenly">
-          <TouchableOpacity
-            onPress={() => {
-              fetch(
-                `${process.env.EXPO_PUBLIC_POCKETBASE_URL}/rsvp?announcement_id=${props.model.id}`,
-                {
-                  method: "POST",
-                  headers: {
-                    Authorization: `${pb.authStore.token}`,
+          {announcementChannel === null ? (
+            <TouchableOpacity
+              onPress={async () => {
+                const r = await fetch(
+                  `${process.env.EXPO_PUBLIC_POCKETBASE_URL}/rsvp?announcement_id=${props.model.id}`,
+                  {
+                    method: "GET",
+                    headers: {
+                      Authorization: `${pb.authStore.token}`,
+                    },
                   },
-                },
-              );
-              if (props.model.rsvpUrl) Linking.openURL(props.model.rsvpUrl);
-            }}
-            className="bg-bot-blue-2 flex w-[30%] flex-col items-center justify-center rounded-full py-1"
-          >
-            <Text className="text-lg font-semibold text-white">RSVP</Text>
-          </TouchableOpacity>
+                );
+                console.log(r.status);
+                await fetchAnnouncementChannel();
+                if (props.model.rsvpUrl) Linking.openURL(props.model.rsvpUrl);
+              }}
+              className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-blue-2 py-1"
+            >
+              <Text className="text-lg font-semibold text-white">RSVP</Text>
+            </TouchableOpacity>
+          ) : null}
+          {announcementChannel !== null ? (
+            <TouchableOpacity
+              onPress={async () => {
+                const channel = await pb
+                  .collection("channels")
+                  .getFirstListItem(`announcement ~ "${props.model.id}"`);
+                // @ts-expect-error
+                props.navigation.navigate("Messages", {
+                  screen: "Channels",
+                  params: {
+                    next: channel.id,
+                  },
+                });
+              }}
+              className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-blue-2 py-1"
+            >
+              <Text className="text-lg font-semibold text-white">Reply</Text>
+            </TouchableOpacity>
+          ) : null}
           {calendar && (
             <TouchableOpacity
               onPress={async () => {
@@ -237,28 +289,11 @@ export default function Announcement(props: AnnouncementData) {
                   { sync: true },
                 );
               }}
-              className="bg-bot-blue-2 flex w-[30%] flex-col items-center justify-center rounded-full py-1"
+              className="flex w-[30%] flex-col items-center justify-center rounded-full bg-bot-blue-2 py-1"
             >
               <Text className="text-lg font-semibold text-white">Calendar</Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            onPress={async () => {
-              const channel = await pb
-                .collection("channels")
-                .getFirstListItem(`announcement ~ "${props.model.id}"`);
-              // @ts-expect-error
-              props.navigation.navigate("Messages", {
-                screen: "Channels",
-                params: {
-                  next: channel.id,
-                },
-              });
-            }}
-            className="bg-bot-blue-2 flex w-[30%] flex-col items-center justify-center rounded-full py-1"
-          >
-            <Text className="text-lg font-semibold text-white">Reply</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </View>

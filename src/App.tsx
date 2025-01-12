@@ -22,15 +22,11 @@ import NewAnnouncement from "./pages/newAnnouncement";
 import type { RootStackParamList } from "./util/pages";
 import type { NavigationContainerRef } from "@react-navigation/native";
 
-const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
+const routingInstrumentation = Sentry.reactNavigationIntegration();
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
   tracesSampleRate: 1.0,
-  integrations: [
-    new Sentry.ReactNativeTracing({
-      routingInstrumentation,
-    }),
-  ],
+  integrations: [routingInstrumentation],
   environment: process.env.EXPO_PUBLIC_SENTRY_ENVIRONMENT,
 });
 
