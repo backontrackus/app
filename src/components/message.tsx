@@ -5,17 +5,15 @@ import * as Sentry from "@sentry/react-native";
 import { MarkdownView } from "react-native-markdown-view";
 
 import { getTimeString } from "@/util/dateUtils";
-import pb from "@/util/pocketbase";
-
-import type { RecordModel, AuthModel } from "pocketbase";
+import pb, { type Message, type User, type UserName } from "@/util/pocketbase";
 
 type MessageProps = {
-  message: RecordModel;
-  user: AuthModel;
+  message: Message;
+  user: User;
 };
 
 export default function Message({ message, user }: MessageProps) {
-  const [publicUser, setPublicUser] = useState<RecordModel | null>(null);
+  const [publicUser, setPublicUser] = useState<UserName | null>(null);
   if (!user) {
     return null;
   }

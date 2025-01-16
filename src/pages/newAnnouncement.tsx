@@ -59,7 +59,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           getAnnouncementData(announcement).then(async (data) => {
             const newAttachments = [];
             for (const attachment of announcement.attachments) {
-              const url = pb.files.getUrl(announcement, attachment);
+              const url = pb.files.getURL(announcement, attachment);
               const res = await fetch(url);
               const type = res.headers.get("content-type") ?? "text/plain";
 
@@ -366,8 +366,8 @@ export default function NewAnnouncement({ navigation, route }: Props) {
             const data = new FormData();
             data.append("title", name);
             data.append("content", description);
-            data.append("location", pb.authStore.model?.location!);
-            data.append("user", pb.authStore.model?.id!);
+            data.append("location", pb.authStore.record?.location!);
+            data.append("user", pb.authStore.record?.id!);
             data.append("rsvpUrl", rsvp.trim());
 
             const sDate = new Date(startDate);
@@ -452,7 +452,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
                   .collection("announcements")
                   .update(route.params.announcementId, {
                     attachments: null,
-                    location: pb.authStore.model?.location,
+                    location: pb.authStore.record?.location,
                   });
                 await pb
                   .collection("announcements")

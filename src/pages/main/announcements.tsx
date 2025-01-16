@@ -32,7 +32,7 @@ export default function AnnouncementsPage({ navigation }: Props) {
   const [announcements, setAnnouncements] = useState<RecordModel[]>([]);
   const [isLeader, setIsLeader] = useState(false);
   const [modalId, setModalId] = useState<string | null>(null);
-  const user = pb.authStore.model;
+  const user = pb.authStore.record;
   if (!user) {
     navigation.navigate("Home");
     return null;

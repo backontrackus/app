@@ -21,7 +21,7 @@ const Tab = createBottomTabNavigator<TabParamList>();
 export default function MainScreen({ navigation, route }: Props) {
   const [isLeader, setIsLeader] = useState(false);
 
-  const user = pb.authStore.model;
+  const user = pb.authStore.record;
   const location = user?.location;
 
   useEffect(() => {

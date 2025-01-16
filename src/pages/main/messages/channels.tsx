@@ -4,8 +4,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import pb from "@/util/pocketbase";
-import Channel from "@/components/channel";
+import pb, { type Channel } from "@/util/pocketbase";
+import ChannelComponent from "@/components/channel";
 
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -15,7 +15,6 @@ import type {
   TabParamList,
   MessagesStackParamList,
 } from "@/util/pages";
-import type { RecordModel } from "pocketbase";
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<MessagesStackParamList, "Channels">,
@@ -29,11 +28,9 @@ export default function ChannelsPage({ navigation, route }: Props) {
   const nextPageRef = useRef<number>();
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstPageReceived, setIsFirstPageReceived] = useState(false);
-  const [channels, setChannels] = useState<(RecordModel & { ts: number })[]>(
-    [],
-  );
+  const [channels, setChannels] = useState<(Channel & { ts: number })[]>([]);
 
-  const user = pb.authStore.model;
+  const user = pb.authStore.record;
   if (!user) {
     navigation.navigate("Home");
     return null;
@@ -87,7 +84,7 @@ export default function ChannelsPage({ navigation, route }: Props) {
               fields: "created,updated",
             })
             .then((res) => {
-              const dateStr = (res.updated ?? res.created).replace(" ", "T");
+              const dateStr = res.created.replace(" ", "T");
               modifiedChannels[i].ts = Date.parse(dateStr).valueOf();
             })
             .catch(() => {
@@ -120,7 +117,11 @@ export default function ChannelsPage({ navigation, route }: Props) {
     <FlatList
       data={channels}
       renderItem={({ item: channel }) => (
-        <Channel key={channel.id} model={channel} navigation={navigation} />
+        <ChannelComponent
+          key={channel.id}
+          model={channel}
+          navigation={navigation}
+        />
       )}
       className="flex w-full flex-col px-2 py-3"
       contentContainerStyle={{

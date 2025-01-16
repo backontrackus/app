@@ -22,11 +22,11 @@ export default function HomeScreen({ navigation }: Props) {
       }
 
       Sentry.setUser({
-        id: pb.authStore.model?.id,
-        username: pb.authStore.model?.username,
-        email: pb.authStore.model?.email,
+        id: pb.authStore.record?.id,
+        username: pb.authStore.record?.username,
+        email: pb.authStore.record?.email,
         ip_address: "{{auto}}",
-        name: pb.authStore.model?.name,
+        name: pb.authStore.record?.name,
       });
 
       if (model.location) {
@@ -47,7 +47,7 @@ export default function HomeScreen({ navigation }: Props) {
     };
   }, []);
 
-  checkAuth(pb.authStore.model);
+  checkAuth(pb.authStore.record);
 
   return (
     <View className="relative h-full flex-1 flex-col items-center justify-end">
@@ -91,23 +91,26 @@ export default function HomeScreen({ navigation }: Props) {
             }
 
             if (userData) {
-              const avatarUrl = userData?.meta?.avatarUrl;
+              const avatarUrl = userData?.meta?.avatarURL;
               const name = userData?.meta?.name;
 
               Sentry.setUser({
-                id: pb.authStore.model?.id,
-                username: pb.authStore.model?.username,
-                email: pb.authStore.model?.email,
+                id: pb.authStore.record?.id,
+                username: pb.authStore.record?.username,
+                email: pb.authStore.record?.email,
                 ip_address: "{{auto}}",
                 name,
               });
 
-              pb.collection("users").update(pb?.authStore?.model?.id, {
-                avatarUrl,
-                name,
-              });
+              const authId = pb?.authStore?.record?.id;
+              if (authId) {
+                pb.collection("users").update(authId, {
+                  avatarUrl,
+                  name,
+                });
+              }
 
-              if (pb.authStore.model?.location) {
+              if (pb.authStore.record?.location) {
                 navigation.navigate("Main", {});
               } else {
                 navigation.navigate("Setup", { logout: false });

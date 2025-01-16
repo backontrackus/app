@@ -16,7 +16,7 @@ export default function SetupScreen({ navigation, route }: Props) {
   const [locations, setLocations] = useState<RecordModel[]>([]);
   const [selectedLocationId, setSelectedLocationId] = useState<String | null>();
 
-  const user = pb.authStore.model;
+  const user = pb.authStore.record;
   if (!user) {
     navigation.navigate("Home");
     return null;
@@ -89,6 +89,7 @@ export default function SetupScreen({ navigation, route }: Props) {
               pb.authStore.clear();
               navigation.navigate("Home");
             } else {
+              // @ts-expect-error
               navigation.navigate("Main");
             }
           }

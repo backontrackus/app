@@ -11,8 +11,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Sentry from "@sentry/react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import pb from "@/util/pocketbase";
-import Message from "@/components/message";
+import pb, { type Message } from "@/util/pocketbase";
+import MessageComponent from "@/components/message";
 
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -22,7 +22,6 @@ import type {
   TabParamList,
   MessagesStackParamList,
 } from "@/util/pages";
-import type { RecordModel } from "pocketbase";
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<MessagesStackParamList, "Channel">,
@@ -36,11 +35,11 @@ export default function ChannelPage({ navigation, route }: Props) {
   const nextPageRef = useRef<number>();
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstPageReceived, setIsFirstPageReceived] = useState(false);
-  const [messages, setMessages] = useState<RecordModel[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const [width, setWidth] = useState(0);
 
-  const user = pb.authStore.model;
+  const user = pb.authStore.record;
   if (!user) {
     navigation.navigate("Home");
     return null;
@@ -110,7 +109,7 @@ export default function ChannelPage({ navigation, route }: Props) {
         data={messages}
         renderItem={({ item: message }) => (
           <View style={{ width }} className="px-2">
-            <Message key={message.id} message={message} user={user} />
+            <MessageComponent key={message.id} message={message} user={user} />
           </View>
         )}
         onEndReached={() => {

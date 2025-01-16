@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Image } from "expo-image";
 import * as Sentry from "@sentry/react-native";
 
-import pb from "@/util/pocketbase";
+import pb, { type UserName, type LatestMessage } from "@/util/pocketbase";
 
 import type { RecordModel } from "pocketbase";
 import type { CompositeNavigationProp } from "@react-navigation/native";
@@ -29,12 +29,13 @@ type ChannelProps = {
 };
 
 export default function Channel(props: ChannelProps) {
-  const [userNames, setUserNames] = useState<RecordModel[]>([]);
+  const [userNames, setUserNames] = useState<UserName[]>([]);
   const [latestMessage, setLatestMessage] = useState<
-    RecordModel | null | false
+    LatestMessage | null | false
   >(null);
-  const [latestMessageUser, setLatestMessageUser] =
-    useState<RecordModel | null>(null);
+  const [latestMessageUser, setLatestMessageUser] = useState<UserName | null>(
+    null,
+  );
 
   useEffect(() => {
     if (props.model.users.length !== 0) {
@@ -50,7 +51,7 @@ export default function Channel(props: ChannelProps) {
         })
         .then((names) => {
           setUserNames(
-            names.filter((name) => name.id !== pb.authStore.model?.id),
+            names.filter((name) => name.id !== pb.authStore.record?.id),
           );
         })
         .catch(Sentry.captureException);
@@ -85,7 +86,7 @@ export default function Channel(props: ChannelProps) {
       });
   }, [props.model.users]);
 
-  const authUser = pb.authStore.model;
+  const authUser = pb.authStore.record;
   if (!authUser) {
     return null;
   }

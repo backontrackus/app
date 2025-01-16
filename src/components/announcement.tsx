@@ -75,7 +75,7 @@ export default function Announcement(props: AnnouncementData) {
     const newAttachments: string[] = [];
     const newImages: string[] = [];
     for (const attachment of props.model.attachments) {
-      const url = pb.files.getUrl(props.model, attachment);
+      const url = pb.files.getURL(props.model, attachment);
       const filename = url.split("/").at(-1) ?? "file.txt";
       const ext = filename.split(".").at(-1) ?? "txt";
 

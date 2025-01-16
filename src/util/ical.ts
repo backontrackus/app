@@ -18,7 +18,7 @@ export type AnnouncementData = {
 export async function getAnnouncementData(
   model: RecordModel,
 ): Promise<AnnouncementData> {
-  const url = pb.files.getUrl(model, model.calendar);
+  const url = pb.files.getURL(model, model.calendar);
 
   const res = await fetch(url);
   const text = await res.text();

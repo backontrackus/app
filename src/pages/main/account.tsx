@@ -25,7 +25,7 @@ const AccountPage = ({ navigation }: Props) => {
   const [location, setLocation] = useState<RecordModel | null>(null);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [locationModalVisible, setLocationModalVisible] = useState(false);
-  const user = pb.authStore.model;
+  const user = pb.authStore.record;
 
   useEffect(() => {
     if (user) {
@@ -44,7 +44,7 @@ const AccountPage = ({ navigation }: Props) => {
         setModalVisible={setDeleteModalVisible}
         question="Are you sure you want to delete your account?"
         yesCallback={() => {
-          pb.collection("users").delete(pb.authStore.model?.id);
+          pb.collection("users").delete(pb.authStore.record?.id);
           pb.authStore.clear();
           navigation.navigate("Home");
         }}
