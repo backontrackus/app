@@ -16,7 +16,7 @@ AsyncStorage.getItem("pb_auth").then((value) => {
   try {
     const parsed = JSON.parse(value ?? "") || {};
 
-    store.save(parsed.token || "", parsed.model || null);
+    store.save(parsed.token || "", parsed.record || null);
   } catch (_) {}
 });
 

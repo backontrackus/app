@@ -40,7 +40,7 @@ export default function HomeScreen({ navigation }: Props) {
   useEffect(() => {
     const unsubscribe = pb.authStore.onChange((token, model) => {
       checkAuth(model);
-    });
+    }, true);
 
     return () => {
       unsubscribe();
