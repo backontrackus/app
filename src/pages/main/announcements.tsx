@@ -163,19 +163,6 @@ export default function AnnouncementsPage({ navigation }: Props) {
         onRefresh={refresh}
         refreshing={isLoading}
       />
-      {isLeader && (
-        <TouchableOpacity
-          style={{
-            elevation: 2,
-          }}
-          className="absolute bottom-5 right-5 flex aspect-square h-14 w-14 flex-col items-center justify-center rounded-full bg-gray-500 p-3 shadow-black "
-          onPress={() => {
-            navigation.navigate("NewAnnouncement", {});
-          }}
-        >
-          <Text className="text-center text-2xl text-white">+</Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 }

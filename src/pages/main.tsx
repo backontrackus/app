@@ -105,12 +105,10 @@ export default function MainScreen({ navigation, route }: Props) {
 
   return (
     <>
-      <StatusBar style="dark" />
-
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarStyle: {
-            height: Platform.OS == "ios" ? 100 : 60,
+            height: Platform.OS == "ios" ? 80 : 60,
           },
           tabBarLabelStyle: {
             fontSize: 16,

@@ -30,7 +30,7 @@ export default function Message({ message, user }: MessageProps) {
   return (
     <View
       key={message.id}
-      className="mb-2 flex w-full flex-row items-start justify-start"
+      className="mb-2 flex w-full flex-row items-end justify-start"
     >
       {message.user !== user.id && (
         <Image
@@ -42,7 +42,7 @@ export default function Message({ message, user }: MessageProps) {
       )}
       <View className="flex w-full flex-col items-start justify-start">
         <View
-          className={`flex w-full flex-row items-center gap-x-1 ${
+          className={`flex w-full flex-row items-center gap-x-1 text-black dark:text-white ${
             message.user === user.id ? "justify-end pr-2" : "justify-start pl-2"
           }`}
         >

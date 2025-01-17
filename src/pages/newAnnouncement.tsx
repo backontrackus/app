@@ -122,7 +122,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
           <View className="flex flex-row items-center justify-start">
             <Text className="italic dark:text-white">You can use</Text>
             <Text
-              className="ml-1 italic text-blue-500 dark:text-white"
+              className="ml-1 italic text-blue-500 underline dark:text-white"
               onPress={() => {
                 Linking.openURL("https://www.markdownguide.org/basic-syntax/");
               }}

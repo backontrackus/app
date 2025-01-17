@@ -108,7 +108,7 @@ export default function Announcement(props: AnnouncementData) {
           })}
         </Text>
       </View>
-      <View className="flex w-full flex-col items-start justify-start rounded-xl rounded-bl-none bg-bot-blue-1 p-2">
+      <View className="flex w-full flex-col items-start justify-start rounded-xl bg-bot-blue-1 p-2">
         <View className="flex w-full flex-row items-start justify-between">
           <Text className="w-4/5 text-2xl font-semibold text-white">
             {props.model.title}
