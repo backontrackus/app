@@ -4,7 +4,7 @@ import { Image, BackHandler, Platform, TouchableOpacity } from "react-native";
 import React, { useEffect, useCallback, useState } from "react";
 import * as Sentry from "@sentry/react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import AnnouncementsPage from "./main/announcements";
 import MessagesPage from "./main/messages";
@@ -19,6 +19,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "Main">;
 const Tab = createBottomTabNavigator<TabParamList>();
 
 export default function MainScreen({ navigation, route }: Props) {
+  const insets = useSafeAreaInsets();
   const [isLeader, setIsLeader] = useState(false);
 
   const user = pb.authStore.record;
@@ -108,7 +109,7 @@ export default function MainScreen({ navigation, route }: Props) {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarStyle: {
-            height: Platform.OS == "ios" ? 80 : 60,
+            height: 60 + insets.bottom,
           },
           tabBarLabelStyle: {
             fontSize: 16,
