@@ -101,8 +101,8 @@ export default function ChannelPage({ navigation, route }: Props) {
   }
 
   return (
-    <SafeAreaView
-      className="relative h-full w-full pt-2"
+    <View
+      className="relative h-full w-full"
       onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
     >
       <FlatList
@@ -164,6 +164,6 @@ export default function ChannelPage({ navigation, route }: Props) {
           <MaterialCommunityIcons name="send" size={24} color="white" />
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

@@ -21,7 +21,7 @@ export default function Message({ message, user }: MessageProps) {
   useEffect(() => {
     pb.collection("user_names")
       .getOne(message.user, {
-        requestKey: `user-name-${message.user}`,
+        requestKey: `user-name-${message.user}-message-${message.id}`,
       })
       .then(setPublicUser)
       .catch(Sentry.captureException);

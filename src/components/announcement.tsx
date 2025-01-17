@@ -221,16 +221,15 @@ export default function Announcement(props: AnnouncementData) {
           {announcementChannel === null ? (
             <TouchableOpacity
               onPress={async () => {
-                const r = await fetch(
-                  `${process.env.EXPO_PUBLIC_POCKETBASE_URL}/rsvp?announcement_id=${props.model.id}`,
+                await fetch(
+                  `${process.env.EXPO_PUBLIC_POCKETBASE_URL}rsvp?announcement_id=${props.model.id}`,
                   {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                       Authorization: `${pb.authStore.token}`,
                     },
                   },
                 );
-                console.log(r.status);
                 await fetchAnnouncementChannel();
                 if (props.model.rsvpUrl) Linking.openURL(props.model.rsvpUrl);
               }}
