@@ -137,6 +137,7 @@ export default function ChannelPage({ navigation, route }: Props) {
           placeholder="Type a message"
           value={newMessage}
           onChangeText={setNewMessage}
+          textAlignVertical="center"
         />
         <TouchableOpacity
           onPress={() => {

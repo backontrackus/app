@@ -115,6 +115,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
                 : "Habitat for Humanity"
             }
             editable={!loading}
+            textAlignVertical="center"
           />
         </ScrollView>
         <View className="mb-4 w-full self-start">
@@ -166,6 +167,7 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
                 ? "Loading..."
                 : "https://www.example.com/sign-up"
             }
+            textAlignVertical="center"
           />
         </ScrollView>
         <View className="w-full self-start">
@@ -300,6 +302,7 @@ Come volunteer with us on Saturday, August 10th and help paint and clean up a ne
                 ? "Loading..."
                 : "12345 Example St, Example, FL 12345"
             }
+            textAlignVertical="center"
           />
         </ScrollView>
         <Text className="mb-2 self-start text-lg dark:text-white">
