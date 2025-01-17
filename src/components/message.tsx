@@ -46,7 +46,7 @@ export default function Message({ message, user }: MessageProps) {
       <View className="flex w-full flex-col items-start justify-start">
         <View
           className={`flex w-full flex-row items-center gap-x-1 ${
-            message.user === user.id ? "justify-end pr-2" : "justify-start pl-2"
+            message.user === user.id ? "justify-end" : "justify-start"
           }`}
         >
           {message.user !== user.id && (
