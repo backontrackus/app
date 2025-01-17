@@ -133,7 +133,7 @@ export default function ChannelPage({ navigation, route }: Props) {
       <View className="absolute bottom-0 flex flex-row items-center justify-center gap-x-2 px-4 py-2">
         <TextInput
           placeholderTextColor={"gray"}
-          className="flex-1 rounded-xl border-2 border-black bg-white px-2 py-1 text-lg dark:bg-zinc-900 dark:text-white"
+          className="flex-1 rounded-xl bg-zinc-200 px-2 py-1 text-lg dark:bg-zinc-900"
           placeholder="Type a message"
           value={newMessage}
           onChangeText={setNewMessage}
