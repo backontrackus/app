@@ -145,7 +145,7 @@ export default function NewAnnouncement({ navigation, route }: Props) {
               route.params.announcementId && loading
                 ? "Loading..."
                 : `**Habitat for Humanity is a non-profit organization that builds homes for those in need.**
-              Come volunteer with us on Saturday, August 10th and help paint and clean up a new house!`
+Come volunteer with us on Saturday, August 10th and help paint and clean up a new house!`
             }
             textAlignVertical="top"
           />
