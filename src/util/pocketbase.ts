@@ -131,4 +131,6 @@ const pb = new Pocketbase(
   store,
 ) as TypedPocketbase;
 
+pb.autoCancellation(false);
+
 export default pb;
