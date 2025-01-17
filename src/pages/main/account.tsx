@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { TouchableOpacity, Text, View, Image } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import { useColorScheme } from "nativewind";
 import * as Sentry from "@sentry/react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Confirmation from "@/components/confirmation";
 
@@ -36,6 +37,10 @@ const AccountPage = ({ navigation }: Props) => {
         });
     }
   }, [user]);
+
+  useEffect(() => {
+    AsyncStorage.setItem("colorScheme", colorScheme ?? "light");
+  }, [colorScheme]);
 
   return (
     <SafeAreaView className="relative h-full w-full">
@@ -71,7 +76,7 @@ const AccountPage = ({ navigation }: Props) => {
         <Text className="mt-2 text-lg dark:text-white">{location?.name}</Text>
 
         <TouchableOpacity
-          className="mt-4 w-1/2 flex-row items-center rounded-md bg-gray-500 p-2"
+          className="mt-4 w-7/12 flex-row items-center rounded-md bg-gray-500 p-2"
           onPress={() =>
             Clipboard.setStringAsync(
               `${process.env.EXPO_PUBLIC_POCKETBASE_URL}/${location?.id}.ics`,
@@ -90,7 +95,7 @@ const AccountPage = ({ navigation }: Props) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="mt-2 w-1/2 flex-row items-center rounded-md bg-gray-500 p-2"
+          className="mt-2 w-7/12 flex-row items-center rounded-md bg-gray-500 p-2"
           onPress={() => setLocationModalVisible(true)}
         >
           <MaterialCommunityIcons
@@ -105,18 +110,23 @@ const AccountPage = ({ navigation }: Props) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="mt-2 w-1/2 flex-row items-center rounded-md bg-gray-500 p-2"
+          className="mt-2 w-7/12 flex-row items-center rounded-md bg-gray-500 p-2"
           onPress={() => {
             toggleColorScheme();
           }}
         >
+          <MaterialIcons
+            name={colorScheme === "dark" ? "light-mode" : "dark-mode"}
+            size={24}
+            color="black"
+          />
           <Text className="flex-1 text-center text-lg text-white">
             Switch to {colorScheme === "dark" ? "Light Mode" : "Dark Mode"}
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="mt-2 w-1/2 flex-row items-center rounded-md bg-red-600 p-2"
+          className="mt-2 w-7/12 flex-row items-center rounded-md bg-red-600 p-2"
           onPress={() => {
             Sentry.setUser(null);
             pb.authStore.clear();
@@ -133,7 +143,7 @@ const AccountPage = ({ navigation }: Props) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="mt-2 w-1/2 flex-row items-center rounded-md bg-red-600 p-2"
+          className="mt-2 w-7/12 flex-row items-center rounded-md bg-red-600 p-2"
           onPress={() => setDeleteModalVisible(true)}
         >
           <MaterialCommunityIcons

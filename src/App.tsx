@@ -13,6 +13,7 @@ import { Platform } from "react-native";
 import { useColorScheme } from "nativewind";
 import * as Sentry from "@sentry/react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import HomeScreen from "./pages/home";
 import SetupScreen from "./pages/setup";
@@ -21,6 +22,7 @@ import NewAnnouncement from "./pages/newAnnouncement";
 
 import type { RootStackParamList } from "./util/pages";
 import type { NavigationContainerRef } from "@react-navigation/native";
+import type { ColorSchemeSystem } from "nativewind/dist/style-sheet/color-scheme";
 
 const routingInstrumentation = Sentry.reactNavigationIntegration();
 Sentry.init({
@@ -77,7 +79,7 @@ async function registerForPushNotificationsAsync() {
 function App() {
   const navigationRef =
     useRef<NavigationContainerRef<RootStackParamList>>(null);
-  const { colorScheme } = useColorScheme();
+  const { colorScheme, setColorScheme } = useColorScheme();
   const [expoPushToken, setExpoPushToken] =
     useState<Notifications.ExpoPushToken>();
 
@@ -85,6 +87,12 @@ function App() {
     registerForPushNotificationsAsync().then((token) =>
       setExpoPushToken(token),
     );
+  }, []);
+
+  useEffect(() => {
+    AsyncStorage.getItem("colorScheme").then((v) => {
+      setColorScheme(v as ColorSchemeSystem);
+    });
   }, []);
 
   return (
