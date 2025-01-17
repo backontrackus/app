@@ -118,7 +118,7 @@ export default function Channel(props: ChannelProps) {
         <View className="mb-4 flex w-full flex-row items-start justify-start ">
           <Image
             source={userNames[0].avatarUrl}
-            className="mr-3 aspect-square w-1/6 rounded-full"
+            className="mr-3 mt-2 aspect-square w-1/6 rounded-full"
           />
           <View className="flex w-10/12 flex-col items-start justify-start">
             <Text className="text-lg font-bold leading-tight dark:text-white">
