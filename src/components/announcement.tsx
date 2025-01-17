@@ -100,8 +100,8 @@ export default function Announcement(props: AnnouncementData) {
   return (
     <View className="mb-3 flex w-11/12 flex-col items-start justify-start">
       <View className="flex flex-row items-center justify-start pl-1">
-        <Text className="mr-1">{userName} on</Text>
-        <Text className="text-slate-900">
+        <Text className="mr-1 text-black dark:text-white">{userName} on</Text>
+        <Text className="text-black text-slate-900 dark:text-white">
           {new Date(props.model.created).toLocaleString([], {
             dateStyle: "medium",
             timeStyle: "short",
