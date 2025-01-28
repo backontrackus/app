@@ -10,6 +10,7 @@ import AnnouncementsPage from "./main/announcements";
 import MessagesPage from "./main/messages";
 import AccountPage from "./main/account";
 import pb from "@/util/pocketbase";
+import { getAvatarUrl } from "@/util/avatar";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList, TabParamList } from "@/util/pages";
@@ -133,7 +134,7 @@ export default function MainScreen({ navigation, route }: Props) {
               case "Account":
                 return (
                   <Image
-                    source={{ uri: user.avatarUrl }}
+                    source={{ uri: getAvatarUrl(user) }}
                     width={size}
                     height={size}
                     style={{ marginTop: 5, borderRadius: 9999 }}

@@ -14,6 +14,7 @@ import type {
   TabParamList,
   MessagesStackParamList,
 } from "@/util/pages";
+import { getAvatarUrl } from "@/util/avatar";
 
 type NavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<MessagesStackParamList, "Channels">,
@@ -117,7 +118,7 @@ export default function Channel(props: ChannelProps) {
       <View className="flex flex-col items-center justify-center py-2 pl-5 pr-8">
         <View className="mb-4 flex w-full flex-row items-start justify-start ">
           <Image
-            source={userNames[0].avatarUrl}
+            source={getAvatarUrl(userNames[0])}
             className="mr-3 mt-2 aspect-square w-1/6 rounded-full"
           />
           <View className="flex w-10/12 flex-col items-start justify-start">

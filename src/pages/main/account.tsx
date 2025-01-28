@@ -15,6 +15,7 @@ import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { RootStackParamList, TabParamList } from "@/util/pages";
 import type { RecordModel } from "pocketbase";
 import pb from "@/util/pocketbase";
+import { getAvatarUrl } from "@/util/avatar";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, "Account">,
@@ -65,7 +66,9 @@ const AccountPage = ({ navigation }: Props) => {
       <View className="z-10 flex h-full items-center justify-center">
         <View className="bg-light-gray h-24 w-24 rounded-full">
           <Image
-            source={{ uri: user?.avatarUrl }}
+            source={{
+              uri: getAvatarUrl(user),
+            }}
             className="h-24 w-24 rounded-full"
           />
         </View>

@@ -37,6 +37,57 @@ export default function HomeScreen({ navigation }: Props) {
     }
   }
 
+  async function login(provider: "google" | "apple") {
+    Sentry.addBreadcrumb({
+      type: "auth",
+      category: "login",
+      level: "info",
+    });
+
+    let userData;
+
+    try {
+      userData = await pb.collection("users").authWithOAuth2({
+        provider,
+        urlCallback: async (url) => {
+          WebBrowser.openAuthSessionAsync(url);
+        },
+      });
+    } catch (e) {
+      // @ts-expect-error
+      console.error(e.originalError);
+      Sentry.captureException(e);
+    }
+
+    if (userData) {
+      const avatarUrl = userData?.meta?.avatarURL;
+      const name =
+        userData?.meta?.name || pb.authStore.record?.email.split("@")[0];
+
+      Sentry.setUser({
+        id: pb.authStore.record?.id,
+        username: pb.authStore.record?.username,
+        email: pb.authStore.record?.email,
+        ip_address: "{{auto}}",
+        name,
+      });
+
+      const authId = pb?.authStore?.record?.id;
+      if (authId) {
+        pb.collection("users").update(authId, {
+          avatarUrl,
+          name,
+        });
+      }
+
+      if (pb.authStore.record?.location) {
+        navigation.navigate("Main", {});
+      } else {
+        navigation.navigate("Setup", { logout: false });
+      }
+    }
+  }
+
   useEffect(() => {
     const unsubscribe = pb.authStore.onChange((token, model) => {
       checkAuth(model);
@@ -68,55 +119,19 @@ export default function HomeScreen({ navigation }: Props) {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={async () => {
-            Sentry.addBreadcrumb({
-              type: "auth",
-              category: "login",
-              level: "info",
-            });
-
-            let userData;
-
-            try {
-              userData = await pb.collection("users").authWithOAuth2({
-                provider: "google",
-                urlCallback: async (url) => {
-                  WebBrowser.openAuthSessionAsync(url);
-                },
-              });
-            } catch (e) {
-              // @ts-expect-error
-              console.error(e.originalError);
-              Sentry.captureException(e);
-            }
-
-            if (userData) {
-              const avatarUrl = userData?.meta?.avatarURL;
-              const name = userData?.meta?.name;
-
-              Sentry.setUser({
-                id: pb.authStore.record?.id,
-                username: pb.authStore.record?.username,
-                email: pb.authStore.record?.email,
-                ip_address: "{{auto}}",
-                name,
-              });
-
-              const authId = pb?.authStore?.record?.id;
-              if (authId) {
-                pb.collection("users").update(authId, {
-                  avatarUrl,
-                  name,
-                });
-              }
-
-              if (pb.authStore.record?.location) {
-                navigation.navigate("Main", {});
-              } else {
-                navigation.navigate("Setup", { logout: false });
-              }
-            }
-          }}
+          onPress={() => login("apple")}
+          className={`z-20 mb-5 flex flex-1 flex-row items-center rounded-md bg-white px-5 py-2`}
+        >
+          <Image
+            className="mr-2 h-12 w-10"
+            source={require("../assets/apple.png")}
+          />
+          <Text className="text-center text-2xl font-bold text-black">
+            Log in with Apple
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => login("google")}
           className={`z-20 flex flex-1 flex-row items-center rounded-md bg-bot-orange px-5 py-2 ${
             Platform.OS === "ios" ? "mb-10" : ""
           }`}

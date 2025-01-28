@@ -7,6 +7,7 @@ import { useColorScheme } from "nativewind";
 
 import { getTimeString } from "@/util/dateUtils";
 import pb, { type Message, type User, type UserName } from "@/util/pocketbase";
+import { getAvatarUrl } from "@/util/avatar";
 
 type MessageProps = {
   message: Message;
@@ -37,7 +38,7 @@ export default function Message({ message, user }: MessageProps) {
     >
       {message.user !== user.id && (
         <Image
-          source={{ uri: publicUser?.avatarUrl }}
+          source={{ uri: publicUser ? getAvatarUrl(publicUser) : undefined }}
           width={40}
           height={40}
           style={{ marginRight: 5, borderRadius: 9999 }}
